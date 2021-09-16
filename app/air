@@ -1,0 +1,208 @@
+#!/usr/local/bin/python
+# -*- coding: utf-8 -*-
+
+from aerich.cli import cli, click
+from aerich.utils import get_app_connection
+from src.models import User, Permission, SignUpToken, APIKeys, RefreshToken
+from src.security import get_password_hash, generate_private_public_keys
+from typing import List, Optional, Any
+from datetime import datetime, timedelta
+
+from functools import wraps
+import os
+import sys
+
+import asyncio
+from tortoise import Tortoise
+
+
+def coro(f):
+    @wraps(f)
+    def wrapper(*args, **kwargs):
+        loop = asyncio.get_event_loop()
+
+        # Close db connections at the end of all all but the cli group function
+        try:
+            loop.run_until_complete(f(*args, **kwargs))
+        finally:
+            if f.__name__ != "cli":
+                loop.run_until_complete(Tortoise.close_connections())
+
+    return wrapper
+
+
+def get_connection(context):
+    get_app_connection(
+        context.obj['config'],
+        context.obj['app']
+    )
+
+
+def validate_password(ctx, param, value):
+    if len(value) < 6:
+        raise click.UsageError(
+            message='Must be greater than 6 characters',
+            ctx=ctx,
+        )
+    return value
+
+
+# @cli.command(help="Init config file and generate root migrate location.")
+# @click.option(
+#     "-t",
+#     "--tortoise-orm",
+#     required=True,
+#     help="Tortoise-ORM config module dict variable, like settings.TORTOISE_ORM.",
+# )
+# @click.option(
+#     "-l",
+#     "--location",
+#     default="./migrations",
+#     show_default=True,
+#     help="Migrate store location.",
+# )
+# @click.option(
+#     "-s",
+#     "--src_folder",
+#     default=CONFIG_DEFAULT_VALUES["src_folder"],
+#     show_default=False,
+#     help="Folder of the source, relative to the project root.",
+# )
+# @click.pass_context
+# @coro
+# async def init(ctx: click.Context, tortoise_orm, location, src_folder):
+#     config_file = ctx.obj["config_file"]
+#     name = ctx.obj["name"]
+#     if Path(config_file).exists():
+#         return click.secho("Configuration file already created", fg='yellow')
+#
+#     if os.path.isabs(src_folder):
+#         src_folder = os.path.relpath(os.getcwd(), src_folder)
+#     # Add ./ so it's clear that this is relative path
+#     if not src_folder.startswith("./"):
+#         src_folder = "./" + src_folder
+#
+#     # check that we can find the configuration, if not we can fail before the config file gets created
+#     add_src_path(src_folder)
+#     get_tortoise_config(ctx, tortoise_orm)
+#
+#     parser.add_section(name)
+#     parser.set(name, "tortoise_orm", tortoise_orm)
+#     parser.set(name, "location", location)
+#     parser.set(name, "src_folder", src_folder)
+#
+#     with open(config_file, "w", encoding="utf-8") as f:
+#         parser.write(f)
+#
+#     Path(location).mkdir(parents=True, exist_ok=True)
+#
+#     click.secho(f"Success create migrate location {location}", fg='green')
+#     click.secho(f"Success generate config file {config_file}", fg='green')
+
+
+@cli.command(help='Create user')
+@click.option('-u', '--username', prompt='Username', type=click.UNPROCESSED)
+@click.option('-e', '--email', prompt='Email', type=click.UNPROCESSED, required=False, default='')
+@click.option('-p', '--password', prompt='Password', hide_input=True, confirmation_prompt=True, type=click.UNPROCESSED,
+              callback=validate_password,
+              help='min 6 char')
+@click.option('--perm', type=click.UNPROCESSED, required=False, default=None)
+@click.pass_context
+@coro
+async def add_user(ctx: click.Context,
+                   username: str,
+                   password: str,
+                   email: Optional[str] = '',
+                   perm: Optional[str] = None):
+    get_connection(ctx)
+
+    try:
+        user = await User.create(
+            username=username,
+            password=get_password_hash(password),
+            email=email,
+            is_active=True,
+        )
+        if perm:
+            for pid in perm.replace(' ', '').split(','):
+                permission = await Permission.get(id=int(pid))
+                if permission:
+                    await permission.users.add(user)
+                    click.echo(click.style(f'{permission.name} was added !', fg='green'))
+
+    except Exception as e:
+        click.secho('Error:', fg='red', bold=True)
+        click.echo(e)
+    else:
+        click.secho('User was created !', fg='green', bold=True)
+
+
+@cli.command(help='Create permission')
+@click.option('--slug', prompt='Slug', required=True)
+@click.pass_context
+@coro
+async def add_perm(ctx: click.Context, slug: str):
+    get_connection(ctx)
+    slug = slug.lower().strip().replace(' ', '_')
+
+    try:
+        await Permission.create(slug=slug)
+    except Exception as e:
+        click.secho('Error:', fg='red', bold=True)
+        click.echo(e)
+    else:
+        click.secho('Permission created !', fg='green', bold=True)
+
+
+@cli.command(help='Generate sign up link')
+@click.option('--exp', 'exp', required=False, type=int)
+@click.pass_context
+@coro
+async def sign_up(ctx: click.Context, exp: Optional[int] = None):
+    get_connection(ctx)
+    expires = None
+
+    if exp:
+        expires = datetime.utcnow() + timedelta(hours=exp)
+
+    try:
+        token = await SignUpToken.create(expires_at=expires)
+    except Exception as e:
+        click.echo(click.style(f'Error:', fg='red', bold=True))
+        click.echo(e)
+    else:
+        click.echo(click.style('Sign up hash:', fg='green', bold=True))
+        click.echo(token.id)
+
+
+@cli.command(help='Generate key pair')
+@click.pass_context
+@coro
+async def rotate_keys(ctx: click.Context):
+    get_connection(ctx)
+
+    private, public = generate_private_public_keys()
+    keys = await APIKeys.create(
+        private_key=private.decode(),
+        public_key=public.decode()
+    )
+    click.secho('API Keys:', fg='green', bold=True)
+
+
+@cli.command(help='Delete all refresh tokens')
+@click.pass_context
+@coro
+async def del_refresh(ctx: click.Context):
+    get_connection(ctx)
+
+    await RefreshToken.all().delete()
+    click.secho('Deleted !', fg='green', bold=True)
+
+
+def main():
+    sys.path.insert(0, '.')
+    cli()
+
+
+if __name__ == '__main__':
+    main()

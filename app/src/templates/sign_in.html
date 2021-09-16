@@ -1,0 +1,104 @@
+{% extends 'index.html' %}
+
+
+{% block content %}
+    <div id="alert" class="alert alert-danger" role="alert"></div>
+    <div id="sign-up-form" class="container h-100">
+        <div class="row justify-content-center align-items-center h-100">
+            <div class="col-auto mb-5">
+                <form action="/token/obtain/" method="post">
+                    <div class="mb-4">
+                        <label for="exampleInputEmail1" class="form-label">Username</label>
+                        <input type="text" name="username" class="form-control" id="exampleInputEmail1">
+                    </div>
+                    <div class="mb-5">
+                        <label for="exampleInputPassword1" class="form-label">Password</label>
+                        <input type="password" name="password" class="form-control" id="exampleInputPassword1">
+                    </div>
+                    <div>
+                        <button type="submit" class="btn d-block w-100 btn-primary">Login</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+
+{% block javascript %}
+    <script type="text/javascript">
+      let timer = null
+
+      function b64_decode(code) {
+        return decodeURIComponent(escape(window.atob(code)))
+      }
+
+      function showAlert(status, message) {
+        const alert = document.getElementById('alert')
+        alert.innerText = message
+        alert.classList.remove('alert-success')
+        alert.classList.remove('alert-danger')
+        alert.classList.add(!status ? 'alert-danger' : 'alert-success')
+        setTimeout(function() {
+          alert.classList.add('shown')
+        }, 10)
+
+        if (!timer) {
+          timer = setTimeout(function () {
+            alert.classList.remove('shown')
+          }, 3000)
+        }
+      }
+
+      function handleSubmit(e) {
+        e.preventDefault()
+        e.stopPropagation()
+
+        const form = document.getElementById('sign-up-form')
+        const xhr = new XMLHttpRequest()
+        let message;
+        xhr.open('POST', e.target.getAttribute('action'), true)
+        xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8")
+
+        const request = JSON.stringify(
+          {username: e.target.username.value, password: e.target.password.value}
+        )
+
+        xhr.onload = function () {
+
+          if (this.status !== 200) {
+            try {
+              const resp = JSON.parse(this.response)
+              message = resp['detail']
+            } catch (e) {
+              console.log(e)
+              message = 'Error'
+            }
+            showAlert(false, message)
+
+          } else {
+            const resp = JSON.parse(this.response)
+            form.classList.add('hidden')
+            showAlert(true, resp['detail'])
+          }
+        }
+        xhr.onerror = function () {
+          try {
+            const resp = JSON.parse(this.response)
+            message = resp['detail']
+          } catch (e) {
+            console.log(e)
+            message = 'Error'
+          }
+          showAlert(false, message)
+        }
+        xhr.send(request)
+        return false
+      }
+
+      window.addEventListener('load', function () {
+        document.forms[0].addEventListener('submit', handleSubmit)
+      })
+    </script>
+    {{ super() }}
+{% endblock %}

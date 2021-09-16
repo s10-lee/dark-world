@@ -1,0 +1,17 @@
+.git
+.ipynb_checkpoints
+.gitignore
+**/*.db
+**/*.rdb
+**/*.pid
+**/.DS_Store
+.idea
+**/.cache
+**/__pycache__
+app/db/migrations
+app/aerich.ini
+app/.env*
+*.env
+*.scss
+*.conf.example
+venv
