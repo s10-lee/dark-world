@@ -32,5 +32,5 @@ Init and migrate
 air init -t src.settings.ORM --location ./db/migrations
 air init-db
 air rotate-keys
-air add-user -u admin
+air add-user -u admin -p 1qw2er3ty -e admin@artel.works
 ```

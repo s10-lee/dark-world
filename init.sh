@@ -3,7 +3,7 @@ echo "--- init ---"
 # ---- Venv
 if [ ! -d venv ]
 then
-  python3.9 -m venv venv>>/dev/null
+  python3.9 -m venv --copies venv>>/dev/null
   echo "+++ ./venv"
 fi
 
@@ -13,6 +13,7 @@ then
   _app="$(pwd)"
   echo '
 alias cli="'$_app'/cli"
+
 if [ -f '$_app'/app/.env ]
 then
     export $(cat '$_app'/app/.env | sed "s/#.*//g" | xargs)
