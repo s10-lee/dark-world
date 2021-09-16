@@ -3,9 +3,11 @@ echo "--- init ---"
 # ---- Venv
 if [ ! -d venv ]
 then
-  python3.9 -m venv --copies venv>>/dev/null
+  python3 -m venv --copies venv >> /dev/null
   echo "+++ ./venv"
 fi
+
+# ---- Pip
 
 # ---- Patch Venv
 if [ ! -f venv/bin/patched.txt ]
@@ -14,9 +16,9 @@ then
   echo '
 alias cli="'$_app'/cli"
 
-if [ -f '$_app'/app/.env ]
+if [ -f '$_app'/.env ]
 then
-    export $(cat '$_app'/app/.env | sed "s/#.*//g" | xargs)
+    export $(cat '$_app'/.env | sed "s/#.*//g" | xargs)
 fi' >> venv/bin/activate
   chmod 0775 venv/bin/activate
   touch venv/bin/patched.txt

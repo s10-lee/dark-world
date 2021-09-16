@@ -1,5 +1,4 @@
 from fastapi import FastAPI, APIRouter, Request, Depends
-# from tortoise import Tortoise
 from fastapi.responses import HTMLResponse, JSONResponse
 from fastapi.exceptions import HTTPException
 from fastapi.middleware.cors import CORSMiddleware
