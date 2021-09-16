@@ -128,7 +128,7 @@ async def add_user(ctx: click.Context,
                 permission = await Permission.get(id=int(pid))
                 if permission:
                     await permission.users.add(user)
-                    click.echo(click.style(f'{permission.name} was added !', fg='green'))
+                    click.echo(click.style(f'{permission.slug} was added !', fg='green'))
 
     except Exception as e:
         click.secho('Error:', fg='red', bold=True)

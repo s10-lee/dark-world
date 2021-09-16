@@ -1,18 +1,9 @@
-#!/bin/bash
-
 echo "--- init ---"
-
-# --- create database
-# echo 'Create database manually'
-
-# --- install db extension
-
-
 
 # ---- Venv
 if [ ! -d venv ]
 then
-  python -m venv venv>>/dev/null
+  python3.9 -m venv venv>>/dev/null
   echo "+++ ./venv"
 fi
 
