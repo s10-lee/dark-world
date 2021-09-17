@@ -1,9 +1,8 @@
-import os
 import json
 import asyncio
 from functools import wraps
 import uuid
-from aerich import Command, Migrate
+from aerich import Command
 from click import (
     group,
     argument,
@@ -12,14 +11,11 @@ from click import (
     pass_context,
     confirmation_option,
     style,
-    Path as CPath,
-    File as CFile,
-    types,
     UsageError,
     echo,
     secho,
 )
-from app.src.functions import import_driver, save_to_file, get_timestamp
+# from app.src.functions import import_driver, save_to_file, get_timestamp
 from app.src.security import get_password_hash, generate_private_public_keys
 from app.src.models import User, Permission, SignUpToken, APIKeys, RefreshToken
 from typing import Optional
@@ -106,6 +102,7 @@ async def cli(ctx: Context, location: str):
 # @option('--limit', default=None, type=types.INT)
 # @option('--clear', default=False, is_flag=True)
 # def merge(source, destination=None, filename=None, limit=None, clear=False):
+#     import os
 #     dirname = ''
 #     index = 0
 #     content = ''
