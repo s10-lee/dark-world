@@ -1,4 +1,5 @@
 from tortoise import Tortoise
+from typing import Any
 from tortoise.models import Model
 from tortoise.fields import (
     IntField, UUIDField, CharField, ForeignKeyField, BooleanField, DatetimeField, ManyToManyField,
@@ -42,7 +43,7 @@ class User(Model):
     email = CharField(max_length=200, default='')
     is_active = BooleanField(default=True)
     is_staff = BooleanField(default=False)
-    last_login = DatetimeField(null=True, auto_now=True)
+    last_login = DatetimeField(null=True, auto_now_add=True)
     perms: ManyToManyRelation[Permission]
 
     async def logged(self):
@@ -92,4 +93,4 @@ class RefreshToken(Model):
         table = 'user_refresh_token'
 
 
-Tortoise.init_models(['src.models'], 'models')
+# Tortoise.init_models(['app.src.models'], 'models')

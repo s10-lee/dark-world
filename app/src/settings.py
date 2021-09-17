@@ -12,7 +12,7 @@ ORM = {
     },
     'apps': {
         'models': {
-            'models': ['src.models', 'aerich.models'],
+            'models': ['app.src.models', 'aerich.models'],
             'default_connection': 'default',
         },
     },

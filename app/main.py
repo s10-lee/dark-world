@@ -1,10 +1,10 @@
-from fastapi import FastAPI, APIRouter, Request, Depends
-from fastapi.responses import HTMLResponse, JSONResponse
+from fastapi import FastAPI, Request, Depends
+from fastapi.responses import JSONResponse
 from fastapi.exceptions import HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
-from .security import (
+from app.src.security import (
     authentication_user,
     create_access_token,
     auth_wrapper,
@@ -14,8 +14,8 @@ from .security import (
     auth_check_refresh
 )
 from tortoise.contrib.fastapi import register_tortoise
-from .settings import ORM
-from .models import User, UserCredentials, SignUpToken
+from app.src.settings import ORM
+from app.src.models import User, UserCredentials, SignUpToken
 from uuid import UUID
 from datetime import datetime
 
@@ -57,7 +57,6 @@ async def show_signup_form(request: Request, uid: UUID = Depends(validate_signup
 async def register_new_user(data: UserCredentials, uid: UUID = Depends(validate_signup)):
     if not (data.password and data.username):
         raise HTTPException(400, detail='All fields are required')
-
     try:
         await User.create(username=data.username, password=get_password_hash(data.password))
         await SignUpToken.filter(id=uid).update(activated_at=datetime.utcnow())

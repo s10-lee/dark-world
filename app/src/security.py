@@ -4,10 +4,10 @@ from cryptography.hazmat.primitives import serialization as crypto_serialization
 from cryptography.hazmat.primitives.asymmetric import rsa
 from cryptography.hazmat.backends import default_backend as crypto_default_backend
 from passlib.context import CryptContext
-from fastapi import HTTPException, Security, Header, Depends, status, Cookie
+from fastapi import HTTPException, Security, status, Cookie
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
-from .models import User, UserCredentials, SignUpToken, RefreshToken, APIKeys
-from .settings import JWT_SECRET, ALGORITHM, INTERVAL, APP_NAME
+from app.src.models import User, UserCredentials, SignUpToken, RefreshToken, APIKeys
+from app.src.settings import JWT_SECRET, ALGORITHM, INTERVAL, APP_NAME
 from uuid import UUID
 import jwt
 import secrets

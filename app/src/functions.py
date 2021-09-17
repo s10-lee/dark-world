@@ -1,35 +1,6 @@
-import asyncio
 import json
 import os
-import time
 from datetime import datetime
-from functools import wraps
-from tortoise import Tortoise
-
-
-def track_time(f):
-    @wraps(f)
-    def wrapper(*args, **kwargs):
-        start = time.time()
-        print("--- ", time.strftime("%H:%M:%S"), " ---")
-        result = f(*args, **kwargs)
-        print(f"---  {round(time.time() - start, 2)} sec  ---")
-        print("--- ", time.strftime("%H:%M:%S"), " ---")
-        return result
-    return wrapper
-
-
-def coro(f):
-    @wraps(f)
-    def wrapper(*args, **kwargs):
-        loop = asyncio.get_event_loop()
-        try:
-            loop.run_until_complete(f(*args, **kwargs))
-        finally:
-            if f.__name__ != "cli":
-                loop.run_until_complete(Tortoise.close_connections())
-                loop.run_until_complete(asyncio.sleep(0.25))
-    return wrapper
 
 
 def chdir(path):
