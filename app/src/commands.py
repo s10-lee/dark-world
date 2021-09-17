@@ -1,7 +1,6 @@
 import json
 import asyncio
 from functools import wraps
-import uuid
 from aerich import Command
 from click import (
     group,
@@ -183,16 +182,15 @@ async def db_group(ctx: Context):
 
 
 @user_group.command(name='add', help='Create user')
-@option('--username', prompt='Username')
-@option('--email', prompt='Email', required=False, default='')
-@option('--password', prompt='Password', hide_input=True, confirmation_prompt=True, callback=validate_password)
-@option('--staff', required=False, default=False, is_flag=True)
+@option('-u', '--username', prompt='Username')
+@option('-e', '--email', prompt='Email', required=False, default='')
+@option('-p', '--password', prompt='Password', hide_input=True, confirmation_prompt=True, callback=validate_password)
+@option('-s', '--staff', required=False, default=False, is_flag=True)
 @coro
 async def create_user(username: str,
                       password: str,
                       email: Optional[str] = '',
-                      staff: Optional[str] = False,
-                      perm: Optional[str] = None):
+                      staff: Optional[str] = False):
     try:
         await User.create(
             username=username,
@@ -209,29 +207,28 @@ async def create_user(username: str,
         secho('User was created !', fg='green', bold=True)
 
 
-@user_group.command(name='del', help='Delete user')
-@option('--pk', required=False, default=None)
-@option('--username', required=False, default=None)
-@option('--email', required=False, default=None)
+@user_group.command(name='del', help='Delete user.')
+@option('-u', '--username', required=False, default=None)
+@option('-e', '--email', required=False, default=None)
+@confirmation_option(prompt='Are you sure?')
 @coro
-async def delete_user(pk: Optional[uuid.UUID],
-                      username: Optional[str],
-                      email: Optional[str]):
-
-    if not any([pk, username, email]):
-        return secho('At least one condition', fg='red', bold=True)
-
+async def delete_user(username: str, email: str):
     try:
-        await User.filter(username=username)
+        if username:
+            ret = await User.filter(username=username).delete()
+        elif email:
+            ret = await User.filter(email=email).delete()
+        else:
+            return secho('At least one condition !', fg='red', bold=True)
     except Exception as e:
         secho('Error:', fg='red', bold=True)
         echo(e)
     else:
-        secho('Permission created !', fg='green', bold=True)
+        secho(f'User record was deleted - {ret} !', fg='green', bold=True)
 
 
-@cli.command(name='perm', help='Create permission')
-@option('--slug', prompt='Slug', required=True)
+@cli.command(name='perm', help='Create permission.')
+@option('-s', '--slug', prompt='Slug', required=True)
 @coro
 async def create_permission(slug: str):
     try:
@@ -243,7 +240,7 @@ async def create_permission(slug: str):
         secho('Permission created !', fg='green', bold=True)
 
 
-@user_group.command(name='signup', help='Generate sign up link.')
+@user_group.command(name='sing', help='Generate sign up link.')
 @option('-e', '--expire', 'hours', required=False, type=int, default=None, help='Hours before expire.')
 @pass_context
 @coro
@@ -262,7 +259,7 @@ async def create_signup_link(ctx: Context, hours: Optional[int] = None):
         echo(token.id)
 
 
-@user_group.command(name='refresh', help='Clear refresh tokens.')
+@user_group.command(name='noref', help='Clear refresh tokens.')
 @pass_context
 @coro
 async def delete_refresh_tokens(ctx: Context):
@@ -283,13 +280,7 @@ async def rotate_api_keys(ctx: Context):
 
 
 @db_group.command(name='init', help='Generate schema and generate app migrate location.')
-@option(
-    '--safe',
-    type=bool,
-    default=True,
-    help='Creates tables if it does not exist.',
-    show_default=True,
-)
+@option('--safe', default=True, help='Creates tables if it does not exist.', show_default=True)
 @pass_context
 @coro
 async def init_db_aerich(ctx: Context, safe: bool):
