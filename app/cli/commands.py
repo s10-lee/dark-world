@@ -1,10 +1,8 @@
-import json
 import asyncio
 from functools import wraps
-from aerich import Command
+from aerich import Command, Migrate, Aerich
 from click import (
     group,
-    argument,
     option,
     Context,
     pass_context,
@@ -14,18 +12,24 @@ from click import (
     echo,
     secho,
 )
-# from app.src.functions import import_driver, save_to_file, get_timestamp
-from app.src.security import get_password_hash, generate_private_public_keys
-from app.src.models import User, Permission, SignUpToken, APIKeys, RefreshToken
+from app.src.auth.services import get_password_hash, generate_private_public_keys
+from app.src.user.models import User, Permission, RefreshToken
+from app.src.auth.models import APIKeys, SignUpToken
+from app.config.settings import ORM, DATABASE_URL
+
+from app.db.utils import (
+    write_version_file,
+    get_models_describe,
+    close_connections,
+    get_connection,
+)
 from typing import Optional
 from datetime import datetime, timedelta
-import time
-from tortoise import Tortoise, BaseDBAsyncClient
-from app.src.settings import ORM
+from tortoise import Tortoise, generate_schema_for_client
+from tortoise.utils import get_schema_sql
 from pathlib import Path
+import time
 
-# def get_connection(name: str = None) -> BaseDBAsyncClient:
-#     return Tortoise.get_connection(name or 'default')
 
 
 def validate_password(ctx, param, value):
@@ -56,7 +60,7 @@ def coro(function=None, keep_alive=False):
                 loop.run_until_complete(f(*args, **kwargs))
             finally:
                 if not keep_alive:
-                    loop.run_until_complete(Tortoise.close_connections())
+                    loop.run_until_complete(close_connections())
                 loop.run_until_complete(asyncio.sleep(0.5))
         return wrapper
     if callable(function):
@@ -70,14 +74,10 @@ def coro(function=None, keep_alive=False):
 @coro(keep_alive=True)
 async def cli(ctx: Context, location: str):
     ctx.ensure_object(dict)
-    subcommand = ctx.invoked_subcommand
+    ctx.obj['location'] = location
     command = Command(tortoise_config=ORM, location=location, app='models')
-    # command = Migrate.init(ORM, 'models', './app/db/migrations')
     ctx.obj['command'] = command
-    if subcommand != 'init':
-        await command.init()
-    # await Tortoise.init(config=ORM)
-    # await Tortoise.init(db_url=DATABASE_URL, modules={'models': ['app.src.models']})
+    await command.init()
 
 
 # @cli.command()
@@ -174,20 +174,13 @@ async def user_group(ctx: Context):
     pass
 
 
-@cli.group(name='db', help='Aerich wrapper')
-@pass_context
-@coro(keep_alive=True)
-async def db_group(ctx: Context):
-    pass
-
-
 @user_group.command(name='add', help='Create user')
 @option('-u', '--username', prompt='Username')
 @option('-e', '--email', prompt='Email', required=False, default='')
 @option('-p', '--password', prompt='Password', hide_input=True, confirmation_prompt=True, callback=validate_password)
 @option('-s', '--staff', required=False, default=False, is_flag=True)
 @coro
-async def create_user(username: str,
+async def user_create(username: str,
                       password: str,
                       email: Optional[str] = '',
                       staff: Optional[str] = False):
@@ -212,7 +205,7 @@ async def create_user(username: str,
 @option('-e', '--email', required=False, default=None)
 @confirmation_option(prompt='Are you sure?')
 @coro
-async def delete_user(username: str, email: str):
+async def user_delete(username: str, email: str):
     try:
         if username:
             ret = await User.filter(username=username).delete()
@@ -230,7 +223,7 @@ async def delete_user(username: str, email: str):
 @cli.command(name='perm', help='Create permission.')
 @option('-s', '--slug', prompt='Slug', required=True)
 @coro
-async def create_permission(slug: str):
+async def permission_create(slug: str):
     try:
         await Permission.create(slug=slug)
     except Exception as e:
@@ -240,11 +233,11 @@ async def create_permission(slug: str):
         secho('Permission created !', fg='green', bold=True)
 
 
-@user_group.command(name='sing', help='Generate sign up link.')
+@user_group.command(name='sign', help='Generate sign up link.')
 @option('-e', '--expire', 'hours', required=False, type=int, default=None, help='Hours before expire.')
 @pass_context
 @coro
-async def create_signup_link(ctx: Context, hours: Optional[int] = None):
+async def signup_link(ctx: Context, hours: Optional[int] = None):
     expires_at = None
     if hours:
         expires_at = datetime.utcnow() + timedelta(hours=hours)
@@ -270,7 +263,7 @@ async def delete_refresh_tokens(ctx: Context):
 @cli.command(name='keygen', help='Generate and rotate key pairs.')
 @pass_context
 @coro
-async def rotate_api_keys(ctx: Context):
+async def api_keys_rotate(ctx: Context):
     private, public = generate_private_public_keys()
     await APIKeys.create(
         private_key=private.decode(),
@@ -279,21 +272,41 @@ async def rotate_api_keys(ctx: Context):
     secho('API Key was created', fg='green', bold=True)
 
 
+@cli.group(name='db', help='Aerich wrapper.')
+@pass_context
+@coro(keep_alive=True)
+async def db_group(ctx: Context):
+    pass
+
+
 @db_group.command(name='init', help='Generate schema and generate app migrate location.')
 @option('--safe', default=True, help='Creates tables if it does not exist.', show_default=True)
 @pass_context
 @coro
-async def init_db_aerich(ctx: Context, safe: bool):
-    command = ctx.obj['command']
-    app = command.app
-    dirname = Path(command.location, app)
+async def db_init(ctx: Context, safe: bool):
+    location = ctx.obj['location']
+    app = 'models'
+    init_config = {
+        'connections': {
+            'default': DATABASE_URL
+        },
+        'apps': {
+            'models': {
+                'models': ['aerich.models'],
+                'default_connection': 'default',
+            },
+        },
+    }
+    command = Command(tortoise_config=init_config, location=location, app='models')
+    dirname = Path(location, 'models')
+
     try:
         await command.init_db(safe)
-        secho(f'Migration {dirname}', fg='green', bold=True)
-        secho(f'Schema generated "{app}"', fg='green', bold=True)
+        secho(f'Migrations {dirname}', fg='green', bold=True)
+        secho('Schema generated', fg='green', bold=True)
     except FileExistsError:
         return secho(
-            f'"{app}" - already exists. Delete {dirname} and try again.', fg='yellow', bold=True
+            f'Migrations already exists. Delete {dirname} and try again.', fg='yellow', bold=True
         )
 
 
@@ -301,25 +314,24 @@ async def init_db_aerich(ctx: Context, safe: bool):
 @option('--name', default='update', show_default=True, help='Migration name.')
 @pass_context
 @coro
-async def create_db_migration(ctx: Context, name: str):
+async def db_migrate(ctx: Context, name: str):
     command = ctx.obj['command']
-    ret = await command.migrate(name)
-    if not ret:
+    migration = await command.migrate(name)
+    if not migration:
         return secho('No changes detected', fg='yellow', bold=True)
-    secho(f'Success migrate {ret}', fg='green', bold=True)
+    secho(f'Success migrate {migration}', fg='green', bold=True)
 
 
 @db_group.command(name='up', help='Upgrade DB.')
 @pass_context
 @coro
-async def upgrade_db_migration(ctx: Context):
+async def db_upgrade(ctx: Context):
     command = ctx.obj['command']
     migrated = await command.upgrade()
     if not migrated:
-        secho('No upgrade items found', fg='yellow')
-    else:
-        for version_file in migrated:
-            secho(f'Success upgrade {version_file}', fg='green', bold=True)
+        return secho('No upgrade items found', fg='yellow')
+    for version_file in migrated:
+        secho(f'Success upgrade {version_file}', fg='green', bold=True)
 
 
 @db_group.command(name='down', help='Downgrade DB.')
@@ -328,7 +340,7 @@ async def upgrade_db_migration(ctx: Context):
 @pass_context
 @confirmation_option(prompt='Are you sure?')
 @coro
-async def downgrade_db_migration(ctx: Context, version: int, clear: bool):
+async def db_downgrade(ctx: Context, version: int, clear: bool):
     command = ctx.obj['command']
     try:
         files = await command.downgrade(version, clear)

@@ -6,15 +6,14 @@
     <div id="sign-up-form" class="container h-100">
     <div class="row justify-content-center align-items-center h-100">
         <div class="col-auto mb-5">
-        <form action="/sign-up/{{ uid }}/" method="post">
+        <form action="{{ request.url.path }}" method="post">
             <div class="mb-4">
-                <label for="exampleInputEmail1" class="form-label">Username</label>
-                <input type="text" name="username" class="form-control" id="exampleInputEmail1" aria-describedby="nameHelp">
-                <small id="nameHelp" class="form-text text-muted">Unique name or email, whatever</small>
+                <label class="form-label">Username</label>
+                <input type="text" name="username" class="form-control">
             </div>
             <div class="mb-5">
-                <label for="exampleInputPassword1" class="form-label">Password</label>
-                <input type="password" name="password" class="form-control" id="exampleInputPassword1">
+                <label class="form-label">Password</label>
+                <input type="password" name="password" class="form-control">
             </div>
             <div>
                 <button type="submit" class="btn d-block w-100 btn-primary">Sign Up</button>

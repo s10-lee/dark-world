@@ -4,10 +4,13 @@ from cryptography.hazmat.primitives import serialization as crypto_serialization
 from cryptography.hazmat.primitives.asymmetric import rsa
 from cryptography.hazmat.backends import default_backend as crypto_default_backend
 from passlib.context import CryptContext
+from fastapi.responses import JSONResponse
 from fastapi import HTTPException, Security, status, Cookie
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
-from app.src.models import User, UserCredentials, SignUpToken, RefreshToken, APIKeys
-from app.src.settings import JWT_SECRET, ALGORITHM, INTERVAL, APP_NAME
+from app.src.user.models import User, RefreshToken
+from app.src.user.schemas import UserCredentials
+from app.src.auth.models import APIKeys, SignUpToken
+from app.config.settings import JWT_SECRET, ALGORITHM, INTERVAL, APP_NAME
 from uuid import UUID
 import jwt
 import secrets
@@ -112,6 +115,23 @@ async def create_refresh_token(user: User) -> RefreshToken:
         token=secrets.token_urlsafe(48),
         expires_at=datetime.utcnow() + timedelta(days=10)
     )
+
+
+async def client_token_response(user: User) -> JSONResponse:
+    refresh_token = await create_refresh_token(user)
+    access_token = await create_access_token(user)
+    response = JSONResponse(content={
+        'access_token': access_token,
+    })
+    seconds = refresh_token.expires()
+    response.set_cookie(
+        key='refresh_token',
+        value=refresh_token.token,
+        expires=seconds,
+        path='/',
+        httponly=True,
+    )
+    return response
 
 
 def verify_password(plain_password: str, hashed_password: str) -> bool:

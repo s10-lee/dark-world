@@ -1,0 +1,11 @@
+-- upgrade --
+CREATE TABLE IF NOT EXISTS "link" (
+    "id" UUID NOT NULL  PRIMARY KEY,
+    "url" VARCHAR(255) NOT NULL,
+    "code" VARCHAR(50) NOT NULL UNIQUE,
+    "is_active" BOOL NOT NULL  DEFAULT True,
+    "updated_at" TIMESTAMPTZ NOT NULL  DEFAULT CURRENT_TIMESTAMP,
+    "created_at" TIMESTAMPTZ   DEFAULT CURRENT_TIMESTAMP
+);
+-- downgrade --
+DROP TABLE IF EXISTS "link";

@@ -7,8 +7,6 @@ then
   echo "+++ ./venv"
 fi
 
-# ---- Pip
-
 # ---- Patch Venv
 if [ ! -f venv/bin/patched.txt ]
 then
