@@ -120,3 +120,4 @@ users.acl
 *.pem
 *.crt
 *.key
+./cli
