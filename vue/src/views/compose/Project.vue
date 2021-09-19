@@ -10,9 +10,6 @@
 
 <script>
 export default {
-  name: 'Project',
-  mounted() {
-    this.$store.commit('loaded')
-  }
+  name: 'Project'
 }
 </script>

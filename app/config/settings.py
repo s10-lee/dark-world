@@ -8,6 +8,7 @@ JWT_SECRET = os.getenv('JWT_SECRET')
 SECRET_KEY = os.getenv('SECRET')
 ALGORITHM = os.getenv('ALGORITHM')
 INTERVAL = int(os.getenv('INTERVAL', 10))
+CORS_ALLOW_ORIGINS = [os.getenv('CORS_ALLOW_ORIGINS', '*')]
 
 
 def auto_models():

@@ -1,6 +1,6 @@
 <template>
   <header v-bind="$attrs" class="navbar navbar-dark navbar-expand-lg fixed-top px-3">
-    <b-link class="navbar-brand" to="/" exact><small class="moon-text">D4RKVV0R1D</small></b-link>
+    <b-link class="navbar-brand" to="/" exact></b-link>
     <button class="navbar-toggler">
       <span class="navbar-toggler-icon"></span>
     </button>

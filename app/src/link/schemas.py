@@ -10,11 +10,5 @@ CreateSchema = pydantic_model_creator(
 ReceiveSchema = pydantic_model_creator(
     Link,
     name='ReceiveSchema',
-    include=('url', ),
-)
-
-ReceiveSchemaAll = pydantic_model_creator(
-    Link,
-    name='ReceiveSchemaAll',
-    exclude_readonly=True,
+    include=('code', ),
 )

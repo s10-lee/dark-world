@@ -152,6 +152,12 @@ body:after {
   color: transparent;
   -webkit-text-fill-color: transparent;
 }
+.copy-link {
+  color: #073e0a;
+  &:hover, &:active {
+    color: #0b5a0f;
+  }
+}
 .moon-img {
   width: 500px;
   height: auto;
