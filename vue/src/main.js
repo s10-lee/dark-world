@@ -4,9 +4,9 @@ import router from 'router'
 import store from 'store'
 
 import BLink from 'components/BLink'
-import BLoading from './components/BLoading'
-import BNavbar from './components/BNavbar'
-import './scss/dark.scss'
+import BLoading from 'components/BLoading'
+import BNavbar from 'components/BNavbar'
+import 'scss/dark.scss'
 
 const app = createApp({
     render() {

@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>.</title>
+    {% for url in styles %}<link type="text/css" media="all" rel="stylesheet" href="{{ url }}"/>{{ '\n' }}{% endfor %}
+</head>
+<body>
+<div class="http-error">
+    <h2 class="error-status">{{ ext.status_code }}</h2>
+    <h1 class="error-text"> {{ exc.detail }}</h1>
+</div>
+{% for url in scripts %}{{ '\n' }}<script type="text/javascript" src="{{ url }}"></script>{% endfor %}
+</body>
+</html>

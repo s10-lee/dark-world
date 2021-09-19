@@ -19,15 +19,18 @@ web = FastAPI(default_response_class=HTMLResponse)
 
 
 @web.exception_handler(StarletteHTTPException)
-async def my_custom_exception_handler(request: Request, exc: StarletteHTTPException):
+async def custom_exception_handler(request: Request, exc: StarletteHTTPException):
+    data = {
+        'request': request,
+        'exc': exc,
+        **get_vue()
+    }
     if exc.status_code == 404:
-        return templates.TemplateResponse('layout_vue.html', {'request': request, **get_vue()})
-    else:
-        # Just use FastAPI's built-in handler for other errors
-        return await http_exception_handler(request, exc)
+        return templates.TemplateResponse('layout_vue.html', data)
+    return templates.TemplateResponse('error.html', data)
 
 
-def get_vue():
+def get_vue() -> dict:
     stats_path = os.path.abspath('./stats/webpack-stats.json')
     styles = []
     scripts = []
@@ -36,7 +39,6 @@ def get_vue():
             data = json.load(fp)
             public_path = data['publicPath']
             for app_name in data['chunks']:
-                print(app_name)
                 for chunk in data['chunks'][app_name]:
                     file_name = chunk['name']
 
@@ -46,11 +48,6 @@ def get_vue():
                     if file_name[-3:] == '.js':
                         scripts.append(public_path + file_name)
     return {'styles': styles, 'scripts': scripts}
-
-
-# @web_router
-# async def http_exception_handler(request, exc):
-#     return Response(str(exc.detail), status_code=exc.status_code)
 
 
 @web.get('/sign-up/{uid}/')

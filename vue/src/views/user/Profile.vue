@@ -1,7 +1,10 @@
 <template>
-  <div>
-    <h1>User Profile</h1>
-    <hr/>
+  <div class="container">
+    <div class="row">
+      <div class="col">
+        <h3 class="mt-5 fw-bold">Profile</h3>
+      </div>
+    </div>
   </div>
 </template>
 
