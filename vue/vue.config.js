@@ -5,16 +5,15 @@ const BundleTracker = require('webpack-bundle-tracker');
 const isProd = process.env.NODE_ENV === 'production';
 const statRoot = path.resolve(path.join(path.dirname(__dirname), 'stats'));
 const statFile = isProd ? 'webpack-stats-prod.json' : 'webpack-stats.json';
-const publicPath = isProd ? '/static/dist/' : 'http://0.0.0.0:5050/';
-const outputDir = path.resolve(path.join(statRoot, 'dist'));
-
+const publicPath = isProd ? '/static/bundles/' : 'http://0.0.0.0:5050/';
+const outputDir = path.resolve(path.join(path.dirname(statRoot), 'app/static/bundles'));
 
 
 module.exports = {
     // pages: {
     //     app: 'src/main.js',
     // },
-    assetsDir: 'src/assets',
+    // assetsDir: 'assets',
     outputDir: outputDir,
     publicPath: publicPath,
     runtimeCompiler: true,

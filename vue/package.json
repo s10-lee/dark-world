@@ -5,7 +5,8 @@
   "scripts": {
     "serve": "vue-cli-service serve --port 5050",
     "build": "vue-cli-service build --mode production",
-    "hot": "vue-cli-service build --mode development --watch --port 5050",
+    "postbuild": "./postbuild.sh",
+    "watch": "vue-cli-service build --mode development --watch --port 5050",
     "lint": "vue-cli-service lint"
   },
   "dependencies": {

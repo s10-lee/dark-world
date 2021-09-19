@@ -1,8 +1,15 @@
 <template>
   <b-loading />
+  <b-navbar/>
   <router-view v-slot="{ Component, route }">
     <transition name="fade" mode="out-in">
       <component :is="Component" :key="route.fullPath" />
     </transition>
   </router-view>
 </template>
+<script>
+import BNavbar from "./components/BNavbar";
+export default {
+  components: {BNavbar}
+}
+</script>

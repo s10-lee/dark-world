@@ -1,6 +1,7 @@
 import os
 from glob import glob
 
+DEBUG = os.getenv('DEBUG', False)
 APP_NAME = os.getenv('APP_NAME')
 DATABASE_URL = os.getenv('DATABASE_URL')
 JWT_SECRET = os.getenv('JWT_SECRET')

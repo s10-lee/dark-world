@@ -8,6 +8,8 @@ from app.src.link.routers import router as api_link
 from app.src.auth.services import validate_signup
 import json
 import os
+from app.config.settings import DEBUG
+
 
 templates = Jinja2Templates(directory='app/templates')
 
@@ -31,7 +33,11 @@ async def custom_exception_handler(request: Request, exc: StarletteHTTPException
 
 
 def get_vue() -> dict:
-    stats_path = os.path.abspath('./stats/webpack-stats.json')
+    stats_file = 'stats/webpack-stats-prod.json'
+    if DEBUG:
+        stats_file = 'stats/webpack-stats.json'
+
+    stats_path = os.path.abspath(stats_file)
     styles = []
     scripts = []
     if os.path.exists(stats_path):
@@ -41,12 +47,11 @@ def get_vue() -> dict:
             for app_name in data['chunks']:
                 for chunk in data['chunks'][app_name]:
                     file_name = chunk['name']
-
                     if file_name.endswith('.css'):
                         styles.append(public_path + file_name)
-
                     if file_name[-3:] == '.js':
                         scripts.append(public_path + file_name)
+
     return {'styles': styles, 'scripts': scripts}
 
 

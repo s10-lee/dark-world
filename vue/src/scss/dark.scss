@@ -10,7 +10,7 @@
 @import "~bootstrap/scss/variables";
 @import "~bootstrap/scss/mixins";
 
-$body-bg: #12181b;
+$body-bg: #000;
 $body-color: #b2becd;
 
 // scss-docs-start spacers
@@ -112,6 +112,17 @@ body {
   @extend %fixed-container;
   overflow: hidden;
 }
+body:after {
+  content: '';
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  background: linear-gradient(to bottom, #12181b, #000);
+  height: 300px;
+  z-index: -1;
+}
 .mono {
   font-family: $font-family-monospace;
 }
@@ -133,8 +144,21 @@ body {
 .rounded-5 {
   border-radius: .5rem;
 }
-
-
+.moon-text {
+  letter-spacing: 1px;
+  font-weight: bolder;
+  background-image: linear-gradient(to right, #901506, #EF5000);
+  -webkit-background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+}
+.moon-img {
+  width: 500px;
+  height: auto;
+}
+#app {
+  height: 100%;
+}
 //************* Mine *************/
 @import "table";
 

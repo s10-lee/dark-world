@@ -1,8 +1,8 @@
 <template>
-    <div class="container">
-      <div class="row">
-        <div class="col">
-          <h2 class="mt-5 fw-bold">Home Page</h2>
+    <div class="container h-100">
+      <div class="row justify-content-center align-items-end h-100">
+        <div class="col-auto h-100">
+          <img src="../assets/icon/moon.png" class="moon-img">
         </div>
       </div>
     </div>
