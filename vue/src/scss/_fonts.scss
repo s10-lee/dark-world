@@ -1,0 +1,39 @@
+@font-face {
+  font-family: 'Studio-Feixen-Sans';
+  src:
+    url("../assets/fonts/StudioFeixenSans-Regular.woff2") format("woff2"),
+    url("../assets/fonts/StudioFeixenSans-Regular.woff") format("woff"),
+    url("../assets/fonts/StudioFeixenSans-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Studio-Feixen-Sans';
+  src:
+    url("../assets/fonts/StudioFeixenSans-Bold.woff2") format("woff2"),
+    url("../assets/fonts/StudioFeixenSans-Bold.woff") format("woff"),
+    url("../assets/fonts/StudioFeixenSans-Bold.ttf") format("truetype");
+  font-weight: 800;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Studio-Feixen-Sans';
+  src:
+    url("../assets/fonts/StudioFeixenSans-Book.woff2") format("woff2"),
+    url("../assets/fonts/StudioFeixenSans-Book.woff") format("woff"),
+    url("../assets/fonts/StudioFeixenSans-Book.ttf") format("truetype");
+  font-weight: 100;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'JetBrainsMonoNL';
+  src:
+    url("../assets/fonts/JetBrainsMono-Regular.woff2") format("woff2"),
+    url("../assets/fonts/JetBrainsMono-Regular.woff") format("woff"),
+    url("../assets/fonts/JetBrainsMonoNL-Regular.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}

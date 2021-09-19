@@ -1,12 +1,14 @@
 echo "--- init ---"
 
-# ---- Cli
+# ---- cli
 if [ ! -f cli ]
 then
   cp app/cli/cmd.py ./cli
   chmod 0775 ./cli
   echo "+++ ./cli"
 fi
+
+
 # ---- Venv
 if [ ! -d venv ]
 then

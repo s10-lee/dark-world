@@ -1,5 +1,4 @@
-from fastapi import Request, Depends, APIRouter
-from fastapi.templating import Jinja2Templates
+from fastapi import Depends, APIRouter
 from fastapi.exceptions import HTTPException
 from datetime import datetime
 from uuid import UUID
@@ -17,12 +16,6 @@ from app.src.auth.services import (
 
 
 router = APIRouter()
-templates = Jinja2Templates(directory='app/src/user/templates')
-
-
-@router.get('/sign-up/{uid}/')
-async def signup_form(request: Request, uid: UUID = Depends(validate_signup)):
-    return templates.TemplateResponse('sign_up.html', {'request': request, 'uid': uid})
 
 
 @router.post('/sign-up/{uid}/')

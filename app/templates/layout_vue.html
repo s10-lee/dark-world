@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>.</title>
+    {% for url in styles %}<link type="text/css" media="all" rel="stylesheet" href="{{ url }}"/>{{ '\n' }}{% endfor %}
+</head>
+<body>
+<div id="app"></div>
+{% for url in scripts %}{{ '\n' }}<script type="text/javascript" src="{{ url }}"></script>{% endfor %}
+</body>
+</html>

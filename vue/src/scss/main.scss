@@ -1,0 +1,249 @@
+@import "init";
+
+
+
+
+// $btn-border-radius: 5px;
+// $btn-border-radius-sm: $btn-border-radius;
+// $btn-border-radius-lg: $btn-border-radius;
+
+
+@import "~bootstrap/scss/functions";
+@import "~bootstrap/scss/variables";
+@import "~bootstrap/scss/mixins";
+
+$body-bg: #f7f3eb;
+
+// scss-docs-start spacers
+$spacers: map-merge(
+    (
+        0: 0,
+        1: ($spacer * .25),
+        2: ($spacer * .5),
+        3: $spacer,
+        4: ($spacer * 1.5),
+        5: ($spacer * 3),
+        6: ($spacer * 5),
+        7: ($spacer * 7),
+        8: ($spacer * 10),
+        9: ($spacer * 13)
+    ),
+    $spacers
+);
+
+// Border radius
+$border-radius-xl: .5rem;
+$border-radius-xs: .125rem;
+
+/****************************************
+    Gray - Color, Background, Border
+*****************************************/
+
+@each $color, $value in $grays {
+    .bg-gray-#{$color} {
+        background-color: $value !important;
+    }
+    a.bg-gray-#{$color},
+    button.bg-gray-#{$color} {
+        background-color: darken($value, 10%) !important;
+    }
+    .border-#{$color} {
+        border-color: $value !important;
+    }
+    .text-#{$color} {
+        color: $value !important;
+    }
+}
+
+
+/********************************
+    Custom Selectors
+********************************/
+#page-loading {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: $zindex-tooltip + 10;
+    background-color: $body-bg;
+
+    display: flex;
+    justify-content: center;
+    justify-items: center;
+}
+
+
+@import "~bootstrap/scss/utilities";
+@import "~bootstrap/scss/utilities/api";
+
+@import "~bootstrap/scss/root";
+@import "~bootstrap/scss/reboot";
+@import "~bootstrap/scss/type";
+@import "~bootstrap/scss/images";
+@import "~bootstrap/scss/containers";
+@import "~bootstrap/scss/grid";
+
+/********************************
+    Additional Classes
+********************************/
+
+%fixed-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+}
+.fixed-container {
+    @extend %fixed-container;
+    overflow: hidden;
+}
+.fixed-container-scroll {
+    @extend %fixed-container;
+    overflow-y: scroll;
+}
+
+html, body {
+    -moz-text-size-adjust: 100%;
+    -webkit-text-size-adjust: 100%;
+    -ms-text-size-adjust: 100%;
+}
+body {
+    @extend %fixed-container;
+    overflow: hidden;
+}
+.mono {
+    font-family: $font-family-monospace;
+}
+.sans {
+    font-family: $font-family-sans-serif;
+}
+.text-pre {
+    white-space: pre;
+}
+.fs-7 {
+    font-size: .8125rem;
+}
+.fs-9 {
+    font-size: 1.125rem;
+}
+.rounded-4 {
+    border-radius: .4rem;
+}
+.rounded-5 {
+    border-radius: .5rem;
+}
+
+
+//************* Mine *************/
+@import "table";
+
+@import "~bootstrap/scss/forms";
+@import "~bootstrap/scss/buttons";
+//************* Mine *************/
+
+/*
+  $background,
+  $border,
+  $color,
+
+  $hover-background,
+  $hover-border,
+  $hover-color,
+
+  $active-background,
+  $active-border,
+  $active-color,
+
+  $disabled-background: $background,
+  $disabled-border: $border,
+  $disabled-color: color-contrast($disabled-background)
+
+*/
+@import "buttons";
+
+.btn-green {
+    @extend .btn;
+    @include button-variant(
+        $m-green, $m-green, $dark,
+        $l-green, $l-green, $dark,
+        $l-green, $l-green, $dark
+    );
+}
+
+.btn-yellow {
+    @extend .btn;
+    @include button-variant(
+        $m-yellow, $m-yellow, $dark,
+        $l-yellow, $l-yellow, $dark,
+        $l-yellow, $l-yellow, $dark
+    );
+}
+
+.btn-out {
+    @extend .btn;
+    @include button-variant(
+        transparent, $dark, $dark,
+        rgba($dark, .15), $dark, $dark,
+        rgba($dark, .15), $dark, $dark
+    );
+    &.invert {
+        @include button-variant(
+            transparent, $white, $white,
+            rgba($white, .15), $white, $white,
+            rgba($white, .15), $white, $white
+        );
+        &.h-green {
+            &:hover {
+                background-color: rgba($m-green, .15);
+                border-color: $m-green;
+            }
+        };
+        &.h-yellow {
+            &:hover {
+                background-color: rgba($m-yellow, .15);
+                border-color: $m-yellow;
+            }
+        }
+    }
+}
+
+.btn-dark {
+    &:hover, &:active, &:focus{
+        background-color: $dark-hover;
+        border-color: $dark-hover;
+    }
+}
+
+
+@import "~bootstrap/scss/transitions";
+@import "~bootstrap/scss/dropdown";
+@import "~bootstrap/scss/button-group";
+@import "~bootstrap/scss/nav";
+@import "~bootstrap/scss/navbar";
+@import "~bootstrap/scss/card";
+@import "~bootstrap/scss/accordion";
+@import "~bootstrap/scss/breadcrumb";
+@import "~bootstrap/scss/pagination";
+
+//************* Mine *************/
+// @import "pagination";
+
+@import "~bootstrap/scss/badge";
+@import "~bootstrap/scss/alert";
+@import "~bootstrap/scss/progress";
+@import "~bootstrap/scss/list-group";
+@import "~bootstrap/scss/close";
+@import "~bootstrap/scss/toasts";
+@import "~bootstrap/scss/modal";
+@import "~bootstrap/scss/tooltip";
+@import "~bootstrap/scss/popover";
+@import "~bootstrap/scss/carousel";
+@import "~bootstrap/scss/spinners";
+@import "~bootstrap/scss/offcanvas";
+@import "~bootstrap/scss/helpers";
+
+
+//************* Mine *************/
+@import "transitions";

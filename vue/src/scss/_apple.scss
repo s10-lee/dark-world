@@ -1,0 +1,148 @@
+
+
+/**************** Inter Font ****************/
+
+.inter {
+  text-transform: none;
+  text-decoration: none;
+  font-weight: 400;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  font-family: 'Inter', sans-serif;
+  // letter-spacing: -.011em;
+  font-feature-settings: "dlig" 0, "numr" 0, "dnom" 0, "tnum" 0, "case" 0, "zero" 0, "frac" 0, "sups" 0, "subs" 0, "cpsp" 0, "salt" 0, "ss01" 0, "ss02" 0, "ss03" 0, "cv01" 0, "cv02", "cv03", "cv04", "cv05" 0, "cv06" 0, "cv07" 0, "cv08" 0, "cv09", "cv10" 0, "cv11", "calt", "liga", "kern";
+  font-variant-ligatures: none;
+}
+
+
+
+/**************** Metallic Button ****************/
+$white: #fff;
+$black: #000;
+$worry: #E81999;
+$caution: #f25f25;
+
+
+$gray-600: #6c757d;
+$gray-700: #495057;
+$gray-800: #343a40;
+
+
+$border-radius-xl: .5rem;
+$border-radius-xs: .125rem;
+
+$apple-gradient: linear-gradient(300deg, #dedede, #f5f5f5);
+$apple-shadow: inset .2px -1px rgba($black, .1), 0 .5em .6em -.5em rgba($black, .2);
+$apple-shadow-hover: inset .2px -1px rgba($black, .35), 0 .5em .6em -.5em rgba($black, .7);
+$apple-btn-color: #4a4a4a;
+$apple-blue: #0574C8;
+$blue: #007bff;
+$sky: #0094ff;
+
+
+.btn-apple {
+  position: relative;
+  padding: .7125em 1.25em;
+  // height: 3em;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  background: linear-gradient(300deg, #dedede, #f5f5f5);
+  color: #4a4a4a;
+
+  @extend .inter;
+  font-weight: 600;
+  text-shadow: 1px 1px 0 $white;
+  border-radius: $border-radius-xl;
+  box-shadow: inset .2px -1px rgba($black, .1), 0 .5em .6em -.5em rgba($black, .2);
+  cursor: pointer;
+  user-select: none;
+  transition: all .4s ease-out;
+  z-index: 1;
+
+  &:after {
+    content: attr(data-text);
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    pointer-events: none;
+    // background: linear-gradient(300deg, darken($blue, 10) 20%, $sky);
+    background: linear-gradient(300deg, darken(#dedede, 5), darken(#f5f5f5, 6));
+    z-index: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: darken(#4a4a4a, 5);
+    opacity: 0;
+    text-shadow: 1px 1px 0 transparent;
+    transition: all .4s ease-out;
+  }
+
+  &:hover, &:active {
+    text-decoration: none;
+    box-shadow: inset .2px -1px rgba($black, .35), 0 .5em .6em -.5em rgba($black, .7);
+    &:after {
+      opacity: 1;
+    }
+  }
+
+  &.dark {
+    color: $white;
+    text-shadow: 1px 1px 0 $gray-800;
+    background: linear-gradient(120deg, $gray-600, $gray-700);
+    box-shadow: inset .2px -1px rgba($black, .4), 0 .5em .6em -.5em rgba($black, .5);
+    &:after {
+      color: $white;
+      background: linear-gradient(120deg, $gray-700, $gray-800);
+      text-shadow: 1px 1px 0 transparent;
+    }
+    &:hover, &:active {
+      box-shadow: inset .2px -1px rgba($black, .5), 0 .5em .6em -.4em rgba($black, .75);
+    }
+  }
+
+  &.worry {
+    color: $white;
+    text-shadow: 1px 1px 0 transparent;
+    background: linear-gradient(300deg, darken($worry, 10) 20%, $worry);
+
+    &:after {
+      color: $white;
+      background: #AE1373;
+      text-shadow: 1px 1px 0 transparent;
+    }
+  }
+
+  &.main {
+    color: $white;
+    text-shadow: 1px 1px 0 darken($blue, 10);
+    background: linear-gradient(300deg, darken($blue, 10) 25%, $sky);
+    box-shadow: inset .2px -1px rgba($black, .35), 0 .5em .6em -.5em rgba($black, .5);
+
+    &:after {
+      color: $white;
+      background: darken($blue, 10);
+      text-shadow: 1px 1px 0 transparent;
+    }
+    &:hover, &:active {
+      box-shadow: inset .2px -1px rgba($black, .5), 0 .5em .6em -.4em rgba($black, .75);
+    }
+  }
+
+
+  &.warn {
+    color: $white;
+    text-shadow: 1px 1px 0 transparent;
+    background: linear-gradient(300deg, darken($caution, 15) 20%, $caution);
+
+    &:after {
+      color: $white;
+      background: #c3431a;
+      text-shadow: 1px 1px 0 transparent;
+    }
+  }
+
+}

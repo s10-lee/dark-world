@@ -1,0 +1,62 @@
+@import "~bootstrap/scss/tables";
+
+.table {
+    margin-bottom: 1rem;
+    color: $gray-400 !important;
+    // background-color: #343a40 !important;
+}
+
+.table tbody.table-dark > * > * {
+    background-color: $gray-800;
+}
+
+.table tbody th, .table tbody td {
+    border: none;
+    padding: 15px 10px;
+    border-bottom: 3px solid #2b3035 !important;
+    font-size: 12px;
+    color: $gray-400;
+}
+
+.table thead.table-dark th {
+    border: none;
+    padding: 22px 10px 15px;
+    font-size: 12px;
+    color: $gray-500;
+    border-bottom: 4px solid $gray-900 !important;;
+}
+
+.table thead.table-sticky th {
+    position: sticky;
+    top: 0;
+}
+.table tfoot.table-sticky td {
+    position: sticky;
+    bottom: 0;
+}
+
+
+.table thead.table-dark th:first-child {
+    border-radius: .5rem 0 0 0;
+}
+.table thead.table-dark th:last-child {
+    border-radius: 0 .5rem 0 0;
+}
+
+.table thead th:first-child,
+.table tbody th {
+    padding-left: 2rem;
+}
+
+.table-hover tbody tr:hover {
+    cursor: pointer;
+}
+.table-hover tbody tr.no-hover:hover {
+    --bs-table-accent-bg: none;
+    cursor: auto;
+}
+
+
+.table tbody.table-dark tr.active > * {
+    background-color: $gray-700;
+}

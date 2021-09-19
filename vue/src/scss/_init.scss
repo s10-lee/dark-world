@@ -1,0 +1,61 @@
+@import "fonts";
+
+@import "~bootstrap/scss/functions";
+@import "~bootstrap/scss/variables";
+@import "~bootstrap/scss/mixins";
+
+// $blue: #007bb6;
+$green: #288603;
+$pink: #F0386B;
+$purple: #a221ad;
+$worry: #E81999;
+$orange: #f25f25;
+
+$brown-600: #59594A;
+$brown-900: #2E2E2E;
+$disabled-color: #e5e1da;
+
+$gray-50:  #F5F7FA;
+$gray-100: #E4E7EB;
+$gray-200: #CBD2D9;
+$gray-300: #9AA5B1;
+$gray-400: #7B8794;
+$gray-500: #616E7C;
+$gray-600: #52606D;
+$gray-700: #3E4C59;
+$gray-800: #323F4B;
+$gray-900: #1F2933;
+$gray-1000: #121212;
+
+/********************************
+    DataCamp Colors
+********************************/
+
+$l-green: #65ff8f;
+$m-green: #03ef62;
+
+$l-yellow: #ffec3c;
+$m-yellow: #fcce0d;
+
+$l-blue: #06bdfc;
+$m-blue: #009bd8;
+
+$dark: #05192d;
+$dark-hover: #213147;
+
+$font-family-sans-serif: 'Studio-Feixen-Sans', Arial, sans-serif;
+
+$link-color: #007bb6;
+$link-decoration: none;
+
+$btn-padding-y: .5rem;
+$btn-padding-x: 1.5rem;
+$btn-padding-y-sm: .35rem;
+$btn-padding-x-sm: 1.25rem;
+$btn-padding-y-lg: .75rem;
+$btn-padding-x-lg: 1.875rem;
+
+$btn-border-width: 2px;
+
+$btn-font-weight: bold;
+$btn-font-size-sm: .95rem;

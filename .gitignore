@@ -113,7 +113,6 @@ alembic/
 migrations/
 
 *.ini
-vue/
 redis.conf
 users.acl
 
@@ -121,3 +120,9 @@ users.acl
 *.crt
 *.key
 /cli
+
+# Frontend
+/stats
+/app/static/bundles
+vue/node_modules/
+vue/package-lock.json
