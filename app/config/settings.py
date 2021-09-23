@@ -2,10 +2,11 @@ import os
 from glob import glob
 
 DEBUG = os.getenv('DEBUG', False)
+MODE = os.getenv('MODE', False)
 APP_NAME = os.getenv('APP_NAME')
 DATABASE_URL = os.getenv('DATABASE_URL')
 JWT_SECRET = os.getenv('JWT_SECRET')
-SECRET_KEY = os.getenv('SECRET')
+SECRET_KEY = os.getenv('SECRET_KEY')
 ALGORITHM = os.getenv('ALGORITHM')
 INTERVAL = int(os.getenv('INTERVAL', 10))
 CORS_ALLOW_ORIGINS = [os.getenv('CORS_ALLOW_ORIGINS', '*')]

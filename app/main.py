@@ -13,6 +13,8 @@ cors_origins = [
     'https://d4rkvv0r1.de',
     'http://localhost',
     'http://localhost:8000',
+    'http://127.0.0.1',
+    'http://127.0.0.1:8000',
     'http://0.0.0.0',
     'http://0.0.0.0:8000'
 ]
@@ -39,7 +41,6 @@ async def redirect(code: str):
 
 app.include_router(web_router)
 app.include_router(api_router, prefix='/api/v1')
-
 
 
 register_tortoise(app, config=ORM)

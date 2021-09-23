@@ -1,6 +1,6 @@
 import axios from 'axios'
-const isProd = process.env.NODE_ENV === 'production';
-const baseApiUrl = isProd ? 'https://d4rkvv0r1.de/api/v1' : '/api/v1'
+// const isProd = process.env.NODE_ENV === 'production';
+const baseApiUrl = '/api/v1'
 
 // TODO: validation ?
 export const xhr = axios.create({baseURL: baseApiUrl, withCredentials: true})

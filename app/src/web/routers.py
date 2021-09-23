@@ -4,7 +4,7 @@ from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 from fastapi.exception_handlers import http_exception_handler
 from app.src.auth.services import validate_signup
-from app.config.settings import DEBUG
+from app.config.settings import DEBUG, MODE
 import json
 import os
 
@@ -31,9 +31,9 @@ web_router = APIRouter()
 #     return await http_exception_handler(request, exc)
 
 def get_vue() -> dict:
-    stats_file = 'stats/webpack-stats-prod.json'
-    if DEBUG:
-        stats_file = 'stats/webpack-stats.json'
+    stats_file = 'stats/webpack-stats.json'
+    if MODE:
+        stats_file = f'stats/webpack-stats-f{MODE}.json'
 
     stats_path = os.path.abspath(stats_file)
     styles = []

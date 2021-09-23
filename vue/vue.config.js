@@ -2,10 +2,15 @@ const path = require('path');
 const BundleTracker = require('webpack-bundle-tracker');
 // const MonacoWebpackPlugin = require('monaco-editor-webpack-plugin');
 
-const isProd = process.env.NODE_ENV === 'production';
+const isLocal = process.env.VUE_APP_MODE === 'local'
+const publicPath = process.env.VUE_APP_PUBLIC
+const statFile = process.env.VUE_APP_STAT_FILE
+
+console.log('process.env =', process.env)
+
 const statRoot = path.resolve(path.join(path.dirname(__dirname), 'stats'));
-const statFile = isProd ? 'webpack-stats-prod.json' : 'webpack-stats.json';
-const publicPath = isProd ? '/static/bundles/' : 'http://0.0.0.0:5050/';
+// const statFile = isProd ? 'webpack-stats-prod.json' : 'webpack-stats.json';
+// const publicPath = isProd ? '/static/bundles/' : 'http://0.0.0.0:5050/';
 const outputDir = path.resolve(path.join(path.dirname(statRoot), 'app/static/bundles'));
 
 
@@ -31,7 +36,7 @@ module.exports = {
         config.resolve.modules.add('./src');
         // config.resolve.modules.add(path.join(__dirname, 'src/views'));
 
-        if (!isProd) {
+        if (isLocal) {
             config.devServer
                 .public('http://0.0.0.0:5050')
                 .host('0.0.0.0').port(5050)
@@ -39,8 +44,7 @@ module.exports = {
                 .watchOptions({poll: 1000})
                 .https(false)
                 .headers({'Access-Control-Allow-Origin': ['*']})
-        }
-        if (isProd) {
+        } else {
             config.optimization.minimize(true)
         }
     }
