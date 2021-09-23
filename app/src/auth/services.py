@@ -85,7 +85,7 @@ async def authentication_user(data: UserCredentials):
     return user
 
 
-async def create_access_token(user: User) -> str:
+async def create_access_token(user: User):
     item = await APIKeys.first()
 
     private_key = crypto_serialization.load_pem_private_key(
@@ -121,7 +121,7 @@ async def client_token_response(user: User) -> JSONResponse:
     refresh_token = await create_refresh_token(user)
     access_token = await create_access_token(user)
     response = JSONResponse(content={
-        'access_token': access_token,
+        'access_token': access_token.decode('utf-8'),
     })
     seconds = refresh_token.expires()
     response.set_cookie(

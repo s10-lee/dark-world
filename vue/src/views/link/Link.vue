@@ -7,16 +7,15 @@
           <h2 class="fw-bold">{{ error.response.status }}</h2>
           <h3 class="fw-bolder">{{ error.response.statusText }}</h3>
         </div>
-        <div v-else-if="done" class="alert alert-success" role="alert">
-          <h3>Short url</h3>
-          <a href="#" @click="onCopy" class="copy-link h1 fw-bold">{{ origin + '/1/' + done.code }}</a>
+        <div v-else-if="done" class="mt-5 text-center">
+          <a href="#" @click="onCopy" class="color-text copy-link fs-3 fw-bold">{{ origin + '/1/' + done.code }}</a>
         </div>
         <form @submit.prevent.stop="onSubmit" v-else>
           <div class="mb-5">
-            <input type="text" v-model="fullurl" class="form-control form-control-lg d-block w-100" autocomplete="Off" spellcheck="false">
+            <input type="text" v-model="fullurl" class="form-control p-3 form-control-lg d-block w-100" placeholder="https://" autocomplete="Off" spellcheck="false">
           </div>
           <button class="btn mx-auto px-6 btn-lg btn-green d-block" type="submit">
-            submit
+            Make Short
           </button>
         </form>
         </transition>
@@ -71,7 +70,6 @@ export default {
     }
   },
   created() {
-    this.fullurl = 'https://www.google.com/search?q=dark+ui&rlz=1C5CHFA_enBY948BY948&oq=dark+ui&aqs=chrome.0.69i59j0i512l2j69i60j69i65l3j69i60.1773j0j7&sourceid=chrome&ie=UTF-8'
     this.origin = new URL(location.href).origin
   }
 }

@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Request, Depends, HTTPException, Response, FastAPI
 from fastapi.exceptions import StarletteHTTPException
-from fastapi.responses import HTMLResponse
+from fastapi.responses import HTMLResponse, RedirectResponse
+from app.src.link.routers import client_redirect
 from fastapi.templating import Jinja2Templates
 from fastapi.exception_handlers import http_exception_handler
 from app.src.auth.services import validate_signup
@@ -13,24 +14,29 @@ templates = Jinja2Templates(directory='app/templates')
 
 web_router = APIRouter()
 
+web = FastAPI(default_response_class=HTMLResponse)
 
-# @web_app.exception_handler(StarletteHTTPException)
-# async def custom_exception_handler(request: Request, exc: StarletteHTTPException):
-#     data = {
-#         'request': request,
-#         'exc': exc,
-#         **get_vue()
-#     }
-#
-#     print('exception', exc.detail)
-#     print(exc.status_code)
-#
-#     if exc.status_code == 404:
-#         return templates.TemplateResponse('layout_vue.html', data)
-#
-#     return await http_exception_handler(request, exc)
+
+@web.exception_handler(StarletteHTTPException)
+async def custom_exception_handler(request: Request, exc: StarletteHTTPException):
+    # TODO: Make middleware
+    # - for application/json return {"detail": "Not Found"}
+    # - */* return HTML template response (404)
+
+    data = {
+        'request': request,
+        'exc': exc,
+        **get_vue()
+    }
+
+    if exc.status_code == 404:
+        return templates.TemplateResponse('layout_vue.html', data)
+
+    return await http_exception_handler(request, exc)
+
 
 def get_vue() -> dict:
+    # TODO: Make Jinja plugin / helper
     stats_file = 'stats/webpack-stats.json'
     if MODE:
         stats_file = f'stats/webpack-stats-f{MODE}.json'
@@ -53,13 +59,19 @@ def get_vue() -> dict:
     return {'styles': styles, 'scripts': scripts}
 
 
-@web_router.get('/project', name='project test')
-@web_router.get('/l1nk', name='show form')
-@web_router.get('/', name='home')
+@web_router.get('/1/{code}', response_class=RedirectResponse)
+async def redirect(code: str):
+    return await client_redirect(code)
+
+
+@web_router.get('/l1nk', name='add short link', response_class=HTMLResponse)
+@web_router.get('/', name='home', response_class=HTMLResponse)
 async def show_client_layout(request: Request) -> templates.TemplateResponse:
     return templates.TemplateResponse('layout_vue.html', {'request': request, **get_vue()})
 
 
-@web_router.get('/sign-up/{uid}/')
+@web_router.get('/sign-up/{uid}/', response_class=HTMLResponse)
 async def signup_form(request: Request, uid: str = Depends(validate_signup)):
     return templates.TemplateResponse('sign_up.html', {'request': request, 'uid': uid})
+
+

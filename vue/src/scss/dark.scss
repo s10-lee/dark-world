@@ -158,6 +158,18 @@ body:after {
     color: #0b5a0f;
   }
 }
+.home-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  //background: transparent url("../assets/icon/moon.png") center center no-repeat;
+  //background-size: 100px;
+}
 .moon-img {
   width: 500px;
   height: auto;

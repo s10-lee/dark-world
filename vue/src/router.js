@@ -11,7 +11,7 @@ const routes = [
   {path: '/', component: Home},
   {path: '/n00b', component: Profile},
   {path: '/l1nk', component: Link},
-  {path: '/project/:pk?', component: Project, props: true},
+  {path: '/project', component: Project, props: true},
   {path: '/:pathMatch(.*)*', name: 'NotFound', component: NotFound, props: true},
 ]
 
