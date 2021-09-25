@@ -177,6 +177,15 @@ body:after {
 #app {
   height: 100%;
 }
+
+.color-text {
+  background-image: linear-gradient(90deg, #ff4088, #f44);
+  -webkit-background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+}
+
+
 //************* Mine *************/
 @import "table";
 

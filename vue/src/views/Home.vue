@@ -1,7 +1,5 @@
 <template>
-    <div class="home-container">
-      <small class="text-muted mono" style="font-size: 1rem;">whatever</small>
-    </div>
+    <div></div>
 </template>
 
 <script>

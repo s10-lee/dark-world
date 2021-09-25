@@ -1,6 +1,10 @@
 import json
+import asyncio
 import os
+import time
 from datetime import datetime
+from functools import wraps
+from app.db.utils import close_connections
 
 
 def chdir(path):
@@ -37,3 +41,32 @@ def import_driver(name, module="drivers"):
     parent = __import__(module, fromlist=[name])
     driver_module = getattr(parent, name)
     return driver_module.constructor
+
+
+def track_time(f):
+    @wraps(f)
+    def wrapper(*args, **kwargs):
+        start = time.time()
+        print('--- ', time.strftime('%H:%M:%S'), ' ---')
+        result = f(*args, **kwargs)
+        print(f'---  {round(time.time() - start, 2)} sec  ---')
+        print('--- ', time.strftime('%H:%M:%S'), ' ---')
+        return result
+    return wrapper
+
+
+def coro(function=None, keep_alive=False):
+    def decorate(f):
+        @wraps(f)
+        def wrapper(*args, **kwargs):
+            loop = asyncio.get_event_loop()
+            try:
+                loop.run_until_complete(f(*args, **kwargs))
+            finally:
+                if not keep_alive:
+                    loop.run_until_complete(close_connections())
+                loop.run_until_complete(asyncio.sleep(0.5))
+        return wrapper
+    if callable(function):
+        return decorate(function)
+    return decorate

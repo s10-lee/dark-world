@@ -1,5 +1,5 @@
-import asyncio
-from functools import wraps
+import os
+
 from aerich import Command, Migrate, Aerich
 from click import (
     group,
@@ -11,12 +11,15 @@ from click import (
     UsageError,
     echo,
     secho,
+    types
 )
 from app.src.auth.services import get_password_hash, generate_private_public_keys
 from app.src.user.models import User, Permission, RefreshToken
 from app.src.auth.models import APIKeys, SignUpToken
 from app.config.settings import ORM, DATABASE_URL
-
+from app.src.functions import track_time, coro
+from app.library.web import make_request_json
+from app.src.job.services import start_job, Job, Step, save_job_result
 from app.db.utils import (
     write_version_file,
     get_models_describe,
@@ -28,44 +31,12 @@ from datetime import datetime, timedelta
 from tortoise import Tortoise, generate_schema_for_client
 from tortoise.utils import get_schema_sql
 from pathlib import Path
-import time
-
 
 
 def validate_password(ctx, param, value):
     if len(value) < 6:
         raise UsageError('Must be greater than 6 characters', ctx=ctx)
     return value
-
-
-def track_time(f):
-    @wraps(f)
-    def wrapper(*args, **kwargs):
-        start = time.time()
-        print('--- ', time.strftime('%H:%M:%S'), ' ---')
-        result = f(*args, **kwargs)
-        print(f'---  {round(time.time() - start, 2)} sec  ---')
-        print('--- ', time.strftime('%H:%M:%S'), ' ---')
-        return result
-    return wrapper
-
-
-def coro(function=None, keep_alive=False):
-    def decorate(f):
-        @wraps(f)
-        def wrapper(*args, **kwargs):
-            loop = asyncio.get_event_loop()
-            try:
-                echo(f.__name__)
-                loop.run_until_complete(f(*args, **kwargs))
-            finally:
-                if not keep_alive:
-                    loop.run_until_complete(close_connections())
-                loop.run_until_complete(asyncio.sleep(0.5))
-        return wrapper
-    if callable(function):
-        return decorate(function)
-    return decorate
 
 
 @group(context_settings={'help_option_names': ['--help']})
@@ -78,6 +49,46 @@ async def cli(ctx: Context, location: str):
     command = Command(tortoise_config=ORM, location=location, app='models')
     ctx.obj['command'] = command
     await command.init()
+
+
+@cli.group(name='job')
+@coro(keep_alive=True)
+async def job_group():
+    pass
+
+
+@job_group.command(name='run')
+@option('--pk', required=True, type=types.INT)
+@coro(keep_alive=True)
+async def job_run(pk):
+    job = await Job.get(id=pk)
+    await job.fetch_related("steps")
+
+    basic_auth = os.getenv('REDDIT_BASIC_AUTH')
+    username = os.getenv('REDDIT_USERNAME')
+    password = os.getenv('REDDIT_PASSWORD')
+
+    kw = {
+        'method': 'POST',
+        'url': 'https://www.reddit.com/api/v1/access_token',
+        'headers': {'Authorization': f'Basic {basic_auth}'},
+        'data': {
+            'grant_type': 'password',
+            'username': username,
+            'password': password,
+        }
+    }
+    for step in job.steps:
+        print('------')
+        _locals = dict()
+        _globals = {
+            'make_request_json': make_request_json,
+            'save_job_result': save_job_result,
+        }
+        exec(step.code, _globals, _locals)
+        func = _locals['run']
+        print('func', func)
+        kw = await func(**kw)
 
 
 # @cli.command()
@@ -166,6 +177,7 @@ async def cli(ctx: Context, location: str):
 #         result = json.dumps(display_items, indent=4)
 #         print(result)
 #     print('--- ', length, 'items  ---')
+
 
 @cli.group(name='user')
 @pass_context

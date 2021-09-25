@@ -17,10 +17,11 @@ const store = createStore({
       state.loading = false
     },
     auth(state, payload) {
-      if (!!payload) {
-        state.user = payload
-      } else {
+      if (!payload) {
         state.user = null
+      } else {
+        state.user = payload
+
       }
     }
   }

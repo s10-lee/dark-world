@@ -44,3 +44,25 @@ CREATE TABLE IF NOT EXISTS "user_permission" (
     "permission_id" INT NOT NULL REFERENCES "permission" ("id") ON DELETE CASCADE,
     "user_id" UUID NOT NULL REFERENCES "user" ("id") ON DELETE CASCADE
 );
+
+
+CREATE TABLE IF NOT EXISTS "job" (
+    "id" SERIAL NOT NULL PRIMARY KEY,
+    "name" VARCHAR(255) NOT NULL,
+    "code" TEXT,
+    "user_id" UUID NOT NULL REFERENCES "user" ("id") ON DELETE CASCADE
+);;
+CREATE TABLE IF NOT EXISTS "job_result" (
+    "id" SERIAL NOT NULL PRIMARY KEY,
+    "data" JSONB,
+    "created_at" TIMESTAMPTZ NOT NULL  DEFAULT CURRENT_TIMESTAMP,
+    "job_id" INT NOT NULL REFERENCES "job" ("id") ON DELETE CASCADE
+);;
+CREATE TABLE IF NOT EXISTS "job_step" (
+    "id" SERIAL NOT NULL PRIMARY KEY,
+    "name" VARCHAR(255) NOT NULL,
+    "code" TEXT,
+    "data" JSONB,
+    "position" SMALLINT NOT NULL  DEFAULT 0,
+    "job_id" INT NOT NULL REFERENCES "job" ("id") ON DELETE CASCADE
+)

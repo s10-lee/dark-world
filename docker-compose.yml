@@ -12,7 +12,7 @@ services:
     env_file:
       - .env.dev
     volumes:
-      - postgres-data:/var/lib/postgresql/data/
+      - postgres_data:/var/lib/postgresql/data/
     networks:
       - local_net
 
@@ -36,7 +36,7 @@ services:
     env_file:
       - .env.dev
     volumes:
-      - static-files:/app/static
+      - static_files:/app/static
     ports:
       - 8000:8000
     depends_on:
@@ -52,10 +52,10 @@ services:
     env_file:
       - .env.dev
     volumes:
-      - static-files:/app/static
-      - web-root:/usr/share/nginx/html
-      - certbot-etc:/etc/letsencrypt
-      - certbot-var:/var/lib/letsencrypt
+      - static_files:/app/static
+      - web_root:/usr/share/nginx/html
+      - certbot_etc:/etc/letsencrypt
+      - certbot_var:/var/lib/letsencrypt
     ports:
       - 80:80
       - 443:443
@@ -70,8 +70,8 @@ networks:
 
 
 volumes:
-  static-files:
-  postgres-data:
-  web-root:
-  certbot-etc:
-  certbot-var:
+  static_files:
+  postgres_data:
+  web_root:
+  certbot_etc:
+  certbot_var:

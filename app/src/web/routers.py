@@ -5,7 +5,7 @@ from app.src.link.routers import client_redirect
 from fastapi.templating import Jinja2Templates
 from fastapi.exception_handlers import http_exception_handler
 from app.src.auth.services import validate_signup
-from app.config.settings import DEBUG, MODE
+from app.config.settings import MODE
 import json
 import os
 
@@ -44,17 +44,20 @@ def get_vue() -> dict:
     stats_path = os.path.abspath(stats_file)
     styles = []
     scripts = []
-    if os.path.exists(stats_path):
-        with open(stats_path) as fp:
-            data = json.load(fp)
-            public_path = data['publicPath']
-            for app_name in data['chunks']:
-                for chunk in data['chunks'][app_name]:
-                    file_name = chunk['name']
-                    if file_name[-4:] == '.css':
-                        styles.append(public_path + file_name)
-                    if file_name[-3:] == '.js' and '.hot' not in file_name:
-                        scripts.append(public_path + file_name)
+
+    if not os.path.exists(stats_path):
+        raise FileNotFoundError
+
+    with open(stats_path) as fp:
+        data = json.load(fp)
+        public_path = data['publicPath']
+        for app_name in data['chunks']:
+            for chunk in data['chunks'][app_name]:
+                file_name = chunk['name']
+                if file_name[-4:] == '.css':
+                    styles.append(public_path + file_name)
+                if file_name[-3:] == '.js' and '.hot' not in file_name:
+                    scripts.append(public_path + file_name)
 
     return {'styles': styles, 'scripts': scripts}
 
