@@ -18,8 +18,7 @@ from app.src.user.models import User, Permission, RefreshToken
 from app.src.auth.models import APIKeys, SignUpToken
 from app.config.settings import ORM, DATABASE_URL
 from app.src.functions import track_time, coro
-from app.library.web import make_request_json
-from app.src.job.services import start_job, Job, Step, save_job_result
+from app.src.job.services import start_job
 from app.db.utils import (
     write_version_file,
     get_models_describe,
@@ -61,34 +60,7 @@ async def job_group():
 @option('--pk', required=True, type=types.INT)
 @coro(keep_alive=True)
 async def job_run(pk):
-    job = await Job.get(id=pk)
-    await job.fetch_related("steps")
-
-    basic_auth = os.getenv('REDDIT_BASIC_AUTH')
-    username = os.getenv('REDDIT_USERNAME')
-    password = os.getenv('REDDIT_PASSWORD')
-
-    kw = {
-        'method': 'POST',
-        'url': 'https://www.reddit.com/api/v1/access_token',
-        'headers': {'Authorization': f'Basic {basic_auth}'},
-        'data': {
-            'grant_type': 'password',
-            'username': username,
-            'password': password,
-        }
-    }
-    for step in job.steps:
-        print('------')
-        _locals = dict()
-        _globals = {
-            'make_request_json': make_request_json,
-            'save_job_result': save_job_result,
-        }
-        exec(step.code, _globals, _locals)
-        func = _locals['run']
-        print('func', func)
-        kw = await func(**kw)
+    await start_job(pk)
 
 
 # @cli.command()
