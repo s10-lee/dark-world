@@ -4,6 +4,7 @@ from tortoise.fields import (
     CharField,
     DatetimeField,
     CharEnumField,
+    BooleanField,
     TextField,
     JSONField,
     ForeignKeyField,
@@ -14,6 +15,11 @@ from tortoise.fields import (
 from app.db.fields import IPAddressField, UUIDField
 from app.src.user.models import User
 from enum import Enum
+
+class CONVERT(str, Enum):
+    JSON = "JSON"
+    XML = "XML"
+    HTML = "HTML"
 
 
 class METHODS(str, Enum):
@@ -53,6 +59,7 @@ class GrabberRequest(Model):
         'models.GrabberRequest', related_name="children", null=True
     )
     children: ReverseRelation['GrabberRequest']
+    parsers: ReverseRelation['GrabberParser']
 
     class Meta:
         table = 'grab_request'
@@ -70,6 +77,20 @@ class GrabberResponse(Model):
     class Meta:
         ordering = ("-id", )
         table = 'grab_request_response'
+
+
+class GrabberParser(Model):
+    id = IntField(pk=True)
+    rule = CharField(255)
+    keys = JSONField(null=True)
+    variables = JSONField(null=True)
+    convert_type: CONVERT = CharEnumField(CONVERT, default=CONVERT.JSON)
+    one = BooleanField(default=False)
+
+    request: ForeignKeyRelation[GrabberRequest] = ForeignKeyField('models.GrabberRequest', 'parsers')
+
+    class Meta:
+        table = 'grab_parser'
 
 # class Proxy(Model):
 #     id = UUIDField(pk=True)

@@ -13,7 +13,6 @@ async def make_request(decoder: callable = None, **kwargs):
         async with session.request(ssl=False, **kwargs) as resp:
             text = await resp.text()
             return {
-                # 'request_info': resp.request_info,
                 'status': resp.status,
                 'headers': dict(resp.headers),
                 'content_type': resp.content_type,

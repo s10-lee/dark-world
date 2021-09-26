@@ -1,5 +1,7 @@
 import os
 import orjson
+import xmltodict
+from jsonpath_ng import parse
 from aerich import Command, Migrate, Aerich
 from click import (
     group,
@@ -58,6 +60,57 @@ async def grab_group():
     pass
 
 
+@grab_group.command(name='test')
+@option('-i', '--id', 'pk', required=True, type=types.INT)
+@option('-f', '--find', 'find', required=False, type=types.STRING)
+@option('-o', '--one', required=False, type=types.STRING)
+@option('-k', '--key', 'keys', multiple=True, required=False, type=types.STRING)
+@coro(keep_alive=True)
+async def grab_test(pk, find, one, keys):
+    resp = await GrabberResponse.get(id=pk)
+    result = dict()
+
+    i = 0
+    jsonpath_expr = parse(find)
+    for match in jsonpath_expr.find(resp.json):
+        parsed = match.value
+        path = str(match.path)
+        print(' ')
+        print(i)
+        print('PATH =', path)
+        if isinstance(parsed, dict) and keys:
+            _item = dict()
+            for k in keys:
+                _item[k] = parsed[k]
+        else:
+            _item = parsed
+
+        if path not in result.keys():
+            result[path] = list()
+
+        result[path].append(_item)
+
+        i += 1
+
+    # parsed = [match.value for match in jsonpath_expr.find(resp.json)]
+    # print(len(parsed))
+    # if one:
+    #     result[one] = parsed[0]
+    # else:
+    #     result = parsed
+
+    if isinstance(result, dict):
+        print('DICT:')
+        # if result:
+        #     print(result.popitem())
+    if isinstance(result, list):
+        print('LIST:')
+        # if result:
+        #     print(result[0])
+    print(' ')
+    print(result, '\n\n\r')
+
+
 @grab_group.command(name='project')
 @option('-u', '--username', required=True)
 @option('-s', '--slug', required=True)
@@ -101,13 +154,14 @@ async def grab_run(project_id, request_id, var):
 
     resp_json = None
     for request in project.requests:
+        await request.fetch_related('parsers')
 
         # Filter by Request ID
         if request_id and request_id != request.id:
             continue
 
-        if resp_json:
-            variables.update(resp_json)
+        # if resp_json:
+        #     variables.update(resp_json)
 
         url = replace_variables(request.url, variables)
         headers = None
@@ -131,27 +185,58 @@ async def grab_run(project_id, request_id, var):
             'data': data,
         }
 
-        resp_dict = await make_request(**prepared)
+        resp = await make_request(**prepared)
 
         print(' ----->  Request  ')
         print('Headers:', headers)
 
-        print(' ----->  Response  ')
-        print(resp_dict['status'], url)
-        print(resp_dict['content_type'])
-
-        resp_json = None
-        if 'json' in resp_dict['content_type']:
-            resp_json = orjson.loads(resp_dict['data'])
+        print(' ----->  Response  ', resp['content_type'])
+        print(resp['status'], url)
 
         response = GrabberResponse(request=request,
-                                   headers=resp_dict['headers'],
-                                   data=resp_dict['data'],
-                                   status=resp_dict['status'],
-                                   json=resp_json)
+                                   headers=resp['headers'],
+                                   data=resp['data'],
+                                   status=resp['status'])
+
+        for parser in request.parsers:
+            if 'JSON' == parser.convert_type:
+                source = orjson.loads(resp['data'])
+            elif 'XML' == parser.convert_type:
+                source = xmltodict.parse(resp['data'])
+            else:
+                continue
+
+            result = dict()
+            to_vars = parser.variables
+            jsonpath_expr = parse(parser.rule)
+
+            for match in jsonpath_expr.find(source):
+                parsed = match.value
+                path = str(match.path)
+                print('path =', path)
+                if isinstance(parsed, dict) and parser.keys:
+                    _item = dict()
+                    for k in parser.keys:
+                        _item[k] = parsed[k]
+                        if to_vars and k in to_vars:
+                            variables[k] = parsed[k]
+
+                else:
+                    _item = parsed
+                # TODO: Add field to Parser Table -> variables(access_token, some_thing)
+
+                if path not in result.keys():
+                    result[path] = list()
+
+                if parser.one:
+                    result = _item
+                else:
+                    result[path].append(_item)
+
+            response.json = result
+
         await response.save()
 
-    print(' ')
 
 
 @grab_group.command(name='req')
