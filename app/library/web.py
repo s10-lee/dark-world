@@ -15,7 +15,7 @@ async def make_request(decoder: callable = None, **kwargs):
             return {
                 # 'request_info': resp.request_info,
                 'status': resp.status,
-                'headers': resp.headers,
+                'headers': dict(resp.headers),
                 'content_type': resp.content_type,
                 'data': decoder(text) if decoder else text
             }

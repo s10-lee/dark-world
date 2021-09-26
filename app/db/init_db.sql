@@ -1,4 +1,5 @@
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+CREATE EXTENSION IF NOT EXISTS "pgcrypto";
 
 CREATE TABLE IF NOT EXISTS "key_pair" (
     "id" SERIAL NOT NULL PRIMARY KEY,
@@ -45,6 +46,7 @@ CREATE TABLE IF NOT EXISTS "user_permission" (
     "user_id" UUID NOT NULL REFERENCES "user" ("id") ON DELETE CASCADE
 );
 
+--- JOB ---
 
 CREATE TABLE IF NOT EXISTS "job" (
     "id" SERIAL NOT NULL PRIMARY KEY,
@@ -65,4 +67,28 @@ CREATE TABLE IF NOT EXISTS "job_step" (
     "data" JSONB,
     "position" SMALLINT NOT NULL  DEFAULT 0,
     "job_id" INT NOT NULL REFERENCES "job" ("id") ON DELETE CASCADE
-)
+);
+
+
+--- GRABBER ---
+
+CREATE TABLE IF NOT EXISTS "grab_project" (
+    "id" UUID NOT NULL DEFAULT gen_random_uuid() PRIMARY KEY,
+    "slug" VARCHAR(50) NOT NULL UNIQUE,
+    "name" VARCHAR(200) NOT NULL  DEFAULT '',
+    "created_at" TIMESTAMPTZ NOT NULL  DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMPTZ NOT NULL  DEFAULT CURRENT_TIMESTAMP,
+    "user_id" UUID NOT NULL REFERENCES "user" ("id") ON DELETE CASCADE
+);
+CREATE TABLE IF NOT EXISTS "grab_request" (
+    "id" SERIAL NOT NULL PRIMARY KEY,
+    "name" VARCHAR(200) NOT NULL  DEFAULT '',
+    "method" VARCHAR(7) NOT NULL  DEFAULT 'GET',
+    "url" VARCHAR(255) NOT NULL,
+    "params" JSONB,
+    "headers" JSONB,
+    "data" JSONB,
+    "parent_id" INT REFERENCES "grab_request" ("id") ON DELETE CASCADE,
+    "project_id" INT NOT NULL REFERENCES "grab_project" ("id") ON DELETE CASCADE
+);
+COMMENT ON COLUMN "grab_request"."method" IS 'HEAD: HEAD\nOPTIONS: OPTIONS\nGET: GET\nPUT: PUT\nPOST: POST\nPATCH: PATCH\nDELETE: DELETE';

@@ -9,4 +9,6 @@ psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" --dbname "$POSTGRES_DB" <<-E
     ALTER ROLE ${DB_USER} SET client_encoding TO 'utf8';
     ALTER ROLE ${DB_USER} SET default_transaction_isolation TO 'read committed';
     ALTER ROLE ${DB_USER} SET timezone TO '${TIME_ZONE}';
+    CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+    CREATE EXTENSION IF NOT EXISTS "pgcrypto";
 EOSQL

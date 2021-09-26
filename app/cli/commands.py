@@ -1,5 +1,5 @@
 import os
-
+import orjson
 from aerich import Command, Migrate, Aerich
 from click import (
     group,
@@ -13,9 +13,11 @@ from click import (
     secho,
     types
 )
+from app.library.web import make_request_json, make_request
 from app.src.auth.services import get_password_hash, generate_private_public_keys
 from app.src.user.models import User, Permission, RefreshToken
 from app.src.auth.models import APIKeys, SignUpToken
+from app.src.grabber.models import GrabberProject, GrabberRequest, GrabberResponse
 from app.config.settings import ORM, DATABASE_URL
 from app.src.functions import track_time, coro
 from app.src.job.services import start_job
@@ -48,6 +50,136 @@ async def cli(ctx: Context, location: str):
     command = Command(tortoise_config=ORM, location=location, app='models')
     ctx.obj['command'] = command
     await command.init()
+
+
+@cli.group(name='grab')
+@coro(keep_alive=True)
+async def grab_group():
+    pass
+
+
+@grab_group.command(name='project')
+@option('-u', '--username', required=True)
+@option('-s', '--slug', required=True)
+@option('-n', '--name', default='')
+@coro(keep_alive=True)
+async def grab_project(username: str, slug: str, name: str = ''):
+    user = await User.get_or_none(username=username)
+    if not user:
+        return secho(f'User with name "{username}" not found', fg='yellow', bold=True)
+
+    try:
+        project = GrabberProject(name=name, slug=slug, user=user)
+        await project.save()
+    except Exception as e:
+        return secho(f'Error {e}', fg='red', bold=True)
+    secho(f'Project {project.id} was created', fg='green', bold=True)
+
+
+@grab_group.command(name='run')
+@option('-p', '--project', 'project_id', required=True, type=types.INT)
+@option('-r', '--request', 'request_id', default=None, type=types.INT)
+@option('-v', '--var', nargs=2, multiple=True, type=(str, str), required=False)
+@coro(keep_alive=True)
+async def grab_run(project_id, request_id, var):
+
+    project = await GrabberProject.get_or_none(id=project_id)
+    if not project:
+        return secho(f'Project ID {project.id} not found', fg='yellow', bold=True)
+
+    await project.fetch_related('requests')
+
+    # Set variables
+    variables = dict()
+    for name, value in var:
+        variables[name] = value
+
+    def replace_variables(string_value: str, local_variables: dict):
+        for search, replace in local_variables.items():
+            string_value = string_value.replace('{' + search + '}', str(replace))
+        return string_value
+
+    resp_json = None
+    for request in project.requests:
+
+        # Filter by Request ID
+        if request_id and request_id != request.id:
+            continue
+
+        if resp_json:
+            variables.update(resp_json)
+
+        url = replace_variables(request.url, variables)
+        headers = None
+
+        if request.headers:
+            headers = {name: replace_variables(value, variables) for name, value in request.headers.items()}
+
+        params = None
+        if request.params:
+            params = {name: replace_variables(value, variables) for name, value in request.params.items()}
+
+        data = None
+        if request.data:
+            data = {name: replace_variables(value, variables) for name, value in request.data.items()}
+
+        prepared = {
+            'method': request.method,
+            'url': url,
+            'headers': headers,
+            'params': params,
+            'data': data,
+        }
+
+        resp_dict = await make_request(**prepared)
+
+        print(' ----->  Request  ')
+        print('Headers:', headers)
+
+        print(' ----->  Response  ')
+        print(resp_dict['status'], url)
+        print(resp_dict['content_type'])
+
+        resp_json = None
+        if 'json' in resp_dict['content_type']:
+            resp_json = orjson.loads(resp_dict['data'])
+
+        response = GrabberResponse(request=request,
+                                   headers=resp_dict['headers'],
+                                   data=resp_dict['data'],
+                                   status=resp_dict['status'],
+                                   json=resp_json)
+        await response.save()
+
+    print(' ')
+
+
+@grab_group.command(name='req')
+@option('-p', '--project', 'project_id', required=True, type=types.INT)
+@option('-m', '--method', default='get')
+@option('--url', required=True)
+@option('--name', default='')
+@option('--parent', 'parent_id', default=None, type=types.INT)
+@coro(keep_alive=True)
+async def grab_request(project_id: int, method: str, url: str, name: str, parent_id: int = None):
+    project = await GrabberProject.get_or_none(id=project_id)
+    if not project:
+        return secho(f'Project ID {project.id} not found', fg='yellow', bold=True)
+
+    parent = None
+    if parent_id:
+        parent = await GrabberRequest.filter(id=parent_id, project_id=project_id).first()
+        if not parent:
+            return secho(f'Parent Request {parent.id} not found', fg='yellow', bold=True)
+
+    method = method.upper()
+
+    try:
+        request = GrabberRequest(name=name, method=method, url=url, project=project, parent=parent)
+        await request.save()
+    except Exception as e:
+        return secho(f'Error {e}', fg='red', bold=True)
+    secho(f'Request {project.id} was created', fg='green', bold=True)
 
 
 @cli.group(name='job')

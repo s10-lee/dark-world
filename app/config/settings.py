@@ -37,6 +37,7 @@ APPS_MODELS = [
     'app.src.user.models',
     'app.src.link.models',
     'app.src.job.models',
+    'app.src.grabber.models',
     'aerich.models'
 ]
 
