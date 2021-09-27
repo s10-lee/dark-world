@@ -5,7 +5,7 @@ from cryptography.hazmat.primitives.asymmetric import rsa
 from cryptography.hazmat.backends import default_backend as crypto_default_backend
 from passlib.context import CryptContext
 from fastapi.responses import JSONResponse
-from fastapi import HTTPException, Security, status, Cookie
+from fastapi import HTTPException, Security, status, Cookie, Depends
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from app.src.user.models import User, RefreshToken
 from app.src.user.schemas import UserCredentials
@@ -83,6 +83,10 @@ async def authentication_user(data: UserCredentials):
     await user.fetch_related('perms')
     await user.logged()
     return user
+
+
+async def current_auth_user(user_data: dict = Depends(auth_wrapper)) -> User:
+    return await User.get(id=user_data['sub'])
 
 
 async def create_access_token(user: User):

@@ -28,7 +28,7 @@ APP_PARAMS = {
 }
 
 
-def auto_models():
+def auto_load_models():
     return [model[:-3].replace('/', '.') for model in glob('app/src/*/models.py')]
 
 
@@ -36,8 +36,7 @@ APPS_MODELS = [
     'app.src.auth.models',
     'app.src.user.models',
     'app.src.link.models',
-    'app.src.job.models',
-    'app.src.grabber.models',
+    'app.src.grab.models',
     'aerich.models'
 ]
 

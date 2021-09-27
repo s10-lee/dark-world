@@ -12,6 +12,7 @@ from app.src.auth.services import (
     auth_check_refresh,
     auth_wrapper,
     get_password_hash,
+    current_auth_user,
 )
 
 
@@ -43,7 +44,7 @@ async def auth_refresh_token(user: User = Depends(auth_check_refresh)):
 
 
 @router.get('/profile/')
-async def user_profile(user: User = Depends(auth_wrapper)):
+async def user_profile(user: User = Depends(current_auth_user)):
     return {'access': 'yes', 'user': user.username}
 
 
