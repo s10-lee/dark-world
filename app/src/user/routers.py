@@ -45,6 +45,6 @@ async def auth_refresh_token(user: User = Depends(auth_check_refresh)):
 
 @router.get('/profile/')
 async def user_profile(user: User = Depends(current_auth_user)):
-    return {'access': 'yes', 'user': user.username}
+    return {'access': 'yes', 'user': user.username, 'uid': user.id}
 
 

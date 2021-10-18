@@ -2,11 +2,8 @@ import { createApp, h } from 'vue'
 import App from './App.vue'
 import router from 'router'
 import store from 'store'
-
-import BLink from 'components/BLink'
-import BLoading from 'components/BLoading'
-import BNavbar from 'components/BNavbar'
-import 'scss/dark.scss'
+import {registerComponents} from 'components';
+import 'scss/main.scss'
 
 const app = createApp({
     render() {
@@ -14,9 +11,6 @@ const app = createApp({
     }
 }).use(router).use(store)
 
-
-app.component('b-link', BLink)
-app.component('b-loading', BLoading)
-app.component('b-navbar', BNavbar)
+registerComponents(app)
 
 app.mount('#app')

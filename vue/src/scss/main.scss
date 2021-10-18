@@ -1,18 +1,8 @@
 @import "init";
 
-
-
-
-// $btn-border-radius: 5px;
-// $btn-border-radius-sm: $btn-border-radius;
-// $btn-border-radius-lg: $btn-border-radius;
-
-
 @import "~bootstrap/scss/functions";
 @import "~bootstrap/scss/variables";
 @import "~bootstrap/scss/mixins";
-
-$body-bg: #f7f3eb;
 
 // scss-docs-start spacers
 $spacers: map-merge(
@@ -31,9 +21,6 @@ $spacers: map-merge(
     $spacers
 );
 
-// Border radius
-$border-radius-xl: .5rem;
-$border-radius-xs: .125rem;
 
 /****************************************
     Gray - Color, Background, Border
@@ -112,6 +99,7 @@ html, body {
 body {
     @extend %fixed-container;
     overflow: hidden;
+    -webkit-font-smoothing: antialiased;
 }
 .mono {
     font-family: $font-family-monospace;

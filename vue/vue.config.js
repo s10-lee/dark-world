@@ -34,7 +34,7 @@ module.exports = {
 
         // config.resolve.alias.set('__STATIC__', 'static');
         config.resolve.modules.add('./src');
-        // config.resolve.modules.add(path.join(__dirname, 'src/views'));
+        config.resolve.modules.add(path.join(__dirname, 'src/components'));
 
         if (isLocal) {
             config.devServer

@@ -1,18 +1,19 @@
-from fastapi import Depends, APIRouter, Request, Response
+from fastapi import Depends, APIRouter
 from fastapi.exceptions import HTTPException
 from datetime import datetime
-from typing import Optional, List
+from typing import Optional
 from uuid import UUID
-from app.src.grab.models import Project, ProjectStep, User
-from app.src.grab.schemas import CreateProject, ReceiveProject, ListProject
-from app.src.auth.services import (
-    validate_signup,
-    authentication_user,
-    client_token_response,
-    auth_check_refresh,
-    auth_wrapper,
-    current_auth_user,
+from app.library.routers import CRUDRouter
+from app.src.grab.models import Project, ProjectStep, User, Request
+from app.src.grab.schemas import (
+    CreateProject,
+    ReceiveProject,
+    ListProject,
+    RequestSchemaCreate,
+    RequestSchemaReceive,
+    RequestSchemaList,
 )
+from app.src.auth.services import current_auth_user
 
 
 router = APIRouter(tags=['Web Scraping'])
@@ -47,5 +48,24 @@ async def destroy_project(uid: UUID, user: User = Depends(current_auth_user)):
     obj = await Project.filter(uid=uid, user=user).delete()
     if not obj:
         raise HTTPException(404, 'Object does not exist')
-    return {'detail': 'Object was deleted'}
+    return obj
+
+
+router_request = CRUDRouter(
+    model=Request,
+    lookup_field='uid',
+    tags=['Request'],
+    schema=RequestSchemaReceive,
+    schema_in=RequestSchemaCreate,
+    schema_list=RequestSchemaList,
+)
+
+# dependencies=[Depends(current_auth_user)]
+
+router.include_router(router_request, prefix='/request')
+
+# def create_crud_endpoint():
+#     return {'CRUD': 'Yeeeessss!!'}
+#
+# router.add_api_route('/crud/', create_crud_endpoint)
 

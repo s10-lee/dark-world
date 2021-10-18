@@ -17,6 +17,8 @@ from app.db.fields import IPAddressField, UUIDField
 from uuid import uuid4
 from app.src.user.models import User
 from enum import Enum
+from app.src.functions import init_models
+
 
 
 class TYPES(str, Enum):
@@ -33,7 +35,7 @@ class METHODS(str, Enum):
     DELETE = "DELETE"
 
 
-class UUIDMixin(Model):
+class PkMixin(Model):
     id = IntField(pk=True)
     uid = UUIDField(default=uuid4, unique=True)
 
@@ -49,7 +51,7 @@ class DTMixin(Model):
         abstract = True
 
 
-class BaseModel(UUIDMixin, DTMixin):
+class BaseModel(PkMixin, DTMixin):
     class Meta:
         abstract = True
 
@@ -84,6 +86,7 @@ class ProjectStep(BaseModel, NameSlugActiveMixin):
     )
     children: ReverseRelation['ProjectStep']
 
+
     class Meta:
         table = 'ws_project_step'
 
@@ -114,7 +117,7 @@ class Parser(BaseModel, NameSlugActiveMixin):
         table = 'ws_parser'
 
 
-class HttpRequestResponse(UUIDMixin):
+class HttpRequestResponse(PkMixin):
     method: METHODS = CharEnumField(METHODS, default=METHODS.GET)
     url = CharField(500)
     headers = JSONField(null=True)
@@ -140,3 +143,6 @@ class HttpRequestResponse(UUIDMixin):
 #
 #     class Meta:
 #         table = 'proxy'
+
+
+init_models(['app.src.grab.models'])

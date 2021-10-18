@@ -4,7 +4,6 @@ import re
 import sys
 from pathlib import Path
 from typing import Dict, Union
-
 from click import BadOptionUsage, ClickException, Context
 from tortoise import BaseDBAsyncClient, Tortoise
 

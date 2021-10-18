@@ -4,7 +4,15 @@ import os
 import time
 from datetime import datetime
 from functools import wraps
+from tortoise import Tortoise
 from app.db.utils import close_connections
+from typing import Union
+
+
+def init_models(models: Union[str, list[str]]):
+    if isinstance(models, str):
+        models = [models]
+    Tortoise.init_models(models, 'models')
 
 
 def chdir(path):

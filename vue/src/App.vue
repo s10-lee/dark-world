@@ -8,8 +8,7 @@
   </router-view>
 </template>
 <script>
-import BNavbar from "./components/BNavbar";
 export default {
-  components: {BNavbar}
+
 }
 </script>

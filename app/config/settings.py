@@ -37,7 +37,6 @@ APPS_MODELS = [
     'app.src.user.models',
     'app.src.link.models',
     'app.src.grab.models',
-    'aerich.models'
 ]
 
 ORM = {
@@ -46,7 +45,7 @@ ORM = {
     },
     'apps': {
         'models': {
-            'models': APPS_MODELS,
+            'models': APPS_MODELS + ['aerich.models'],
             'default_connection': 'default',
         },
     },
