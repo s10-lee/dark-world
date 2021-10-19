@@ -43,7 +43,7 @@
 </template>
 
 <script>
-import BInputPair from "blocks/BInputPair";
+import BInputPair from 'blocks/BInputPair';
 export default {
   components: {
     BInputPair

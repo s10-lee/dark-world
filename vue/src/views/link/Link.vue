@@ -25,7 +25,7 @@
 </template>
 
 <script>
-import {xhr} from 'services'
+import { postApiCall } from 'services/http'
 
 export default {
   name: "Link",
@@ -54,7 +54,8 @@ export default {
           const re = new RegExp(expression);
 
           if (re.test(this.fullurl)) {
-            xhr.post('/link/', {url: parsedUrl}).then(r => r.data).then(data => {this.done = data
+            postApiCall('/link/', {url: parsedUrl}).then(data => {
+              this.done = data
             }).catch(e => {
               this.error = e
             })

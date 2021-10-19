@@ -6,13 +6,14 @@
 export default {
   name: 'BBtn',
   props: {
+    block: Boolean,
     size: String,
     variant: String,
   },
   data() {
     return {
       sizes: ['xl', 'lx', 'md', 'sm', 'xl'],
-      variants: ['primary', 'secondary', 'success', 'warning', 'danger', 'info'],
+      variants: ['primary', 'secondary', 'success', 'warning', 'danger', 'info', 'dark'],
       variants2: ['green', 'yellow', 'out']
     }
   },
@@ -27,6 +28,9 @@ export default {
       }
       if (this.sizes.includes(this.size)) {
         styles.push('btn-' + this.size)
+      }
+      if (this.block) {
+        styles.push('btn-block')
       }
 
       return styles

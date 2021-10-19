@@ -9,71 +9,71 @@ from app.src.grab.models import User
 from app.src.auth.services import current_auth_user
 
 
-class ModelViewSet:
-    lookup_field: str = 'pk'
-    model: Union[MODEL, Any] = None
-    schema: PydanticModel = None
-    schema_in: PydanticModel = None
-    schema_list: PydanticListModel = None
-
-    def __init__(self,
-                 model: Any,
-                 lookup_field: str = None,
-                 schema: PydanticModel = None,
-                 schema_in: PydanticModel = None,
-                 schema_list: PydanticListModel = None,
-                 api_router: APIRouter = None,
-                 **kwargs):
-
-        if model:
-            self.model = model
-        if lookup_field:
-            self.lookup_field = lookup_field
-
-        if schema:
-            self.schema = schema
-        if schema_in:
-            self.schema_in = schema_in
-        if schema_list:
-            self.schema_list = schema_list
-
-        self.api_router = api_router or APIRouter(**kwargs)
-
-        self._response_models = {
-            'list': self.schema_list,
-            'create': self.schema,
-            'update': self.schema,
-            'retrieve': self.schema,
-            # 'destroy': None,
-        }
-
-    def _db_lookup(self, lookup_value):
-        return {f'{self.lookup_field}': lookup_value}
-
-    @property
-    def _lookup_path(self):
-        return '/{pk}/'
-
-    def get_queryset(self, **kwargs) -> QuerySet:
-        return self.model.filter(**kwargs)
-
-    async def list(self, user: User = Depends(current_auth_user)):
-        try:
-            return await self.schema_list.from_queryset(self.get_queryset(user=user))
-        except Exception as e:
-            raise HTTPException(400, str(e))
-
-    async def retrieve(self, pk, user: User = Depends(current_auth_user)):
-        try:
-            return await self.model.get(user=user, **self._db_lookup(pk))
-        except Exception as e:
-            raise HTTPException(400, str(e))
-
-    async def create(self, data, user: User = Depends(current_auth_user)):
-        try:
-            return await self.model.create(user=user, **data.dict(exclude_unset=True))
-        except Exception as e:
-            raise HTTPException(400, str(e))
+# class ModelViewSet:
+#     lookup_field: str = 'pk'
+#     model: Union[MODEL, Any] = None
+#     schema: PydanticModel = None
+#     schema_in: PydanticModel = None
+#     schema_list: PydanticListModel = None
+#
+#     def __init__(self,
+#                  model: Any,
+#                  lookup_field: str = None,
+#                  schema: PydanticModel = None,
+#                  schema_in: PydanticModel = None,
+#                  schema_list: PydanticListModel = None,
+#                  api_router: APIRouter = None,
+#                  **kwargs):
+#
+#         if model:
+#             self.model = model
+#         if lookup_field:
+#             self.lookup_field = lookup_field
+#
+#         if schema:
+#             self.schema = schema
+#         if schema_in:
+#             self.schema_in = schema_in
+#         if schema_list:
+#             self.schema_list = schema_list
+#
+#         self.api_router = api_router or APIRouter(**kwargs)
+#
+#         self._response_models = {
+#             'list': self.schema_list,
+#             'create': self.schema,
+#             'update': self.schema,
+#             'retrieve': self.schema,
+#             # 'destroy': None,
+#         }
+#
+#     def _db_lookup(self, lookup_value):
+#         return {f'{self.lookup_field}': lookup_value}
+#
+#     @property
+#     def _lookup_path(self):
+#         return '/{pk}/'
+#
+#     def get_queryset(self, **kwargs) -> QuerySet:
+#         return self.model.filter(**kwargs)
+#
+#     async def list(self, user: User = Depends(current_auth_user)):
+#         try:
+#             return await self.schema_list.from_queryset(self.get_queryset(user=user))
+#         except Exception as e:
+#             raise HTTPException(400, str(e))
+#
+#     async def retrieve(self, pk, user: User = Depends(current_auth_user)):
+#         try:
+#             return await self.model.get(user=user, **self._db_lookup(pk))
+#         except Exception as e:
+#             raise HTTPException(400, str(e))
+#
+#     async def create(self, data, user: User = Depends(current_auth_user)):
+#         try:
+#             return await self.model.create(user=user, **data.dict(exclude_unset=True))
+#         except Exception as e:
+#             raise HTTPException(400, str(e))
 
 
 class CRUDRouter(APIRouter):
@@ -86,7 +86,6 @@ class CRUDRouter(APIRouter):
     schema_in: PydanticModel = None
     schema_list: PydanticListModel = None
     # schema_update: BaseModel = None
-    # schema_delete: BaseModel = None
 
     _http_method = {
         'list': 'GET',
@@ -126,12 +125,10 @@ class CRUDRouter(APIRouter):
         self._handlers = {
             'list': '/',
             'create': '/',
-            # 'update': lookup_path,
-            # 'destroy': lookup_path,
+            # 'update': self.lookup_path,
+            # 'destroy': None,
             'retrieve': self.lookup_path,
         }
-        print('TYPE -----', self.schema)
-        print('TYPE -----', self.schema_list)
 
         self._response_models = {
             # 'list': self.schema,
@@ -192,6 +189,7 @@ class CRUDRouter(APIRouter):
 
     def _create_handler(self):
         model = self.model
+        schema = self.schema
         schema_in = self.schema_in
 
         async def _wrapper(data: schema_in, user: User = Depends(current_auth_user)):

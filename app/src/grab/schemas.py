@@ -8,7 +8,6 @@ RequestSchemaCreate = pydantic_model_creator(
     name='RequestSchemaCreate',
     exclude=('id', 'is_active', 'slug', 'uid', 'user_id',),
     exclude_readonly=True,
-
 )
 
 RequestSchemaReceive = pydantic_model_creator(
@@ -20,7 +19,7 @@ RequestSchemaList = pydantic_queryset_creator(
     Request,
     name='RequestSchemaList',
     # exclude=('id', )
-    include=('name', 'method', 'url', 'params', 'headers', 'data', 'project_id', 'created_at', 'updated_at'),
+    include=('uid', 'name', 'method', 'url', 'params', 'headers'),
 )
 
 

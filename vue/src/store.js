@@ -1,30 +1,34 @@
 import {createStore} from 'vuex'
+import parseJwt from 'services/jwt'
 
-// Create a new store instance.
+const USER_TOKEN = 'USER_TOKEN'
+
 const store = createStore({
-  state() {
-    return {
-      count: 0,
-      loading: true,
-      user: null,
-    }
-  },
-  mutations: {
-    increment(state) {
-      state.count++
+    state() {
+        return {
+            loading: true,
+            user: null,
+            token: localStorage.getItem('t') || null,
+        }
     },
-    loaded(state) {
-      state.loading = false
-    },
-    auth(state, payload) {
-      if (!payload) {
-        state.user = null
-      } else {
-        state.user = payload
+    mutations: {
+        loaded(state) {
+            state.loading = false
+        },
+        login(state, payload) {
+            if (payload) {
+                state.token = payload
+                state.user = parseJwt(payload)
+                localStorage.setItem('t', payload)
+            } else {
+                state.token = null
+                state.user = null
+                localStorage.removeItem('t')
+            }
+        },
 
-      }
-    }
-  }
+    },
+    actions: {}
 })
 
 export default store
