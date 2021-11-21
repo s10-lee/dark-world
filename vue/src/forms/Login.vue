@@ -11,7 +11,7 @@
             <b-input label="Password" type="password" v-model="password"/>
           </div>
           <div class="mb-3">
-            <b-btn block variant="green" @click.prevent.stop="handleLogin">Login</b-btn>
+            <b-btn block variant="green" @click.prevent.stop="handleLogin">Sign In</b-btn>
           </div>
         </div>
       </div>

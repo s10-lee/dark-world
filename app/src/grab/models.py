@@ -17,7 +17,7 @@ from app.db.fields import IPAddressField, UUIDField
 from uuid import uuid4
 from app.src.user.models import User
 from enum import Enum
-from app.src.functions import init_models
+from app.db.utils import init_models
 
 
 class TYPES(str, Enum):
@@ -84,7 +84,6 @@ class ProjectStep(BaseModel, NameSlugActiveMixin):
         'models.ProjectStep', related_name="children", null=True
     )
     children: ReverseRelation['ProjectStep']
-
 
     class Meta:
         table = 'ws_project_step'

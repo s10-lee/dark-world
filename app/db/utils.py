@@ -27,6 +27,12 @@ async def close_connections():
     return await Tortoise.close_connections()
 
 
+def init_models(models: Union[str, list[str]]):
+    if isinstance(models, str):
+        models = [models]
+    Tortoise.init_models(models, 'models')
+
+
 def get_app_connection_name(config, app_name: str) -> str:
     app = config.get("apps").get(app_name)
     if app:

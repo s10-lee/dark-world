@@ -3,10 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <title>.</title>
+{% block style %}
     {% for url in styles %}<link type="text/css" media="all" rel="stylesheet" href="{{ url }}"/>{{ '\n' }}{% endfor %}
+{% endblock %}
 </head>
 <body>
-<div id="app"></div>
-{% for url in scripts %}{{ '\n' }}<script type="text/javascript" src="{{ url }}"></script>{% endfor %}
+{% block content %}
+    <div id="app"></div>
+{% endblock %}
+{% block javascript %}
+    {% for url in scripts %}{{ '\n' }}<script type="text/javascript" src="{{ url }}"></script>{% endfor %}
+{% endblock %}
 </body>
 </html>

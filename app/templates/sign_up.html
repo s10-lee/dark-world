@@ -1,24 +1,62 @@
-{% extends 'index.html' %}
+{% extends 'layout_vue.html' %}
 
+{% block style %}
+    {{ super() }}
+    <style rel="stylesheet">
+        #alert {
+            width: 22rem;
+            position: absolute;
+            top: 1rem;
+            left: 50%;
+            opacity: 0;
+            text-align: center;
+            transform: translateX(-50%) translateY(0);
+            transition: all .35s ease-out;
+            z-index: 2;
+        }
+        #alert.shown {
+            opacity: 1;
+            transform: translateX(-50%) translateY(1rem);
+        }
+        #sign-up-form {
+            transition: all .35s ease-out;
+        }
+        #sign-up-form.hidden {
+            opacity: 0;
+            transform: translateY(3rem);
+        }
+    </style>
+{% endblock %}
 
 {% block content %}
-    <div id="alert" class="alert alert-danger" role="alert"></div>
-    <div id="sign-up-form" class="container h-100">
-    <div class="row justify-content-center align-items-center h-100">
-        <div class="col-auto mb-5">
-        <form action="{{ request.url.path }}" method="post">
-            <div class="mb-4">
-                <label class="form-label">Username</label>
-                <input type="text" name="username" class="form-control">
+    <div class="fixed-container">
+    <div class="container">
+        <div class="row mt-6 justify-content-center">
+            <div class="col-4">
+                <div id="alert" class="alert alert-danger shadow-sm" role="alert"></div>
+                <form id="sign-up-form" action="/api/sign-up/{{ uid }}/" method="post">
+                    <div class="p-5 border bg-white rounded">
+                        <h1 class="text-100 text-center mb-5">Register</h1>
+                        <div class="mb-4">
+                            <label class="form-label">Username</label>
+                            <input type="text" name="username" class="form-control">
+                        </div>
+                        <div class="mb-5">
+                            <label class="form-label">Password</label>
+                            <input type="password" name="password" class="form-control">
+                        </div>
+                        <div class="mb-3">
+                            <button type="submit" class="btn-green btn-block">Sign Up</button>
+                        </div>
+                        <div class="mb-3">
+                            <a href="javascript:void(0);" onclick="return showAlert(true, 'Some message content !')">Success</a>
+                        </div>
+                        <div class="mb-3">
+                            <a href="javascript:void(0);" onclick="return showAlert(false, 'Some message content !')">Danger</a>
+                        </div>
+                    </div>
+                </form>
             </div>
-            <div class="mb-5">
-                <label class="form-label">Password</label>
-                <input type="password" name="password" class="form-control">
-            </div>
-            <div>
-                <button type="submit" class="btn d-block w-100 btn-primary">Sign Up</button>
-            </div>
-        </form>
         </div>
     </div>
     </div>
@@ -46,7 +84,7 @@
         if (!timer) {
           timer = setTimeout(function () {
             alert.classList.remove('shown')
-          }, 3000)
+          }, 5000)
         }
       }
 
@@ -100,5 +138,4 @@
         document.forms[0].addEventListener('submit', handleSubmit)
       })
     </script>
-    {{ super() }}
 {% endblock %}

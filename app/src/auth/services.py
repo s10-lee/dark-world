@@ -127,11 +127,10 @@ async def client_token_response(user: User) -> JSONResponse:
     response = JSONResponse(content={
         'access_token': access_token.decode('utf-8'),
     })
-    seconds = refresh_token.expires()
     response.set_cookie(
         key='refresh_token',
         value=refresh_token.token,
-        expires=seconds,
+        expires=refresh_token.expires(),
         path='/',
         httponly=True,
     )

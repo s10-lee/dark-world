@@ -11,9 +11,7 @@ import os
 
 
 templates = Jinja2Templates(directory='app/templates')
-
 web_router = APIRouter()
-
 web = FastAPI(default_response_class=HTMLResponse)
 
 
@@ -74,6 +72,6 @@ async def show_client_layout(request: Request) -> templates.TemplateResponse:
 
 @web_router.get('/sign-up/{uid}/', response_class=HTMLResponse)
 async def signup_form(request: Request, uid: str = Depends(validate_signup)):
-    return templates.TemplateResponse('sign_up.html', {'request': request, 'uid': uid})
+    return templates.TemplateResponse('sign_up.html', {'request': request, 'uid': uid, **get_vue()})
 
 

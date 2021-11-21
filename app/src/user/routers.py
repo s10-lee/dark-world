@@ -10,7 +10,6 @@ from app.src.auth.services import (
     authentication_user,
     client_token_response,
     auth_check_refresh,
-    auth_wrapper,
     get_password_hash,
     current_auth_user,
 )
