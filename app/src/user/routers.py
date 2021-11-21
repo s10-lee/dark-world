@@ -20,7 +20,7 @@ router = APIRouter()
 
 
 @router.post('/sign-up/{uid}/')
-async def register_new_user(data: UserCredentials, uid: UUID = Depends(validate_signup)):
+async def user_signup(data: UserCredentials, uid: UUID = Depends(validate_signup)):
     if not (data.password and data.username):
         raise HTTPException(400, 'All fields are required')
     try:
@@ -29,7 +29,6 @@ async def register_new_user(data: UserCredentials, uid: UUID = Depends(validate_
         return {'status': 'Success', 'detail': 'User created !'}
     except Exception as e:
         print(e)
-
         raise HTTPException(400, 'User already exists')
 
 
@@ -46,5 +45,3 @@ async def auth_refresh_token(user: User = Depends(auth_check_refresh)):
 @router.get('/profile/')
 async def user_profile(user: User = Depends(current_auth_user)):
     return {'access': 'yes', 'user': user.username, 'uid': user.id}
-
-

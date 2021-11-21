@@ -20,7 +20,6 @@ from enum import Enum
 from app.src.functions import init_models
 
 
-
 class TYPES(str, Enum):
     JSON = "json"
     XML = "xml"
@@ -134,15 +133,6 @@ class HttpRequestResponse(PkMixin):
     class Meta:
         ordering = ("-id", )
         table = 'ws_http'
-
-# class Proxy(Model):
-#     id = UUIDField(pk=True)
-#     host = IPAddressField(unique=True)
-#     port = IntField()
-#     updated_at = DatetimeField(auto_now=True)
-#
-#     class Meta:
-#         table = 'proxy'
 
 
 init_models(['app.src.grab.models'])

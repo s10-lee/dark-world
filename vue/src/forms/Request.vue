@@ -4,28 +4,58 @@
         <div class="col-md-2">
           <label class="form-label">Method</label>
           <select class="form-select">
-            <option selected>GET</option>
-            <option>POST</option>
-            <option>PUT</option>
-            <option>PATCH</option>
-            <option>DELETE</option>
+            <option v-for="(name, key) in methods" :value="key" :selected="key === modelValue.method">
+              {{ name }}
+            </option>
           </select>
         </div>
 
         <div class="col-md-10">
-          <b-input label="Url" placeholder="https://"/>
+          <b-input label="Url" placeholder="https://" v-model="modelValue.url" />
         </div>
-        <div class="col-md-6">
-          <b-label>Params</b-label>
-          <div v-for="(value, name) in params">
-            <b-input-pair :placeholders="['Key', 'Value']"
+        <div class="col-md-5">
+          {{ modelValue.headers }}
+          <br/>
+
+          <div v-if="modelValue.params">
+            <b-label>Params</b-label>
+            <div v-for="(value, name) in modelValue.params" class="mb-3">
+              <b-input-pair size="sm"
+                            placeholder-first="Key"
+                            placeholder-last="Value"/>
+
+            </div>
+          </div>
+<!--          <div>-->
+<!--            <b-input-pair size="sm"-->
+<!--                          placeholder-first="Key"-->
+<!--                          placeholder-last="Value"/>-->
+<!--          </div>-->
+        </div>
+        <div class="col-md-2">
+        </div>
+        <div class="col-md-5">
+          <b-label>Headers</b-label>
+          <div v-if="modelValue.headers">
+            <div v-for="(value, name, index) in modelValue.headers" class="mb-3">
+
+              <b-input-pair size="sm"
+                            :value-first="name"
+                            :value-second="value"
+                            placeholder-first="Key"
+                            placeholder-last="Value"/>
+              <small class="text-muted">
+                {{ value }} = {{ name }} = {{ index }}
+              </small>
+
+            </div>
+          </div>
+          <div>
+            <b-input-pair size="sm"
                           placeholder-first="Key"
                           placeholder-last="Value"/>
-
           </div>
-        </div>
-        <div class="col-md-6">
-          <b-text-area rows="10" label="Headers"/>
+
         </div>
         <div class="col-12">
           <div class="form-check">
@@ -45,14 +75,31 @@
 <script>
 import BInputPair from 'blocks/BInputPair';
 export default {
+  props: {
+    modelValue: {
+      type: Object,
+      default: {
+        url: null,
+        method: 'GET',
+        headers: {},
+        params: {},
+        data: {}
+      },
+      required: true
+    },
+  },
   components: {
     BInputPair
   },
   data() {
     return {
-      url: null,
-      params: {},
-      headers: {},
+      methods: {
+        'GET': 'GET',
+        'POST': 'POST',
+        'PUT': 'PUT',
+        'PATCH': 'PATCH',
+        'DELETE': 'DELETE',
+      }
     }
   }
 

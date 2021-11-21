@@ -10,7 +10,7 @@ from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from app.src.user.models import User, RefreshToken
 from app.src.user.schemas import UserCredentials
 from app.src.auth.models import APIKeys, SignUpToken
-from app.config.settings import JWT_SECRET, ALGORITHM, INTERVAL, APP_NAME
+from app.settings import JWT_SECRET, ALGORITHM, INTERVAL, APP_NAME
 from uuid import UUID
 import jwt
 import secrets

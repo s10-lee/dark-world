@@ -24,10 +24,11 @@ export default {
   },
   computed: {
     inputCss(){
+      const styles = ['form-control']
       if (this.sizes.includes(this.size)) {
-        return 'form-control-' + this.size
+        styles.push('form-control-' + this.size)
       }
-      return 'form-control'
+      return styles
     },
   }
 }

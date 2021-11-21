@@ -7,20 +7,22 @@
     <div class="collapse navbar-collapse">
       <div class="navbar-nav">
         <b-link class="nav-link" to="/" exact>Home</b-link>
-        <b-link class="nav-link" to="/l1nk">L1nk</b-link>
-        <b-link class="nav-link" to="/n00b">n00b</b-link>
-
-        <b-link class="nav-link" to="/ws/" exact>WS</b-link>
-        <b-link class="nav-link" to="/ws/project">Project</b-link>
-        <b-link class="nav-link" to="/ws/request">Request</b-link>
+        <!--  <b-link class="nav-link" to="/l1nk">L1nk</b-link>  -->
+        <template v-if="$store.state.user">
+          <b-link class="nav-link" to="/n00b">n00b</b-link>
+          <!--  <b-link class="nav-link" to="/ws/project">Project</b-link>  -->
+          <!--  <b-link class="nav-link" to="/ws/request">Request</b-link>  -->
+        </template>
+        <template v-else class="navbar-nav">
+          <b-link class="nav-link" to="/sux0r">Sux0r</b-link>
+        </template>
       </div>
     </div>
   </header>
-  <div style="min-height:4.5rem;">&nbsp;</div>
+  <div style="height:56px;"></div>
 </template>
 
 <script>
-import auth from 'services/auth'
 export default {
   name: 'BNavbar'
 }

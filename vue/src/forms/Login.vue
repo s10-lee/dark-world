@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <div class="row justify-content-center">
+    <div class="row mt-6 justify-content-center">
       <div class="col-4">
         <div class="p-5 border bg-white rounded">
           <h1 class="text-100 text-center mb-5">Login</h1>
@@ -20,7 +20,6 @@
 </template>
 
 <script>
-import auth from 'services/auth'
 export default {
   name: 'Login',
   data() {
@@ -31,12 +30,9 @@ export default {
   },
   methods: {
     handleLogin() {
-      auth.obtainToken(this.username, this.password).then(data => {
-        this.$store.commit('login', data)
+      this.$store.dispatch('obtainToken', {username: this.username, password: this.password}).then(() => {
+        this.$router.push({path: '/n00b'})
       })
-      // auth.obtainToken(this.username, this.password).then(data => {
-      //   console.log(data)
-      // })
     }
   }
 }

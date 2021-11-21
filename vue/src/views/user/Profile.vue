@@ -1,8 +1,13 @@
 <template>
-  <div class="container">
-    <div class="row">
-      <div class="col">
-        <h3 class="mt-5 fw-bold">Profile</h3>
+  <div class="fixed-container-scroll">
+    <div class="container">
+      <div class="row mt-6">
+        <div class="col">
+          <h3 class="fw-bold">Profile</h3>
+          <div class="mt-3">
+            {{ $store.state.user }}
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -10,6 +15,6 @@
 
 <script>
 export default {
-  name: "Profile"
+  name: 'Profile'
 }
 </script>

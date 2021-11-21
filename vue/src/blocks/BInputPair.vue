@@ -1,10 +1,10 @@
 <template>
   <div class="row">
     <div class="col">
-      <b-input :size="size" :placeholder="placeholderFirst" />
+      <b-input :size="size" v-model="valueFirst" :placeholder="placeholderFirst" />
     </div>
     <div class="col">
-      <b-input :size="size" :placeholder="placeholderLast" />
+      <b-input :size="size" v-model="valueSecond" :placeholder="placeholderLast" />
     </div>
   </div>
 </template>
@@ -13,11 +13,13 @@
 export default {
   name: 'BInputPair',
   props: {
+    valueFirst: String,
+    valueSecond: String,
     size: String,
-    placeholders: [Array],
     placeholderFirst: String,
     placeholderLast: String,
   },
+  emits: ['update:valueFirst', 'update:valueSecond'],
   data() {
     return {
       sizes: ['xl', 'lg', 'md', 'sm', 'xl'],

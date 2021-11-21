@@ -1,5 +1,3 @@
-import os
-
 from aerich import Command, Migrate, Aerich
 from click import (
     group,
@@ -16,7 +14,7 @@ from click import (
 from app.src.auth.services import get_password_hash, generate_private_public_keys
 from app.src.user.models import User, Permission, RefreshToken
 from app.src.auth.models import APIKeys, SignUpToken
-from app.config.settings import ORM, DATABASE_URL
+from app.settings import ORM, DATABASE_URL
 from app.src.functions import coro
 from app.db.utils import (
     write_version_file,
@@ -47,12 +45,6 @@ async def cli(ctx: Context, location: str):
     command = Command(tortoise_config=ORM, location=location, app='models')
     ctx.obj['command'] = command
     await command.init()
-
-
-@cli.group(name='grab')
-@coro(keep_alive=True)
-async def grab_group():
-    pass
 
 
 @cli.group(name='user')

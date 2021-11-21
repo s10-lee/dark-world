@@ -5,7 +5,7 @@ from app.src.link.routers import client_redirect
 from fastapi.templating import Jinja2Templates
 from fastapi.exception_handlers import http_exception_handler
 from app.src.auth.services import validate_signup
-from app.config.settings import MODE
+from app.settings import MODE
 import json
 import os
 
@@ -39,7 +39,7 @@ def get_vue() -> dict:
     # TODO: Make Jinja plugin / helper
     stats_file = 'stats/webpack-stats.json'
     if MODE:
-        stats_file = f'stats/webpack-stats-f{MODE}.json'
+        stats_file = f'stats/webpack-stats-{MODE}.json'
 
     stats_path = os.path.abspath(stats_file)
     styles = []
@@ -62,12 +62,11 @@ def get_vue() -> dict:
     return {'styles': styles, 'scripts': scripts}
 
 
-@web_router.get('/1/{code}', response_class=RedirectResponse)
-async def redirect(code: str):
-    return await client_redirect(code)
+# @web_router.get('/1/{code}', response_class=RedirectResponse)
+# async def redirect(code: str):
+#     return await client_redirect(code)
 
-
-@web_router.get('/l1nk', name='add short link', response_class=HTMLResponse)
+# @web_router.get('/l1nk', name='add short link', response_class=HTMLResponse)
 @web_router.get('/', name='home', response_class=HTMLResponse)
 async def show_client_layout(request: Request) -> templates.TemplateResponse:
     return templates.TemplateResponse('layout_vue.html', {'request': request, **get_vue()})

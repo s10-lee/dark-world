@@ -1,7 +1,7 @@
-import {createStore} from 'vuex'
+import { createStore } from 'vuex'
 import parseJwt from 'services/jwt'
-
-const USER_TOKEN = 'USER_TOKEN'
+import axios from 'axios';
+import {API_OBTAIN_URL, API_REFRESH_URL} from 'services/const';
 
 const store = createStore({
     state() {
@@ -15,7 +15,7 @@ const store = createStore({
         loaded(state) {
             state.loading = false
         },
-        login(state, payload) {
+        login(state, payload = null) {
             if (payload) {
                 state.token = payload
                 state.user = parseJwt(payload)
@@ -26,9 +26,48 @@ const store = createStore({
                 localStorage.removeItem('t')
             }
         },
-
     },
-    actions: {}
+    actions: {
+        checkUserAuth ({ commit, state }) {
+            const now = Math.round(Date.now() / 1000)
+            try {
+                if (!state.user && state.token) {
+                    commit('login', state.token)
+                }
+                const { exp = 0 } = state.user
+                if (exp - now > 0) {
+                    return true
+                }
+            } catch (e) {}
+
+            commit('login', false)
+            return false
+        },
+        obtainToken ( { commit }, credentials ) {
+            return axios
+                .post(API_OBTAIN_URL, credentials)
+                .then(response => {
+                    const { access_token = null } = response.data
+                    commit('login', access_token)
+                })
+                .catch(e => {
+                    throw e
+                })
+        },
+        refreshToken ( { commit, state } ) {
+            return axios
+                .post(API_REFRESH_URL, {
+                    refresh_token: state.token
+                })
+                .then(response => {
+                    const { access_token = null } = response.data
+                    commit('login', access_token)
+                })
+                .catch(e => {
+                    throw e
+                })
+        }
+    }
 })
 
 export default store

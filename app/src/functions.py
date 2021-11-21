@@ -2,6 +2,7 @@ import json
 import asyncio
 import os
 import time
+import random
 from datetime import datetime
 from functools import wraps
 from tortoise import Tortoise
@@ -78,3 +79,9 @@ def coro(function=None, keep_alive=False):
     if callable(function):
         return decorate(function)
     return decorate
+
+
+def generate_unique_string(k=5):
+    chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
+    result = random.choices(chars, k=k)
+    return ''.join(result)

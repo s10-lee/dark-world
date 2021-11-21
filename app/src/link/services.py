@@ -1,13 +1,7 @@
 from .models import Link
-import random
 from datetime import timedelta, datetime
 from fastapi.exceptions import HTTPException
-
-
-def generate_unique_string(k=5):
-    chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
-    result = random.choices(chars, k=k)
-    return ''.join(result)
+from app.src.functions import generate_unique_string
 
 
 async def create(url: str):
