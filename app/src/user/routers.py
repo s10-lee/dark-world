@@ -25,10 +25,10 @@ async def user_signup(data: UserCredentials, uid: UUID = Depends(validate_signup
     try:
         await User.create(username=data.username, password=get_password_hash(data.password))
         await SignUpToken.filter(id=uid).update(activated_at=datetime.utcnow())
-        return {'status': 'Success', 'detail': 'User created !'}
+        return {'status': 'Success', 'detail': 'User created successfully !'}
     except Exception as e:
         print(e)
-        raise HTTPException(400, 'User already exists')
+        raise HTTPException(400, 'User already exists !')
 
 
 @router.post('/token/obtain/')

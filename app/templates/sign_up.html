@@ -34,25 +34,19 @@
         <div class="row mt-6 justify-content-center">
             <div class="col-4">
                 <div id="alert" class="alert alert-danger shadow-sm" role="alert"></div>
-                <form id="sign-up-form" action="/api/sign-up/{{ uid }}/" method="post">
+                <form id="sign-up-form" action="/api/sign-up/{{ uid }}/" method="post" autocomplete="off">
                     <div class="p-5 border bg-white rounded">
                         <h1 class="text-100 text-center mb-5">Register</h1>
                         <div class="mb-4">
                             <label class="form-label">Username</label>
-                            <input type="text" name="username" class="form-control">
+                            <input type="text" class="form-control" autocomplete="new-user" spellcheck="false">
                         </div>
                         <div class="mb-5">
                             <label class="form-label">Password</label>
-                            <input type="password" name="password" class="form-control">
+                            <input type="password" class="form-control" autocomplete="new-password">
                         </div>
                         <div class="mb-3">
                             <button type="submit" class="btn-green btn-block">Sign Up</button>
-                        </div>
-                        <div class="mb-3">
-                            <a href="javascript:void(0);" onclick="return showAlert(true, 'Some message content !')">Success</a>
-                        </div>
-                        <div class="mb-3">
-                            <a href="javascript:void(0);" onclick="return showAlert(false, 'Some message content !')">Danger</a>
                         </div>
                     </div>
                 </form>
@@ -92,15 +86,16 @@
         e.preventDefault()
         e.stopPropagation()
 
-        const form = document.getElementById('sign-up-form')
-        const xhr = new XMLHttpRequest()
+        const form = document.getElementById('sign-up-form');
+        const xhr = new XMLHttpRequest();
         let message;
-        xhr.open('POST', e.target.getAttribute('action'), true)
-        xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8")
+        xhr.open('POST', e.target.getAttribute('action'), true);
+        xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
 
-        const request = JSON.stringify(
-          {username: e.target.username.value, password: e.target.password.value}
-        )
+        const request = JSON.stringify({
+            username: form.elements[0].value,
+            password: form.elements[1].value
+        });
 
         xhr.onload = function () {
 
