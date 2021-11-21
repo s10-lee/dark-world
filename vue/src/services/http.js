@@ -1,5 +1,5 @@
-import axios from "axios";
-import { BASE_API_URL } from "./const";
+import axios from 'axios';
+import { BASE_API_URL } from 'services/const'
 
 const xhr = axios.create({
     baseURL: BASE_API_URL,

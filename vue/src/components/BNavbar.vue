@@ -6,16 +6,13 @@
     </button>
     <div class="collapse navbar-collapse">
       <div class="navbar-nav">
-        <b-link class="nav-link" to="/" exact>Home</b-link>
-        <!--  <b-link class="nav-link" to="/l1nk">L1nk</b-link>  -->
+        <b-link class="nav-link" to="/" exact>#. . .</b-link>
         <template v-if="$store.state.user">
           <b-link class="nav-link" to="/n00b">n00b</b-link>
-          <!--  <b-link class="nav-link" to="/ws/project">Project</b-link>  -->
-          <!--  <b-link class="nav-link" to="/ws/request">Request</b-link>  -->
         </template>
-        <template v-else class="navbar-nav">
-          <b-link class="nav-link" to="/sux0r">Sux0r</b-link>
-        </template>
+<!--        <template v-else>-->
+<!--          <b-link class="nav-link" to="/sux0r">Sux0r</b-link>-->
+<!--        </template>-->
       </div>
     </div>
   </header>
