@@ -9,6 +9,8 @@ def generate_basic_auth(first, second):
 
 
 async def make_request(decoder: callable = None, **kwargs):
+    if not kwargs.get('method'):
+        kwargs['method'] = 'get'
     async with aiohttp.ClientSession() as session:
         async with session.request(ssl=False, **kwargs) as resp:
             text = await resp.text()
@@ -39,3 +41,17 @@ def parse_xml(content):
 def parse_json(content):
     return orjson.loads(content)
 
+
+# BS4
+async def parse_bs4(page):
+    import bs4
+    soup = bs4.BeautifulSoup(page, 'html.parser')
+    soup.prettify()
+    return soup
+
+
+# lxml.html
+def parse_html_form(content):
+    import lxml.html
+    tree = lxml.html.fromstring(content)
+    return dict(tree.forms[0].fields)

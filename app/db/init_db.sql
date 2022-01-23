@@ -37,3 +37,5 @@ CREATE TABLE IF NOT EXISTS "user_permission" (
     "permission_id" INT NOT NULL REFERENCES "permission" ("id") ON DELETE CASCADE,
     "user_id" UUID NOT NULL REFERENCES "user" ("id") ON DELETE CASCADE
 );
+
+-- "uid" UUID NOT NULL DEFAULT gen_random_uuid() UNIQUE,

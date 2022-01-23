@@ -43,7 +43,7 @@ async def auth_refresh_token(user: User = Depends(auth_check_refresh)):
 
 @router.get('/guest/')
 async def user_guest(request: Request):
-    return {'data': request.state.custom_attr}
+    return {'user': request.state.user}
 
 
 @router.get('/profile/')

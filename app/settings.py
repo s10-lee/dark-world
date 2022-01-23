@@ -35,6 +35,7 @@ def auto_load_models():
 APPS_MODELS = [
     'app.src.auth.models',
     'app.src.user.models',
+    'app.src.dw.models',
     # 'app.src.grab.models',
 ]
 

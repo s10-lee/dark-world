@@ -124,5 +124,6 @@ users.acl
 # Frontend
 /stats
 /app/static/bundles
+/app/static/tmp
 vue/node_modules/
 vue/package-lock.json
