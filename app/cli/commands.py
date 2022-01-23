@@ -12,7 +12,7 @@ from click import (
     types
 )
 from app.src.auth.services import get_password_hash, generate_private_public_keys
-from app.src.user.models import User, Permission, RefreshToken
+from app.src.user.models import User, RefreshToken
 from app.src.auth.models import APIKeys, SignUpToken
 from app.settings import ORM, DATABASE_URL
 from app.src.functions import coro
@@ -98,19 +98,6 @@ async def user_delete(username: str, email: str):
         echo(e)
     else:
         secho(f'User record was deleted - {ret} !', fg='green', bold=True)
-
-
-@cli.command(name='perm', help='Create permission.')
-@option('-s', '--slug', prompt='Slug', required=True)
-@coro
-async def permission_create(slug: str):
-    try:
-        await Permission.create(slug=slug)
-    except Exception as e:
-        secho('Error:', fg='red', bold=True)
-        echo(e)
-    else:
-        secho('Permission created !', fg='green', bold=True)
 
 
 @user_group.command(name='sign', help='Generate sign up link.')

@@ -1,23 +1,9 @@
-from tortoise import Tortoise
 from tortoise.models import Model
 from tortoise.fields import (
     IntField, UUIDField, CharField, ForeignKeyField, BooleanField, DatetimeField, ManyToManyField,
-    ManyToManyRelation, ForeignKeyRelation
+    ForeignKeyRelation
 )
 from datetime import datetime
-
-
-class Permission(Model):
-    id = IntField(pk=True)
-    slug = CharField(max_length=60)
-    users: ManyToManyRelation['User'] = ManyToManyField(
-        'models.User',
-        related_name='perms',
-        through='user_permission'
-    )
-
-    class Meta:
-        table = 'permission'
 
 
 class RefreshToken(Model):
@@ -43,7 +29,6 @@ class User(Model):
     is_active = BooleanField(default=True)
     is_staff = BooleanField(default=False)
     last_login = DatetimeField(null=True)
-    perms: ManyToManyRelation[Permission]
 
     async def logged(self):
         self.last_login = datetime.utcnow()

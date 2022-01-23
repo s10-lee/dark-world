@@ -54,7 +54,6 @@ async def auth_check_refresh(refresh_token: str = Cookie(None)):
     try:
         token = await RefreshToken.get(token=refresh_token, expires_at__gte=datetime.utcnow())
         await token.fetch_related('user')
-        await token.user.fetch_related('perms')
         return await token.user
     except Exception as e:
         print(e)
@@ -73,31 +72,28 @@ async def decode_token(token):
         raise HTTPException(status.HTTP_401_UNAUTHORIZED, detail='Invalid token')
 
 
-async def authentication_user(data: UserCredentials):
+async def authenticate_user(data: UserCredentials):
     user = await User.get_or_none(username=data.username, is_active=True)
 
     if not user or not verify_password(data.password, user.password):
         raise HTTPException(status.HTTP_401_UNAUTHORIZED, detail='Invalid credentials')
     elif not user.is_active:
         raise HTTPException(status.HTTP_401_UNAUTHORIZED, detail='Inactive user')
-    await user.fetch_related('perms')
     await user.logged()
     return user
 
 
-async def current_auth_user(user_data: dict = Depends(auth_wrapper)) -> User:
+async def get_current_auth_user(user_data: dict = Depends(auth_wrapper)) -> User:
     return await User.get(id=user_data['sub'])
 
 
 async def create_access_token(user: User):
     item = await APIKeys.first()
-
     private_key = crypto_serialization.load_pem_private_key(
         bytes(item.private_key, 'utf-8'),
         bytes(JWT_SECRET, 'utf-8'),
         crypto_default_backend()
     )
-
     headers = {
         'kid': str(item.id),
     }
@@ -107,9 +103,7 @@ async def create_access_token(user: User):
         'iat': datetime.utcnow(),
         'sub': str(user.id),
         'name': user.username,
-        'perms': [perm.slug for perm in user.perms]
     }
-
     return jwt.encode(payload, private_key, algorithm=ALGORITHM, headers=headers)
 
 

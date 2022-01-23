@@ -1,7 +1,6 @@
 from fastapi import APIRouter, Request, Depends, HTTPException, Response, FastAPI
 from fastapi.exceptions import StarletteHTTPException
 from fastapi.responses import HTMLResponse, RedirectResponse
-from app.src.link.routers import client_redirect
 from fastapi.templating import Jinja2Templates
 from fastapi.exception_handlers import http_exception_handler
 from app.src.auth.services import validate_signup
@@ -60,11 +59,6 @@ def get_vue() -> dict:
     return {'styles': styles, 'scripts': scripts}
 
 
-# @web_router.get('/1/{code}', response_class=RedirectResponse)
-# async def redirect(code: str):
-#     return await client_redirect(code)
-
-# @web_router.get('/l1nk', name='add short link', response_class=HTMLResponse)
 @web_router.get('/', name='home', response_class=HTMLResponse)
 async def show_client_layout(request: Request) -> templates.TemplateResponse:
     return templates.TemplateResponse('layout_vue.html', {'request': request, **get_vue()})

@@ -64,6 +64,10 @@ class NameSlugActiveMixin(Model):
         abstract = True
 
 
+# *************************************
+#               Models
+# *************************************
+
 class Project(BaseModel, NameSlugActiveMixin):
     user: ForeignKeyRelation[User] = ForeignKeyField('models.User')
     requests: ReverseRelation['Request']

@@ -1,10 +1,8 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from tortoise.contrib.fastapi import register_tortoise
 from app.src.user.routers import router as api_user
-# from app.src.link.routers import router as api_link
-# from app.src.grab.routers import router as api_grab
 from app.src.web.routers import web_router, web
 from app.settings import ORM, CORS_ALLOW_ORIGINS, APP_PARAMS
 
@@ -19,11 +17,14 @@ app.add_middleware(
     allow_headers=['*'],
 )
 
+
+@app.middleware('http')
+async def get_current_user_middleware(request: Request, call_next):
+    request.state.user = None
+    return await call_next(request)
+
 app.include_router(web_router)
 app.include_router(api_user, prefix='/api')
-# app.include_router(api_link, prefix='/api/link')
-# app.include_router(api_grab, prefix='/api/ws')
-
 app.mount('/', web)
 
 register_tortoise(app, config=ORM)

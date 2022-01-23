@@ -1,4 +1,4 @@
-from fastapi import Depends, APIRouter
+from fastapi import Depends, APIRouter, Request
 from fastapi.exceptions import HTTPException
 from datetime import datetime
 from uuid import UUID
@@ -7,11 +7,11 @@ from app.src.user.models import User
 from app.src.user.schemas import UserCredentials
 from app.src.auth.services import (
     validate_signup,
-    authentication_user,
+    authenticate_user,
     client_token_response,
     auth_check_refresh,
     get_password_hash,
-    current_auth_user,
+    get_current_auth_user,
 )
 
 
@@ -32,7 +32,7 @@ async def user_signup(data: UserCredentials, uid: UUID = Depends(validate_signup
 
 
 @router.post('/token/obtain/')
-async def auth_obtain_token(user: User = Depends(authentication_user)):
+async def auth_obtain_token(user: User = Depends(authenticate_user)):
     return await client_token_response(user)
 
 
@@ -41,6 +41,11 @@ async def auth_refresh_token(user: User = Depends(auth_check_refresh)):
     return await client_token_response(user)
 
 
+@router.get('/guest/')
+async def user_guest(request: Request):
+    return {'data': request.state.custom_attr}
+
+
 @router.get('/profile/')
-async def user_profile(user: User = Depends(current_auth_user)):
+async def user_profile(request: Request, user: User = Depends(get_current_auth_user)):
     return {'access': 'yes', 'user': user.username, 'uid': user.id}
