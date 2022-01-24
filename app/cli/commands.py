@@ -9,7 +9,8 @@ from click import (
     UsageError,
     echo,
     secho,
-    types
+    types,
+    argument,
 )
 from app.src.auth.services import get_password_hash, generate_private_public_keys
 from app.src.user.models import User, RefreshToken
@@ -215,3 +216,34 @@ async def db_downgrade(ctx: Context, version: int, clear: bool):
         return secho(str(e), fg='yellow', bold=True)
     for file in files:
         secho(f'Success downgrade {file}', fg='green', bold=True)
+
+
+@cli.command(name='module', help='Init new module.')
+@argument('name')
+@pass_context
+@coro
+async def module_create(ctx: Context, name: str):
+    source_dirname = Path('app/library/module_template').resolve()
+    module_dirname = Path('app/src').resolve() / name
+
+    if module_dirname.exists():
+        return secho(f'Already exists !', fg='red', bold=True)
+
+    module_dirname.mkdir()
+
+    for file in source_dirname.glob('*.py'):
+        with open(file, 'r') as fp:
+            source_code = fp.read()
+            source_code = source_code.replace('{{NAME}}', name)
+
+        with open(module_dirname / file.name, 'w') as fp:
+            fp.write(source_code)
+            secho(f'    {file.name}', fg='bright_green')
+
+    secho(f'Success !', fg='green', bold=True)
+
+
+
+
+
+

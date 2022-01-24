@@ -1,7 +1,5 @@
 from tortoise.contrib.pydantic import pydantic_model_creator, pydantic_queryset_creator
 from app.src.grab.models import Project, ProjectStep
-from typing import List, Type
-from app.db.utils import init_models
 
 # RequestSchemaCreate = pydantic_model_creator(
 #     Request,

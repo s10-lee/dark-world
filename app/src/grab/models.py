@@ -48,7 +48,6 @@ class ProjectStep(BaseModel):
     lft = IntField(null=True)
     rgt = IntField(null=True)
     level = IntField(default=0)
-    # position = IntField(default=0)
     project: ForeignKeyRelation['Project'] = ForeignKeyField('models.Project', 'steps')
     # parent: ForeignKeyNullableRelation['ProjectStep'] = ForeignKeyField(
     #     'models.ProjectStep', related_name="children", null=True
