@@ -26,11 +26,6 @@
 
             </div>
           </div>
-<!--          <div>-->
-<!--            <b-input-pair size="sm"-->
-<!--                          placeholder-first="Key"-->
-<!--                          placeholder-last="Value"/>-->
-<!--          </div>-->
         </div>
         <div class="col-md-2">
         </div>

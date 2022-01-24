@@ -28,6 +28,15 @@ class PrimaryKeyMixin(Model):
         abstract = True
 
 
+class NameSlugActiveMixin(Model):
+    name = fields.CharField(255, default='')
+    slug = fields.CharField(50, unique=True, null=True)
+    is_active = fields.BooleanField(default=True)
+
+    class Meta:
+        abstract = True
+
+
 # class Aerich(Model):
 #     version = fields.CharField(max_length=255)
 #     app = fields.CharField(max_length=20)

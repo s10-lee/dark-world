@@ -1,4 +1,6 @@
 @import "init";
+// @import "dark";
+
 
 @import "~bootstrap/scss/functions";
 @import "~bootstrap/scss/variables";
@@ -128,13 +130,10 @@ body {
     width: 100%;
 }
 
-
 //************* Mine *************/
-@import "table";
-
 @import "~bootstrap/scss/forms";
 @import "~bootstrap/scss/buttons";
-//************* Mine *************/
+
 
 /*
   $background,
@@ -222,6 +221,7 @@ body {
 
 //************* Mine *************/
 // @import "pagination";
+@import "table";
 
 @import "~bootstrap/scss/badge";
 @import "~bootstrap/scss/alert";

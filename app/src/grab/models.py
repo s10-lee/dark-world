@@ -1,4 +1,3 @@
-from tortoise.models import Model
 from tortoise.fields import (
     IntField,
     CharField,
@@ -14,7 +13,7 @@ from tortoise.fields import (
     SmallIntField,
 )
 from app.db.fields import IPAddressField, UUIDField
-from uuid import uuid4
+from app.db.models import PrimaryKeyMixin, DateTimeMixin, NameSlugActiveMixin
 from app.src.user.models import User
 from enum import Enum
 from app.db.utils import init_models
@@ -34,32 +33,7 @@ class METHODS(str, Enum):
     DELETE = "DELETE"
 
 
-class PkMixin(Model):
-    id = IntField(pk=True)
-    uid = UUIDField(default=uuid4, unique=True)
-
-    class Meta:
-        abstract = True
-
-
-class DTMixin(Model):
-    created_at = DatetimeField(auto_now_add=True)
-    updated_at = DatetimeField(auto_now=True)
-
-    class Meta:
-        abstract = True
-
-
-class BaseModel(PkMixin, DTMixin):
-    class Meta:
-        abstract = True
-
-
-class NameSlugActiveMixin(Model):
-    name = CharField(255, default='')
-    slug = CharField(50, unique=True, null=True)
-    is_active = BooleanField(default=True)
-
+class BaseModel(PrimaryKeyMixin, DateTimeMixin, NameSlugActiveMixin):
     class Meta:
         abstract = True
 
@@ -68,7 +42,7 @@ class NameSlugActiveMixin(Model):
 #               Models
 # *************************************
 
-class Project(BaseModel, NameSlugActiveMixin):
+class Project(BaseModel):
     user: ForeignKeyRelation[User] = ForeignKeyField('models.User')
     requests: ReverseRelation['Request']
     parsers: ReverseRelation['Parser']
@@ -78,7 +52,7 @@ class Project(BaseModel, NameSlugActiveMixin):
         table = 'ws_project'
 
 
-class ProjectStep(BaseModel, NameSlugActiveMixin):
+class ProjectStep(BaseModel):
     lft = IntField(null=True)
     rgt = IntField(null=True)
     level = IntField(default=0)
@@ -93,7 +67,7 @@ class ProjectStep(BaseModel, NameSlugActiveMixin):
         table = 'ws_project_step'
 
 
-class Request(BaseModel, NameSlugActiveMixin):
+class Request(BaseModel):
     method: METHODS = CharEnumField(METHODS, default=METHODS.GET)
     url = CharField(255)
     params = JSONField(null=True)
@@ -106,7 +80,7 @@ class Request(BaseModel, NameSlugActiveMixin):
         table = 'ws_request'
 
 
-class Parser(BaseModel, NameSlugActiveMixin):
+class Parser(BaseModel):
     search_rule = CharField(255)
     search_keys = JSONField(null=True)
     global_vars = JSONField(null=True)
@@ -119,7 +93,7 @@ class Parser(BaseModel, NameSlugActiveMixin):
         table = 'ws_parser'
 
 
-class HttpRequestResponse(PkMixin):
+class HttpRequestResponse(PrimaryKeyMixin):
     method: METHODS = CharEnumField(METHODS, default=METHODS.GET)
     url = CharField(500)
     headers = JSONField(null=True)

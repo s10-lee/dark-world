@@ -9,10 +9,8 @@
 </template>
 
 <script>
-import BLabel from './BLabel';
 export default {
   name: 'BCheck',
-  components: { BLabel },
   emits: ['update:modelValue'],
   props: {
     modelValue: String,

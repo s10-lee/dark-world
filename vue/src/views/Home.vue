@@ -5,25 +5,29 @@
         <div class="col">
           <div class="mb-2">
             <b-input label="Label" v-model="inputValue" placeholder="Text..."/>
-            value: {{ inputValue }}
+            <i>value: {{ inputValue }}</i>
           </div>
           <div>
-            <b-check v-model="checkValue">Custom checkbox</b-check>
+            <b-check v-model="checkValue">Checkbox</b-check>
             <br/>
-            value: {{ checkValue }}
+            <i>value: {{ checkValue }}</i>
           </div>
         </div>
         <div class="col">
           <b-text-area label="Label" v-model="textAreaValue"/>
-          value: {{ textAreaValue }}
+          <i>value: {{ textAreaValue }}</i>
         </div>
       </div>
+
       <div class="row">
         <div class="col">
+          <b-select v-model="selectValue" :options="selectOptions"></b-select>
+          <i>value: {{ selectValue }}</i>
         </div>
         <div class="col">
         </div>
       </div>
+
     </div>
   </div>
 </template>
@@ -36,6 +40,12 @@ export default {
       inputValue: null,
       textAreaValue: null,
       checkValue: null,
+      selectValue: null,
+      selectOptions: [
+        {value: 1, text: 'One'},
+        {value: 2, text: 'Second'},
+        {value: 3, text: '33333'}
+      ]
     }
   }
 }

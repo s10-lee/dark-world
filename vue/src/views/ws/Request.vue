@@ -19,7 +19,7 @@
         <request-form v-model="item" />
       </div>
       <div v-else>
-        <div class="row" v-for="item in items">
+        <div class="row" v-for="item in items" :key="item.uid">
           <div class="col">
             <b-link :to="`/ws/request/${item.uid}/`">{{ item.uid }}</b-link>
           </div>

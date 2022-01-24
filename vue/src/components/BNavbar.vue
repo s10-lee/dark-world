@@ -1,5 +1,5 @@
 <template>
-  <header v-bind="$attrs" class="navbar navbar-light bg-white shadow-sm navbar-expand-lg fixed-top px-3">
+  <header v-bind="$attrs" class="navbar navbar-dark bg-dark shadow-sm navbar-expand-lg fixed-top px-3">
     <b-link class="navbar-brand" to="/" exact></b-link>
     <button class="navbar-toggler">
       <span class="navbar-toggler-icon"></span>
@@ -10,9 +10,9 @@
         <template v-if="$store.state.user">
           <b-link class="nav-link" to="/n00b">n00b</b-link>
         </template>
-<!--        <template v-else>-->
-<!--          <b-link class="nav-link" to="/sux0r">Sux0r</b-link>-->
-<!--        </template>-->
+        <template v-else>
+          <b-link class="nav-link" to="/sux0r">Sux0r</b-link>
+        </template>
       </div>
     </div>
   </header>
