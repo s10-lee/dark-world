@@ -3,7 +3,6 @@ from tortoise import models, fields
 from tortoise.queryset import QuerySet, QuerySetSingle
 from typing import TypeVar
 from app.db.fields import UUIDField
-from uuid import uuid4
 
 MODEL = TypeVar("MODEL", bound="Model")
 

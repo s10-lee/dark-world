@@ -1,10 +1,10 @@
 from fastapi import Depends, APIRouter, Request, Response
 from fastapi.exceptions import HTTPException
 from tortoise.contrib.pydantic import PydanticModel, PydanticListModel
-from tortoise.contrib.pydantic import pydantic_model_creator, pydantic_queryset_creator
+# from tortoise.contrib.pydantic import pydantic_model_creator, pydantic_queryset_creator
 from typing import Optional, List, Type, Any, TypeVar, Union
 from app.db.models import Model, QuerySet, MODEL, QuerySetSingle
-from app.src.grab.models import User
+# from app.src.grab.models import User
 from app.src.auth.services import get_current_auth_user
 
 
@@ -77,16 +77,14 @@ class CRUDRouter(APIRouter):
             factory = getattr(self, f'_{name}_handler')
             if not factory:
                 continue
-            endpoint_handler = factory()
+            call_handler = factory()
             http_method = self._http_method.get(name)
 
-            # TODO: We don't need db check in Depends - maybe auth_wrapper instead or nothing at all
             self.add_api_route(
                 path,
-                endpoint_handler,
+                call_handler,
                 methods=[http_method],
                 response_model=self._response_models.get(name),
-                dependencies=[Depends(get_current_auth_user)],
                 name=name,
             )
 
@@ -100,20 +98,21 @@ class CRUDRouter(APIRouter):
         get_queryset = self.get_queryset
         schema_list = self.schema_list
 
-        async def _wrapper(user: User = Depends(get_current_auth_user)):
+        async def _wrapper():
             try:
-                return await schema_list.from_queryset(get_queryset(user=user))
+                return await schema_list.from_queryset(get_queryset())
             except Exception as e:
                 raise HTTPException(400, str(e))
         return _wrapper
 
     def _retrieve_handler(self):
         model = self.model
+        schema = self.schema
         lookup = self._db_lookup
 
-        async def _wrapper(pk, user: User = Depends(get_current_auth_user)):
+        async def _wrapper(pk):
             try:
-                return await model.get(user=user, **lookup(pk))
+                return await schema.from_tortoise_orm(await model.get(**lookup(pk)))
             except Exception as e:
                 raise HTTPException(400, str(e))
         return _wrapper
@@ -122,9 +121,9 @@ class CRUDRouter(APIRouter):
         model = self.model
         schema_in = self.schema_in
 
-        async def _wrapper(data: schema_in, user: User = Depends(get_current_auth_user)):
+        async def _wrapper(data: schema_in):
             try:
-                return await model.create(user=user, **data.dict(exclude_unset=True))
+                return await model.create(**data.dict(exclude_unset=True))
             except Exception as e:
                 raise HTTPException(400, str(e))
         return _wrapper
@@ -134,9 +133,9 @@ class CRUDRouter(APIRouter):
         schema_in = self.schema_in
         lookup = self._db_lookup
 
-        async def _wrapper(pk, data: schema_in, user: User = Depends(get_current_auth_user)):
+        async def _wrapper(pk, data: schema_in):
             try:
-                return await model.filter(user=user, **lookup(pk)).update(**data.dict(exclude_unset=True))
+                return await model.filter(**lookup(pk)).update(**data.dict(exclude_unset=True))
             except Exception as e:
                 raise HTTPException(400, str(e))
         return _wrapper
@@ -145,8 +144,8 @@ class CRUDRouter(APIRouter):
         model = self.model
         lookup = self._db_lookup
 
-        async def _wrapper(pk, user: User = Depends(get_current_auth_user)):
-            obj = await model.filter(user=user, **lookup(pk)).delete()
+        async def _wrapper(pk):
+            obj = await model.filter(**lookup(pk)).delete()
             if not obj:
                 raise HTTPException(404, 'Object does not exist')
             return obj
