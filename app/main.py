@@ -6,6 +6,7 @@ from app.src.user.routers import router as api_user
 from app.src.grab.routers import router as api_grab
 from app.src.miro.routers import router as api_miro
 from app.src.web.routers import web_router, web
+from app.src.auth.services import auth_wrapper
 from app.settings import ORM, CORS_ALLOW_ORIGINS, APP_PARAMS
 
 app = FastAPI(**APP_PARAMS)
@@ -20,15 +21,21 @@ app.add_middleware(
 )
 
 
-# @app.middleware('http')
-# async def get_current_user_middleware(request: Request, call_next):
-#     request.state.user = None
-#
-#     authorization = request.headers.get('authorization')
-#     if authorization:
-#         pass
-#
-#     return await call_next(request)
+@app.middleware('http')
+async def get_current_user_middleware(request: Request, call_next):
+    request.state.user = None
+
+    try:
+        auth_jwt = request.headers.get('authorization')
+        user_data = await auth_wrapper(auth_jwt)
+        request.state.user = {
+            'id': user_data['sub'],
+            'username': user_data['name'],
+        }
+    except Exception as e:
+        print(str(e))
+
+    return await call_next(request)
 
 app.include_router(web_router)
 app.include_router(api_user, prefix='/api')

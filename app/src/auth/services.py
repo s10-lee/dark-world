@@ -46,8 +46,7 @@ async def validate_signup(uid: UUID):
 
 
 async def auth_wrapper(auth: HTTPAuthorizationCredentials = Security(security)):
-    token = await decode_token(auth.credentials)
-    return token
+    return await decode_token(auth.credentials)
 
 
 async def auth_check_refresh(refresh_token: str = Cookie(None)):

@@ -14,10 +14,10 @@
         </div>
       </div>
 
-      <div class="position-absolute shadow rounded" style="right:100px;top:100px;">
+      <div class="position-absolute shadow" style="right:100px;top:100px;">
         <div class="row no-gutters">
           <div class="col">
-            <b-btn variant="green" size="sm" disabled @click.prevent.stop="handleCreate">Create block</b-btn>
+            <b-btn variant="green" size="sm" disabled @click.prevent.stop="createBlock">Create block</b-btn>
           </div>
         </div>
       </div>
@@ -25,9 +25,15 @@
     </div>
 
     <div class="container" v-else>
-      <div class="row mt-5">
+      <div class="row mt-6">
         <div class="col">
           <b-table endpoint="/m1r0" :columns="columns" :items="items"/>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col"></div>
+        <div class="col-2">
+          <b-btn variant="out" size="sm" block @click.prevent.stop="createBoard">Add</b-btn>
         </div>
       </div>
     </div>
@@ -54,7 +60,10 @@ export default {
     }
   },
   methods: {
-    handleCreate() {
+    createBoard() {
+
+    },
+    createBlock() {
 
     },
     startDrag(event) {
@@ -63,7 +72,6 @@ export default {
       this.deltaY = Math.round(event.y - y)
       event.dataTransfer.dropEffect = 'move'
       event.dataTransfer.effectAllowed = 'move'
-      // event.dataTransfer.setData('itemId', item.id)
     },
     onDrag(event, item) {
       item.x = event.x - this.deltaX

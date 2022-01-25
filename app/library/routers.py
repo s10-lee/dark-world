@@ -17,7 +17,7 @@ class CRUDRouter(APIRouter):
     schema: PydanticModel = None
     schema_in: PydanticModel = None
     schema_list: PydanticListModel = None
-    # schema_update: BaseModel = None
+    # schema_update: PydanticModel = None
 
     _http_method = {
         'list': 'GET',
@@ -34,6 +34,7 @@ class CRUDRouter(APIRouter):
                  schema_in: PydanticModel = None,
                  schema_list: PydanticListModel = None,
                  dependencies=None,
+                 user_id=None,
                  **kwargs):
         super().__init__(*args, dependencies=dependencies, **kwargs)
 
@@ -54,7 +55,7 @@ class CRUDRouter(APIRouter):
             'create': '/',
             'update': self.lookup_path,
             'retrieve': self.lookup_path,
-            # 'destroy': None,
+            'destroy': self.lookup_path,
 
         }
 
@@ -98,7 +99,7 @@ class CRUDRouter(APIRouter):
         get_queryset = self.get_queryset
         schema_list = self.schema_list
 
-        async def _wrapper():
+        async def _wrapper(request: Request):
             try:
                 return await schema_list.from_queryset(get_queryset())
             except Exception as e:
@@ -110,7 +111,7 @@ class CRUDRouter(APIRouter):
         schema = self.schema
         lookup = self._db_lookup
 
-        async def _wrapper(pk):
+        async def _wrapper(pk, request: Request):
             try:
                 return await schema.from_tortoise_orm(await model.get(**lookup(pk)))
             except Exception as e:
@@ -121,7 +122,7 @@ class CRUDRouter(APIRouter):
         model = self.model
         schema_in = self.schema_in
 
-        async def _wrapper(data: schema_in):
+        async def _wrapper(data: schema_in, request: Request):
             try:
                 return await model.create(**data.dict(exclude_unset=True))
             except Exception as e:
@@ -133,7 +134,7 @@ class CRUDRouter(APIRouter):
         schema_in = self.schema_in
         lookup = self._db_lookup
 
-        async def _wrapper(pk, data: schema_in):
+        async def _wrapper(pk, data: schema_in, request: Request):
             try:
                 return await model.filter(**lookup(pk)).update(**data.dict(exclude_unset=True))
             except Exception as e:

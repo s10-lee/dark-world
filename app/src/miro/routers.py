@@ -13,9 +13,9 @@ router = APIRouter(tags=['Miro'])
 #     return {'user': request.state.user}
 #
 #
-# @router.get('/private-route/')
-# async def private_route(user: User = Depends(auth_wrapper)):
-#     return {'user': user}
+@router.get('/test/')
+async def private_route(user_data: dict = Depends(auth_wrapper)):
+    return {'user': user_data['sub']}
 
 
 router_board = CRUDRouter(
