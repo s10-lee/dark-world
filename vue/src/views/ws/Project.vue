@@ -26,7 +26,7 @@ export default {
   mixins: [apiCrudMixin],
   data() {
     return {
-      endpoint: '/ws/project/'
+      endpoint: '/ws/project'
     }
   },
 }

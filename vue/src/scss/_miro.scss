@@ -2,17 +2,37 @@
   position: relative;
   height: 100vh;
   background: $white;
-  // border: 1px solid $brown-400;
+  overflow: hidden;
 }
 
 .miro-block {
   position: absolute;
-  border: 1px solid $brown-400;
+  border: 1px solid $gray-200;
   padding: 1rem;
-  border-radius: $border-radius-lg;
-  background: $brown-100;
+  border-radius: $border-radius;
+  background: $white;
+  min-width: 100px;
+  min-height: 180px;
 
   &:hover {
-    cursor: pointer;
+    cursor: move;
   }
+}
+
+.block-pink {
+  background: #FF2E63;
+  color: $white;
+  border-color: transparent;
+}
+
+.block-dark {
+  background: #252A34;
+  color: $white;
+  border-color: transparent;
+}
+
+.block-cyan {
+  background: #03D9D6;
+  color: $white;
+  border-color: transparent;
 }

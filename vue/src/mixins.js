@@ -15,28 +15,28 @@ export const apiCrudMixin = {
             return `${this.endpoint}/${pk ? pk : ''}/`.replace('//', '/')
         },
         listItems() {
-            getApiCall(this.endpoint)
+            getApiCall(this.endpointUrl())
                 .then(data => this.items = data)
                 .catch(error => this.errors.push(error))
         },
         receiveItem(pk) {
-            getApiCall(this.endpoint + `${pk}/`)
+            getApiCall(this.endpointUrl(pk))
                 .then(data => this.item = data)
                 .catch(error => this.errors.push(error))
 
         },
         createItem(payloadData) {
-            postApiCall(this.endpoint, payloadData)
+            postApiCall(this.endpointUrl(), payloadData)
                 .then(data => this.item = data)
                 .catch(error => this.errors.push(error))
         },
         updateItem(pk, payloadData) {
-            putApiCall(this.endpoint + `${pk}/`, payloadData)
+            putApiCall(this.endpointUrl(pk), payloadData)
                 .then(data => this.item = data)
                 .catch(error => this.errors.push(error))
         },
         destroyItem(pk) {
-            deleteApiCall(this.endpoint + `${pk}/`)
+            deleteApiCall(this.endpointUrl(pk))
                 .then(() => {
                     this.item = null
                     this.pk = null

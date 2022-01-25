@@ -11,7 +11,7 @@ const routes = [
     {path: '/', component: Home},
     {path: '/n00b', component: Profile, ...ROUTE_AUTH},
     {path: '/sux0r', component: Auth, ...ROUTE_GUEST},
-    {path: '/m1r0/:pk?', component: () => import('views/Miro'), ...ROUTE_AUTH},
+    {path: '/m1r0/:pk?', component: () => import('views/miro/Board'), ...ROUTE_AUTH},
     {path: '/ws/project/:pk?', component: () => import('views/ws/Project.vue'), props: true, meta: { authRequired: true }},
     // {path: '/ws/request/:pk?', component: () => import('views/ws/Request.vue'), props: true, meta: { authRequired: true }},
     {path: '/:pathMatch(.*)*', name: 'NotFound', component: NotFound, props: true},

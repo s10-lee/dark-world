@@ -19,7 +19,7 @@ router_project = CRUDRouter(
     schema_list=ProjectSchemaList,
 )
 
-router = APIRouter(tags=['Web Scraping'], prefix='/ws')
+router = APIRouter(tags=['Web Scraping'])
 router.include_router(router_project, prefix='/project')
 
 
