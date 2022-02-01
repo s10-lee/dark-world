@@ -3,8 +3,8 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from tortoise.contrib.fastapi import register_tortoise
 from app.src.user.routers import router as api_user
-from app.src.grab.routers import router as api_grab
-from app.src.miro.routers import router as api_miro
+# from app.src.grab.routers import router as api_grab
+# from app.src.miro.routers import router as api_miro
 from app.src.web.routers import web_router, web
 from app.src.auth.services import auth_wrapper
 from app.settings import ORM, CORS_ALLOW_ORIGINS, APP_PARAMS
@@ -39,8 +39,8 @@ async def get_current_user_middleware(request: Request, call_next):
 
 app.include_router(web_router)
 app.include_router(api_user, prefix='/api')
-app.include_router(api_grab, prefix='/api/ws')
-app.include_router(api_miro, prefix='/api/miro')
+# app.include_router(api_grab, prefix='/api/ws')
+# app.include_router(api_miro, prefix='/api/miro')
 
 app.mount('/', web)
 

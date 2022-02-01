@@ -1,3 +1,4 @@
+@import "fonts";
 @import "init";
 // @import "dark";
 
@@ -133,82 +134,7 @@ body {
 //************* STYLES *************/
 @import "~bootstrap/scss/forms";
 @import "~bootstrap/scss/buttons";
-
-
-/*
-  $background,
-  $border,
-  $color,
-
-  $hover-background,
-  $hover-border,
-  $hover-color,
-
-  $active-background,
-  $active-border,
-  $active-color,
-
-  $disabled-background: $background,
-  $disabled-border: $border,
-  $disabled-color: color-contrast($disabled-background)
-
-*/
 @import "buttons";
-
-.btn-green {
-    @extend .btn;
-    @include button-variant(
-        $m-green, $m-green, $dark,
-        $l-green, $l-green, $dark,
-        $l-green, $l-green, $dark
-    );
-}
-
-.btn-yellow {
-    @extend .btn;
-    @include button-variant(
-        $m-yellow, $m-yellow, $dark,
-        $l-yellow, $l-yellow, $dark,
-        $l-yellow, $l-yellow, $dark
-    );
-}
-
-.btn-out {
-    @extend .btn;
-    @include button-variant(
-        transparent, $dark, $dark,
-        rgba($dark, .15), $dark, $dark,
-        rgba($dark, .15), $dark, $dark
-    );
-    &.invert {
-        @include button-variant(
-            transparent, $white, $white,
-            rgba($white, .15), $white, $white,
-            rgba($white, .15), $white, $white
-        );
-        &.h-green {
-            &:hover {
-                background-color: rgba($m-green, .15);
-                border-color: $m-green;
-            }
-        };
-        &.h-yellow {
-            &:hover {
-                background-color: rgba($m-yellow, .15);
-                border-color: $m-yellow;
-            }
-        }
-    }
-}
-
-.btn-dark {
-    &:hover, &:active, &:focus{
-        background-color: $dark-hover;
-        border-color: $dark-hover;
-    }
-}
-
-
 @import "~bootstrap/scss/transitions";
 @import "~bootstrap/scss/dropdown";
 @import "~bootstrap/scss/button-group";

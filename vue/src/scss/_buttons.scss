@@ -1,4 +1,23 @@
 
+/*
+  $background,
+  $border,
+  $color,
+
+  $hover-background,
+  $hover-border,
+  $hover-color,
+
+  $active-background,
+  $active-border,
+  $active-color,
+
+  $disabled-background: $background,
+  $disabled-border: $border,
+  $disabled-color: color-contrast($disabled-background)
+
+*/
+
 .dc-btn--green {
   background-color: #03ef62;
   border-color: #03ef62;
@@ -41,4 +60,57 @@
   font-weight: 800;
   text-decoration: none;
   transition: border-color .3s cubic-bezier(.77, 0, .175, 1);
+}
+
+.btn-green {
+  @extend .btn;
+  @include button-variant(
+                  $m-green, $m-green, $dark,
+                  $l-green, $l-green, $dark,
+                  $l-green, $l-green, $dark
+  );
+}
+
+.btn-yellow {
+  @extend .btn;
+  @include button-variant(
+                  $m-yellow, $m-yellow, $dark,
+                  $l-yellow, $l-yellow, $dark,
+                  $l-yellow, $l-yellow, $dark
+  );
+}
+
+.btn-out {
+  @extend .btn;
+  @include button-variant(
+                  transparent, $dark, $dark,
+                  rgba($dark, .15), $dark, $dark,
+                  rgba($dark, .15), $dark, $dark
+  );
+  &.invert {
+    @include button-variant(
+                    transparent, $white, $white,
+                    rgba($white, .15), $white, $white,
+                    rgba($white, .15), $white, $white
+    );
+    &.h-green {
+      &:hover {
+        background-color: rgba($m-green, .15);
+        border-color: $m-green;
+      }
+    };
+    &.h-yellow {
+      &:hover {
+        background-color: rgba($m-yellow, .15);
+        border-color: $m-yellow;
+      }
+    }
+  }
+}
+
+.btn-dark {
+  &:hover, &:active, &:focus{
+    background-color: $dark-hover;
+    border-color: $dark-hover;
+  }
 }

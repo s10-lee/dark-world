@@ -9,8 +9,10 @@
         <b-link class="nav-link" to="/" exact>#. . .</b-link>
         <template v-if="$store.state.user">
           <b-link class="nav-link" to="/n00b">n00b</b-link>
+          <!--
           <b-link class="nav-link" to="/ws/project">wScrap</b-link>
           <b-link class="nav-link" to="/m1r0">m1r0</b-link>
+          -->
         </template>
         <template v-else>
           <b-link class="nav-link" to="/sux0r">Sux0r</b-link>

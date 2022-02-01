@@ -6,8 +6,6 @@ const isLocal = process.env.VUE_APP_MODE === 'local'
 const publicPath = process.env.VUE_APP_PUBLIC
 const statFile = process.env.VUE_APP_STAT_FILE
 
-console.log('process.env =', process.env)
-
 const statRoot = path.resolve(path.join(path.dirname(__dirname), 'stats'));
 // const statFile = isProd ? 'webpack-stats-prod.json' : 'webpack-stats.json';
 // const publicPath = isProd ? '/static/bundles/' : 'http://0.0.0.0:5050/';

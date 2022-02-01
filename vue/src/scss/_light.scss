@@ -8,7 +8,7 @@ $blue-500: #007bb6;
 $blue-600: #0075ad;
 $blue-900: #213147;   // dark background
 
-// $dark: #05192d;
+$dark: #05192d;
 $dark-hover: $blue-900;
 
 $blue: $blue-500;
@@ -34,24 +34,24 @@ $brown-600: #59594A;
 $brown-900: #2E2E2E;
 // ...
 
-//$gray-50:  #F5F7FA;
-//$gray-100: #E4E7EB;
-//$gray-200: #CBD2D9;
-//$gray-300: #9AA5B1;
-//$gray-400: #7B8794;
-//$gray-500: #616E7C;
-//$gray-600: #667079;   // datacamp placeholder color
-//$gray-700: #3E4C59;
-//$gray-800: #323F4B;
-//$gray-900: #1F2933;
-//$gray-1000: #121212;
+$gray-50:  #F5F7FA;
+$gray-100: #E4E7EB;
+$gray-200: #CBD2D9;
+$gray-300: #9AA5B1;
+$gray-400: #7B8794;
+$gray-500: #616E7C;
+$gray-600: #667079;   // datacamp placeholder color
+$gray-700: #3E4C59;
+$gray-800: #323F4B;
+$gray-900: #1F2933;
+$gray-1000: #121212;
 
-// $body-bg: $brown-200;
-// $body-color: $dark;
+$body-bg: $brown-200;
+$body-color: $dark;
 
-//$disabled-color: $brown-200;
-//$component-active-color: $white;
-//$component-active-bg: $blue-400;
+$disabled-color: $brown-200;
+$component-active-color: $white;
+$component-active-bg: $blue-400;
 
 /********************************
             BORDER
@@ -79,25 +79,25 @@ $form-label-font-weight:    bold;
 /********************************
       Buttons + Forms
 ********************************/
-// $input-bg: $white;
+$input-bg: $white;
 $input-transition: border-color .3s cubic-bezier(.77, 0, .175, 1);
 
 
-// $input-btn-padding-y: .7rem;
-// $input-btn-padding-x: .9rem;
+$input-btn-padding-y: .7rem;
+$input-btn-padding-x: .9rem;
 
 
-// $input-btn-padding-y-sm: .5rem;
-// $input-btn-padding-x-sm: .7rem;
+$input-btn-padding-y-sm: .5rem;
+$input-btn-padding-x-sm: .7rem;
 
-// $input-border-color: $brown-400;
-// $input-btn-border-width: 2px;
+$input-border-color: $brown-400;
+$input-btn-border-width: 2px;
 
 $input-btn-focus-width: 0;
 $input-btn-focus-box-shadow: none;
 
-// $input-focus-border-color: $blue-400;
-// $input-placeholder-color: $gray-600;
+$input-focus-border-color: $blue-400;
+$input-placeholder-color: $gray-600;
 
 /********************************
           Button
@@ -105,15 +105,14 @@ $input-btn-focus-box-shadow: none;
 
 // $btn-padding-y: .5rem;
 // $btn-padding-x: 1.5rem;
+$btn-padding-y-sm: .35rem;
+$btn-padding-x-sm: 1.25rem;
+$btn-padding-y-lg: .75rem;
+$btn-padding-x-lg: 1.875rem;
 
-//$btn-padding-y-sm: .35rem;
-//$btn-padding-x-sm: 1.25rem;
-//$btn-padding-y-lg: .75rem;
-//$btn-padding-x-lg: 1.875rem;
-//
-//$btn-border-width: 2px;
-//$btn-font-weight: bold;
-//$btn-font-size-sm: .95rem;
+$btn-border-width: 2px;
+$btn-font-weight: bold;
+$btn-font-size-sm: .95rem;
 
 
 
@@ -149,4 +148,7 @@ $l-yellow: #ffec3c;
 $m-yellow: #fcce0d;
 
 $font-family-sans-serif: 'Studio-Feixen-Sans', Arial, sans-serif;
+
+//@import "~bootstrap/scss/variables";
+//@import "~bootstrap/scss/mixins";
 
