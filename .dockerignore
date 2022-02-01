@@ -10,7 +10,7 @@
 **/__pycache__
 app/db/migrations
 app/aerich.ini
-*.env
+*.env*
 *.scss
 *.conf.example
 venv

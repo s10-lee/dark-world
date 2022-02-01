@@ -6,11 +6,11 @@ services:
     restart: unless-stopped
     build:
       context: .
-      dockerfile: ./docker/dev/postgres/Dockerfile
+      dockerfile: ./docker/prod/postgres/Dockerfile
     ports:
       - 5432:5432
     env_file:
-      - .env.dev
+      - .env.prod
     volumes:
       - postgres_data:/var/lib/postgresql/data/
     networks:
@@ -20,7 +20,7 @@ services:
 #    container_name: redis
 #    build:
 #      context: .
-#      dockerfile: ./docker/dev/redis/Dockerfile
+#      dockerfile: ./docker/prod/redis/Dockerfile
 #    restart: always
 #    ports:
 #      - 9000:9000
@@ -32,11 +32,11 @@ services:
     restart: always
     build:
       context: .
-      dockerfile: ./docker/dev/fastapi/Dockerfile
+      dockerfile: ./docker/prod/fastapi/Dockerfile
     env_file:
-      - .env.dev
+      - .env.prod
     volumes:
-      - static_files:/app/static
+      - static_files:/usr/src/app/static
     ports:
       - 8000:8000
     depends_on:
@@ -48,9 +48,9 @@ services:
     container_name: nginx
     build:
       context: .
-      dockerfile: ./docker/dev/nginx/Dockerfile
+      dockerfile: ./docker/prod/nginx/Dockerfile
     env_file:
-      - .env.dev
+      - .env.prod
     volumes:
       - static_files:/app/static
       - web_root:/usr/share/nginx/html
@@ -63,6 +63,20 @@ services:
       - app
     networks:
       - local_net
+
+
+  certbot:
+    image: certbot/certbot
+    container_name: certbot
+    volumes:
+      - certbot_etc:/etc/letsencrypt
+      - certbot_var:/var/lib/letsencrypt
+      - web_root:/usr/share/nginx/html
+    networks:
+      - local_net
+    # command: certonly --webroot --webroot-path=/usr/share/nginx/html --email s10@artel.works --agree-tos --no-eff-email --staging -d labgrow.io
+    command: certonly --webroot --webroot-path=/usr/share/nginx/html --email s10@artel.works --agree-tos --no-eff-email --force-renewal -d d4rkvv0r1.de
+
 
 networks:
   local_net:

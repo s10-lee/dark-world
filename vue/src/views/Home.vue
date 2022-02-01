@@ -6,8 +6,6 @@
           <h1>SOME !!!</h1>
         </div>
       </div>
-
-
     </div>
   </div>
 </template>
