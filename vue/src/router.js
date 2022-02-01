@@ -1,6 +1,6 @@
 import {createRouter, createWebHistory} from 'vue-router'
 import Auth from 'views/Auth'
-// import Home from 'views/Home'
+import Home from 'views/Home'
 import Landing from 'views/Landing'
 import Profile from 'views/user/Profile'
 import NotFound from 'views/errors/NotFound'
@@ -9,7 +9,8 @@ import { ROUTE_AUTH, ROUTE_GUEST } from 'services/const'
 
 
 const routes = [
-    {path: '/', component: Landing},
+    {path: '/', component: Home},
+    {path: '/land', component: Landing},
     {path: '/n00b', component: Profile, ...ROUTE_AUTH},
     {path: '/sux0r', component: Auth, ...ROUTE_GUEST},
     {path: '/m1r0/:pk?', component: () => import('views/miro/Board'), ...ROUTE_AUTH},

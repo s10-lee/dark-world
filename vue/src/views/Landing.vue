@@ -25,9 +25,9 @@
       <section class="dark"></section>
 
       <kinesis-container event="scroll" style="position: absolute; top: 75%; left:0; height: 100%;">
-        <kinesis-element :strength="250"
+        <kinesis-element :strength="300"
                          axis="y"
-                         originY="70"
+                         originY="80"
                          transformOrigin="50% 300%">
           <div class="branch-left"></div>
         </kinesis-element>

@@ -3,7 +3,7 @@
     <div class="container">
       <div class="row mt-6">
         <div class="col">
-          <h1>SOME !!!</h1>
+          <h3>. . .</h3>
         </div>
       </div>
     </div>
