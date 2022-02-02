@@ -1,8 +1,32 @@
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&display=swap');
+// NORMAL
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;900&display=swap');
+
+// ITALIC ONLY
+// @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,400;1,600;1,700;1,900&display=swap');
+
+
+$gold-opaque: #DBC087;
+$gold-pale: #cfb886;
+$gold-shine: #c19a49;
+$gold: #9b7132;
+$serif-family: 'Playfair Display', serif;
+
+
+%gold-gradient {
+  background: linear-gradient(#ab8d60, #b29466, #DBC087, #ab8d60);
+}
+
+
+// Gold gradient
+// #ab8d60, #b29466, #DBC087, #ab8d60,
+// Gray gradient
+// #332d34, #24262b, #191b21, #15171d;
+
+
 
 .serif {
-  font-family: 'Playfair Display', serif;
-  // font-weight: 600;
+  font-family: $serif-family;
+  font-weight: 600;
 }
 
 
@@ -10,8 +34,7 @@
 
   height: 100%;
   min-height: 200vh;
-
-  font-size: 24px;
+  font-size: 1rem;
 
   h1, h2, h3, h4, h5 {
     font-family: 'Arsenica', Arial, sans-serif;
@@ -21,14 +44,19 @@
     margin: 0;
   }
 
+  p {
+    font-size: 18px;
+  }
+
   header, section {
     display: flex;
-    padding: 2rem;
+    justify-content: center;
+    padding: 3rem;
+    margin-bottom: 3rem;
     width: 100%;
   }
 
   header {
-
     flex-direction: column;
     align-items: center;
 
@@ -39,20 +67,20 @@
 
     h1 {
       text-align: center;
-      font-size: 4rem;
-      line-height: 4rem;
+      font-size: 5rem;
+      line-height: 4.5rem;
       color: transparent;
       background: url("../assets/img/gold-01.jpeg") center 20%;
       background-clip: text;
-      max-width: 240px;
+      max-width: 300px;
     }
 
     .logo {
       display: block;
       width: 100%;
       height: auto;
-      max-width: 180px;
-      max-height: 180px;
+      max-width: 160px;
+      max-height: 160px;
     }
   }
 
@@ -61,16 +89,10 @@
     &.dark {
       background: url("../assets/img/black-paper-texture.jpeg");
       color: #ddd;
-
       height: 100%;
-      min-height: 50vh;
-      max-height: 500px;
-
-      position: absolute;
-      top: 150%;
-      left: 0;
+      max-height: 300px;
       width: 100%;
-      z-index: 100;
+
     }
   }
 }
@@ -94,24 +116,41 @@
 }
 
 .text-gold {
-  color: #9b7132;
+  color: $gold;
 }
 
+.text-gold-pale {
+  color: $gold-pale;
+}
+
+.title-gold {
+  font-size: 2.5rem;
+  letter-spacing: 1px;
+  color: $gold;
+  font-family: $serif-family;
+  // font-style: italic;
+  font-weight: 700;
+  text-align: center;
+  line-height: 2.5rem;
+}
+
+
+
+
 .photo-01 {
-  background: url("../assets/img/photo-01.png") no-repeat 54% top;
+  background: url("../assets/img/photo-01.png") no-repeat 54% center;
   background-size: 540px auto;
 }
 
 .branch-right {
   pointer-events: none;
-  position: fixed;
-  top: 30%;
-  right: 0;
+  //position: absolute;
+  //top: 30%;
+  //right: 0;
   width: 600px;
   height: 600px;
   background: url("../assets/img/right-branch-blur.png") no-repeat right;
   background-size: contain;
-  // z-index: 100;
 }
 
 
@@ -122,4 +161,44 @@
   background: url("../assets/img/left-branch.png") no-repeat left;
   background-size: contain;
   // z-index: 100;
+}
+
+.price-box {
+  position: relative;
+  display: block;
+  padding: 2rem;
+  border: 1px solid $gold-pale;
+  color: #666;
+  text-align: center;
+  background: #fff;
+  height: 100%;
+  z-index: 10;
+
+  h3 {
+    @extend .serif;
+    font-size: 2rem;
+    font-weight: 900;
+    color: $gold;
+    margin-bottom: 2rem;
+  }
+
+  &.dark {
+    color: #a1a6b1;
+    background-color: #1a1e28;
+    h3 {
+      color: #fff;
+    }
+  }
+
+  &:before {
+    content: '';
+    position: absolute;
+    top: -3px;
+    left: -3px;
+    right: -3px;
+    bottom: -3px;
+    @extend %gold-gradient;
+    z-index: -1;
+  }
+
 }
