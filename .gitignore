@@ -125,5 +125,6 @@ users.acl
 /stats
 /app/static/bundles
 /app/static/tmp
+/app/media
 vue/node_modules/
 vue/package-lock.json

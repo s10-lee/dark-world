@@ -14,3 +14,4 @@ app/aerich.ini
 *.scss
 *.conf.example
 venv
+init.sh

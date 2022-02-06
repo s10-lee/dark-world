@@ -6,9 +6,10 @@
     </button>
     <div class="collapse navbar-collapse">
       <div class="navbar-nav">
-        <b-link class="nav-link" to="/" exact>#. . .</b-link>
+        <b-link class="nav-link" to="/" exact>#</b-link>
         <template v-if="$store.state.user">
-          <b-link class="nav-link" to="/n00b">n00b</b-link>
+          <b-link class="nav-link" to="/n00b" exact>Profile</b-link>
+          <b-link class="nav-link" to="/n00b/gallery">Gallery</b-link>
           <!--
           <b-link class="nav-link" to="/ws/project">wScrap</b-link>
           <b-link class="nav-link" to="/m1r0">m1r0</b-link>
@@ -24,7 +25,9 @@
 </template>
 
 <script>
+import BLink from "./BLink";
 export default {
-  name: 'BNavbar'
+  name: 'BNavbar',
+  components: {BLink}
 }
 </script>

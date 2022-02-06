@@ -34,3 +34,12 @@ export const deleteApiCall = ( url ) => {
     return xhr.delete( url, { headers: httpHeader() })
         .then( response => response.data )
 }
+
+export const uploadApiCall = ( url, formData ) => {
+    return xhr.post( url, formData, {
+        headers: {
+            ...httpHeader(),
+            'Content-Type': 'multipart/form-data'
+        }})
+        .then( response => response.data )
+}

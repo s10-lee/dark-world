@@ -5,12 +5,14 @@ from tortoise.contrib.fastapi import register_tortoise
 from app.src.user.routers import router as api_user
 # from app.src.grab.routers import router as api_grab
 # from app.src.miro.routers import router as api_miro
+from app.src.pin.routers import router as api_pin
 from app.src.web.routers import web_router, web
 from app.src.auth.services import auth_wrapper
 from app.settings import ORM, CORS_ALLOW_ORIGINS, APP_PARAMS, DEBUG
 
 app = FastAPI(**APP_PARAMS)
 app.mount('/static', StaticFiles(directory='app/static'), name='static')
+app.mount('/media', StaticFiles(directory='app/media'), name='media')
 
 app.add_middleware(
     CORSMiddleware,
@@ -41,6 +43,7 @@ app.include_router(web_router)
 app.include_router(api_user, prefix='/api')
 # app.include_router(api_grab, prefix='/api/ws')
 # app.include_router(api_miro, prefix='/api/miro')
+app.include_router(api_pin, prefix='/api/pin')
 
 app.mount('/', web)
 

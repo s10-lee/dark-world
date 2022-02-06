@@ -12,6 +12,8 @@ SECRET_KEY = os.getenv('SECRET_KEY')
 ALGORITHM = os.getenv('ALGORITHM')
 INTERVAL = int(os.getenv('INTERVAL', 10))
 
+MEDIA = 'app/media'
+
 CORS_ALLOW_ORIGINS = [
     'https://d4rkvv0r1.de',
     'http://localhost',
@@ -39,6 +41,7 @@ APPS_MODELS = [
     # 'app.src.dw.models',
     # 'app.src.grab.models',
     # 'app.src.miro.models',
+    'app.src.pin.models',
 ]
 
 ORM = {
