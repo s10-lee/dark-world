@@ -1,24 +1,59 @@
-$body-bg: #111;
-$body-color: $brown-400;
+$gray-100: #f8f9fa !default;
+$gray-200: #e9ecef !default;
+$gray-300: #dee2e6 !default;
+$gray-400: #ced4da !default;
+$gray-500: #adb5bd !default;
+$gray-600: #6c757d !default;
+$gray-700: #495057 !default;
+$gray-800: #343a40 !default;
+$gray-900: #212529 !default;
 
-$input-bg: $dark-hover;
-$input-border-color: $dark-hover;
+
+$dark: #252323;
+$blue: #1A8FE3;
+$green: #0CF574;
+$yellow: #facd19;
+$orange: #fa5f1a;
+
+$primary: $orange;
+$secondary: #474747;
+
+
+$body-color: #f7f0f0;
+
+$body-bg: #111;
+
+
+$border-width: 1px;
+$border-color: $gray-600;
+
+$link-color: $blue;
+
+$input-bg: $body-bg;
+// $input-border-color: $dark-hover;
 // $input-placeholder-color: $gray-400;
+
+$border-radius-xs:    .125rem;
+$border-radius-sm:    .2rem;
+$border-radius:       .25rem;
+$border-radius-lg:    .3rem;
+
+
 /********************************
     Additional Classes
 ********************************/
 
-body:after {
-  content: '';
-  display: block;
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  background: linear-gradient(to bottom, #12181b, #111);
-  height: 300px;
-  z-index: -1;
-}
+//body:after {
+//  content: '';
+//  display: block;
+//  position: absolute;
+//  top: 0;
+//  left: 0;
+//  right: 0;
+//  background: linear-gradient(to bottom, #12181b, #111);
+//  height: 300px;
+//  z-index: -1;
+//}
 
 .moon-text {
   letter-spacing: 1px;

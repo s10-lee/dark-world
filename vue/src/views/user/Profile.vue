@@ -1,4 +1,5 @@
 <template>
+  <b-navbar/>
   <div class="fixed-container-scroll">
     <div class="container">
       <div class="row mt-6">
@@ -15,6 +16,6 @@
 
 <script>
 export default {
-  name: 'Profile'
+  name: 'Profile',
 }
 </script>

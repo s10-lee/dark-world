@@ -23,6 +23,7 @@ CORS_ALLOW_ORIGINS = [
 ]
 
 APP_PARAMS = {
+    'debug': DEBUG,
     'redoc_url': None,
     'docs_url': '/docs' if DEBUG else None,
 }
