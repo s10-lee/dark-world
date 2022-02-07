@@ -1,11 +1,10 @@
 <template>
-  <label class="file-upload">
+  <div class="file-upload">
     <input type="file"
-           @change="$emit('update:modelValue', $event.target.value)"
-           :value="modelValue"
+           @change="onChange"
            v-bind="$attrs">
     <slot></slot>
-  </label>
+  </div>
 </template>
 
 <script>
@@ -13,5 +12,10 @@ export default {
   name: 'BFile',
   props: ['modelValue'],
   emits: ['update:modelValue'],
+  methods: {
+    onChange(event) {
+      this.$emit('update:modelValue', event.target.files[0])
+    }
+  }
 }
 </script>

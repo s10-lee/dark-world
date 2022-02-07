@@ -4,33 +4,35 @@
       <b-col>
         <h1>Gallery</h1>
       </b-col>
-      <b-col cols="auto">
-        <div class="file-upload">
-          <input type="file" accept="image/*" @change="onChange"/>
-          Choose File
-        </div>
-        <div v-if="file" class="ps-5">
-          <b>{{ file.name }}</b>
-          <b-btn variant="secondary" @click="uploadFile">Submit</b-btn>
-        </div>
-      </b-col>
     </b-row>
-    <b-row class="mt-3">
+    <b-row>
       <b-col>
-        <div v-for="item in items" :key="item.uid" class="pin-preview">
-          {{ item.name ? item.name : item.uid}}
-          <img :src="`/media/${item.user_id}/${item.uid}.${item.name.split('.').pop()}`">
+        <pin-create-form/>
+      </b-col>
+    </b-row>
+    <b-row class="mt-3 row-cols-1 row-cols-md-3 row-cols-lg-4 row-cols-xl-5 g-4">
+      <b-col v-for="item in items" :key="item.uid">
+        <div class="card bg-dark">
+          <img :src="item.url" class="card-img-top" alt="">
+          <div class="card-body">
+            <h6 class="card-title">{{ item.name ? item.name : '&nbsp;'}}</h6>
+            <b-btn size="sm" variant="out-danger">delete</b-btn>
+          </div>
         </div>
       </b-col>
     </b-row>
+    <div style="height: 5rem;"></div>
   </div>
 </template>
 
 <script>
-import {uploadApiCall, getApiCall} from 'services/http'
-
+import {uploadApiCall, getApiCall, deleteApiCall} from 'services/http'
+import PinCreateForm from "./PinCreateForm"
 export default {
   name: 'Gallery',
+  components: {
+    PinCreateForm
+  },
   data() {
     return {
       file: '',
@@ -38,10 +40,14 @@ export default {
     }
   },
   methods: {
+    removeFile() {
+
+    },
     onChange(event) {
       this.file = event.target.files[0]
     },
-    uploadFile() {
+    uploadFile(event) {
+      this.file = event.target.files[0]
       let formData = new FormData()
       formData.append('file', this.file, this.file.name)
       uploadApiCall('/pin/upload/', formData).then(data => {

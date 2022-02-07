@@ -4,7 +4,7 @@
         <div class="col-md-2">
           <label class="form-label">Method</label>
           <select class="form-select">
-            <option v-for="(name, key) in methods" :value="key" :selected="key === modelValue.method">
+            <option v-for="(name, key) in methods" :key="key" :value="key" :selected="key === modelValue.method">
               {{ name }}
             </option>
           </select>
@@ -69,17 +69,13 @@
 
 <script>
 import BInputPair from 'blocks/BInputPair';
+const defaultForm = {url: null, method: 'GET', headers: {}, params: {}, data: {}}
+
 export default {
   props: {
     modelValue: {
       type: Object,
-      default: {
-        url: null,
-        method: 'GET',
-        headers: {},
-        params: {},
-        data: {}
-      },
+      default: () => defaultForm,
       required: true
     },
   },

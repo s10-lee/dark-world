@@ -2,36 +2,37 @@ import aiohttp
 import base64
 import xmltodict
 import orjson
+import collections
+
+response_object_creator = collections.namedtuple('response_namedtuple', ['status', 'headers', 'content_type', 'data'])
 
 
 def generate_basic_auth(first, second):
     return base64.b64encode(f"{first}:{second}".encode("utf-8")).decode("utf-8")
 
 
-async def make_request(decoder: callable = None, **kwargs):
-    if not kwargs.get('method'):
-        kwargs['method'] = 'get'
+async def decode_response_data(resp: aiohttp.ClientResponse, data_format: str = None):
+    if data_format == 'xml':
+        data = parse_xml(await resp.text())
+    elif data_format == 'json':
+        data = parse_json(await resp.text())
+    elif data_format == 'binary':
+        data = await resp.read()
+    else:
+        data = await resp.text()
+    return data
+
+
+async def make_request(url, data_format=None, **kwargs) -> response_object_creator:
+    kwargs['method'] = kwargs.get('method', 'get')
     async with aiohttp.ClientSession() as session:
-        async with session.request(ssl=False, **kwargs) as resp:
-            text = await resp.text()
-            return {
-                'status': resp.status,
-                'headers': dict(resp.headers),
-                'content_type': resp.content_type,
-                'data': decoder(text) if decoder else text
-            }
-
-
-def make_session(**kwargs):
-    return aiohttp.ClientSession(**kwargs)
-
-
-async def make_request_json(**kwargs):
-    return await make_request(decoder=parse_json, **kwargs)
-
-
-async def make_request_xml(**kwargs):
-    return await make_request(decoder=parse_xml, **kwargs)
+        async with session.request(url=url, ssl=False, **kwargs) as resp:
+            return response_object_creator(
+                status=resp.status,
+                headers=dict(resp.headers),
+                content_type=resp.content_type,
+                data=await decode_response_data(resp, data_format=data_format)
+            )
 
 
 def parse_xml(content):
@@ -51,7 +52,6 @@ async def parse_bs4(page):
 
 
 # lxml.html
-def parse_html_form(content):
+def parse_html_lxml(content):
     import lxml.html
-    tree = lxml.html.fromstring(content)
-    return dict(tree.forms[0].fields)
+    return lxml.html.fromstring(content)

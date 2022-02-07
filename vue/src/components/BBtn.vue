@@ -12,7 +12,7 @@ export default {
   },
   data() {
     return {
-      sizes: ['xl', 'lx', 'md', 'sm', 'xl'],
+      sizes: ['xs', 'md', 'sm', 'lg', 'xl'],
       variants: ['primary', 'secondary', 'success', 'warning', 'danger', 'info', 'dark'],
       variants2: ['green', 'yellow', 'out']
     }
@@ -26,6 +26,15 @@ export default {
       } else if (this.variants2.includes(this.variant)) {
         styles.push('btn-' + this.variant)
       }
+
+      if (this.variant.indexOf('out-') === 0) {
+        let cls = this.variant.substring(4)
+        if (this.variants.includes(cls)) {
+          styles.push('btn')
+          styles.push('btn-outline-' + cls)
+        }
+      }
+
       if (this.sizes.includes(this.size)) {
         styles.push('btn-' + this.size)
       }

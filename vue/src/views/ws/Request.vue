@@ -33,7 +33,7 @@
 
 <script>
 import { apiCrudMixin } from 'mixins'
-import RequestForm from 'forms/Request'
+import RequestForm from './RequestForm'
 export default {
   mixins: [ apiCrudMixin ],
   components: { RequestForm },

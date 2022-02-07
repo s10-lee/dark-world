@@ -86,6 +86,10 @@ async def get_current_auth_user(user_data: dict = Depends(auth_wrapper)) -> User
     return await User.get(id=user_data['sub'])
 
 
+async def get_current_user_id(user_data: dict = Depends(auth_wrapper)) -> UUID:
+    return UUID(user_data.get('sub'))
+
+
 async def create_access_token(user: User):
     item = await APIKeys.first()
     private_key = crypto_serialization.load_pem_private_key(
