@@ -16,8 +16,9 @@ class CRUDRouter(APIRouter):
 
     schema: PydanticModel = None
     schema_in: PydanticModel = None
+    schema_up: PydanticModel = None
     schema_list: PydanticListModel = None
-    # schema_update: PydanticModel = None
+
 
     _http_method = {
         'list': 'GET',
@@ -32,9 +33,10 @@ class CRUDRouter(APIRouter):
                  lookup_field: str = None,
                  schema: PydanticModel = None,
                  schema_in: PydanticModel = None,
+                 schema_up: PydanticModel = None,
                  schema_list: PydanticListModel = None,
                  dependencies=None,
-                 user_id=None,
+                 by_user=None,
                  **kwargs):
         super().__init__(*args, dependencies=dependencies, **kwargs)
 
@@ -43,12 +45,12 @@ class CRUDRouter(APIRouter):
         if lookup_field:
             self.lookup_field = lookup_field
 
-        if schema:
-            self.schema = schema
-        if schema_in:
-            self.schema_in = schema_in
-        if schema_list:
-            self.schema_list = schema_list
+        self.schema = schema
+        self.schema_in = schema_in
+        self.schema_up = schema_up or schema_in
+        self.schema_list = schema_list
+
+        self.by_user = bool(by_user)
 
         self._handlers = {
             'list': '/',
@@ -89,11 +91,19 @@ class CRUDRouter(APIRouter):
                 name=name,
             )
 
-    def get_queryset(self, **kwargs) -> QuerySet:
+    def get_queryset(self, request: Request = None, **kwargs) -> QuerySet:
+        if self.by_user:
+            user = request.state.user
+            if user:
+                kwargs['user_id'] = user['id']
+
         return self.model.filter(**kwargs)
 
-    def _db_lookup(self, lookup_value):
-        return {f'{self.lookup_field}': lookup_value}
+    def _db_lookup(self, lookup_value, request: Request = None):
+        fields = {f'{self.lookup_field}': lookup_value}
+        if self.by_user and request:
+            fields['user_id'] = request.state.user['id']
+        return fields
 
     def _list_handler(self):
         get_queryset = self.get_queryset
@@ -101,7 +111,7 @@ class CRUDRouter(APIRouter):
 
         async def _wrapper(request: Request):
             try:
-                return await schema_list.from_queryset(get_queryset())
+                return await schema_list.from_queryset(get_queryset(request))
             except Exception as e:
                 raise HTTPException(400, str(e))
         return _wrapper
@@ -113,7 +123,7 @@ class CRUDRouter(APIRouter):
 
         async def _wrapper(pk, request: Request):
             try:
-                return await schema.from_tortoise_orm(await model.get(**lookup(pk)))
+                return await schema.from_tortoise_orm(await model.get(**lookup(pk, request)))
             except Exception as e:
                 raise HTTPException(400, str(e))
         return _wrapper
@@ -121,22 +131,30 @@ class CRUDRouter(APIRouter):
     def _create_handler(self):
         model = self.model
         schema_in = self.schema_in
+        by_user = self.by_user
 
         async def _wrapper(data: schema_in, request: Request):
             try:
-                return await model.create(**data.dict(exclude_unset=True))
+                data_dict = data.dict(exclude_unset=True)
+                if by_user:
+                    data_dict['user_id'] = request.state.user['id']
+                return await model.create(**data_dict)
             except Exception as e:
                 raise HTTPException(400, str(e))
         return _wrapper
 
     def _update_handler(self):
         model = self.model
-        schema_in = self.schema_in
+        schema = self.schema
+        schema_up = self.schema_up
         lookup = self._db_lookup
 
-        async def _wrapper(pk, data: schema_in, request: Request):
+        async def _wrapper(pk, data: schema_up, request: Request):
             try:
-                return await model.filter(**lookup(pk)).update(**data.dict(exclude_unset=True))
+                obj = await model.get(**lookup(pk, request))
+                obj.update_from_dict(data.dict(exclude_unset=True))
+                await obj.save()
+                return await schema.from_tortoise_orm(obj)
             except Exception as e:
                 raise HTTPException(400, str(e))
         return _wrapper
@@ -145,8 +163,8 @@ class CRUDRouter(APIRouter):
         model = self.model
         lookup = self._db_lookup
 
-        async def _wrapper(pk):
-            obj = await model.filter(**lookup(pk)).delete()
+        async def _wrapper(pk, request: Request):
+            obj = await model.filter(**lookup(pk, request)).delete()
             if not obj:
                 raise HTTPException(404, 'Object does not exist')
             return obj

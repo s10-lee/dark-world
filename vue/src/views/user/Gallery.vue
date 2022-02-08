@@ -1,4 +1,5 @@
 <template>
+  <div class="fixed-container-scroll pt-6">
   <div class="container">
     <b-row align-v="center">
       <b-col>
@@ -23,11 +24,13 @@
     </b-row>
     <div style="height: 5rem;"></div>
   </div>
+  </div>
 </template>
 
 <script>
 import {uploadApiCall, getApiCall, deleteApiCall} from 'services/http'
 import PinCreateForm from "./PinCreateForm"
+
 export default {
   name: 'Gallery',
   components: {

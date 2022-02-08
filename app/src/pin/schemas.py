@@ -1,6 +1,6 @@
 from tortoise.contrib.pydantic import pydantic_model_creator, pydantic_queryset_creator
 from app.src.pin.models import Pin
-from pydantic import BaseModel, Field, HttpUrl
+from pydantic import BaseModel, HttpUrl
 
 
 class PinSchemaGrab(BaseModel):

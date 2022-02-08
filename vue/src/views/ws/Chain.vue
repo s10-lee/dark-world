@@ -1,8 +1,8 @@
 <template>
   <div class="container">
     <div class="row mt-3">
-      <div class="col">
-        <h3 class="border-bottom pb-3 mb-3">Projects</h3>
+      <b-col>
+        <h3 class="border-bottom pb-3 mb-3">Chain</h3>
 
         <div v-if="item && pk">
           <pre>{{ item }}</pre>
@@ -10,12 +10,12 @@
 
         <div v-else>
           <div class="row" v-for="item in items" :key="item.uid">
-            <div class="col"><b-link :to="'/ws/project/' + item.uid">{{ item.uid }}</b-link></div>
+            <div class="col"><b-link :to="'/ws/chain/' + item.uid">{{ item.uid }}</b-link></div>
             <div class="col">{{ item.name }}</div>
           </div>
         </div>
 
-      </div>
+      </b-col>
     </div>
   </div>
 </template>
@@ -26,7 +26,7 @@ export default {
   mixins: [apiCrudMixin],
   data() {
     return {
-      endpoint: '/ws/project'
+      endpoint: '/ws/chain'
     }
   },
 }

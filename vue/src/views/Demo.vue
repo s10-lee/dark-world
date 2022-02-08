@@ -27,6 +27,19 @@
         <div class="col">
         </div>
       </div>
+
+      <b-row class="mt-5">
+        <b-col>
+          <b-btn size="lg" variant="secondary" @click="modalShown = true">Open modal</b-btn>
+          {{ modalShown }}
+        </b-col>
+      </b-row>
+
+      <b-modal title="Modal window" :shown="modalShown" @close="modalShown = false">
+        <template #body>
+          <h1 class="text-black">AAAA</h1>
+        </template>
+      </b-modal>
     </div>
   </div>
 </template>
@@ -36,6 +49,7 @@ export default {
   name: 'Demo',
   data() {
     return {
+      modalShown: false,
       inputValue: null,
       textAreaValue: null,
       checkValue: null,

@@ -43,47 +43,48 @@ class BaseModel(PrimaryKeyMixin):
 # *************************************
 
 
-class ProjectStep(BaseModel):
+# class ChainStep(BaseModel):
+#     name = CharField(255, default='')
+#     lft = IntField(null=True)
+#     rgt = IntField(null=True)
+#     level = IntField(default=0)
+#     chain: ForeignKeyRelation['Chain'] = ForeignKeyField('models.Chain', 'steps')
+#     user: ForeignKeyRelation[''] = ForeignKeyField('models.User', 'requests')
+#     object_id = IntField()
+#     object_type = CharField(255)
+#     parent: ForeignKeyNullableRelation['ChainStep'] = ForeignKeyField(
+#         'models.ChainStep', related_name="children", null=True
+#     )
+#     children: ReverseRelation['ChainStep']
+#
+#     class Meta:
+#         table = 'ws_chain_step'
+
+
+class Chain(BaseModel):
     name = CharField(255, default='')
-    lft = IntField(null=True)
-    rgt = IntField(null=True)
-    level = IntField(default=0)
-    project: ForeignKeyRelation['Project'] = ForeignKeyField('models.Project', 'steps')
-    # parent: ForeignKeyNullableRelation['ProjectStep'] = ForeignKeyField(
-    #     'models.ProjectStep', related_name="children", null=True
-    # )
-    # children: ReverseRelation['ProjectStep']
-
-    class Meta:
-        table = 'ws_project_step'
-
-    # class PydanticMeta:
-    #     exclude = ('children', 'parent')
-
-
-class Project(BaseModel):
-    name = CharField(255, default='')
-    # user: ForeignKeyRelation[User] = ForeignKeyField('models.User')
+    user: ForeignKeyRelation[User] = ForeignKeyField('models.User')
     # requests: ReverseRelation['Request']
     # parsers: ReverseRelation['Parser']
-    steps: ReverseRelation[ProjectStep]
+    # steps: ReverseRelation[ChainStep]
 
     class Meta:
-        table = 'ws_project'
+        table = 'ws_chain'
 
 
 # class Request(BaseModel):
 #     method: METHODS = CharEnumField(METHODS, default=METHODS.GET)
 #     url = CharField(255)
 #     params = JSONField(null=True)
-#     headers = JSONField(null=True)
+#     headers = TextField(null=True)
 #     data = JSONField(null=True)
-#     user: ForeignKeyRelation[User] = ForeignKeyField('models.User', 'requests')
-#     project: ForeignKeyRelation[Project] = ForeignKeyField('models.Project', 'requests')
+#     cert = CharField(255, null=True)
+#     chain: ForeignKeyRelation[Chain] = ForeignKeyField('models.Chain', 'requests')
+#     position = SmallIntField(default=0)
 #
 #     class Meta:
 #         table = 'ws_request'
-
+#
 
 # class Parser(BaseModel):
 #     search_rule = CharField(255)
@@ -92,7 +93,7 @@ class Project(BaseModel):
 #     convert_from: TYPES = CharEnumField(TYPES, default=TYPES.JSON)
 #     single = BooleanField(default=False)
 #     user: ForeignKeyRelation[User] = ForeignKeyField('models.User', 'parsers')
-#     project: ForeignKeyRelation[Project] = ForeignKeyField('models.Project', 'parsers')
+#     chain: ForeignKeyRelation[Chain] = ForeignKeyField('models.Chain', 'parsers')
 #
 #     class Meta:
 #         table = 'ws_parser'
@@ -109,8 +110,8 @@ class Project(BaseModel):
 #     request_at = DatetimeField(null=True)
 #     response_at = DatetimeField(null=True)
 #
-#     project: ForeignKeyRelation[Project] = ForeignKeyField('models.Project', 'http')
-#     step: ForeignKeyRelation[ProjectStep] = ForeignKeyField('models.ProjectStep', 'http')
+#     chain: ForeignKeyRelation[Chain] = ForeignKeyField('models.Chain', 'http')
+#     step: ForeignKeyRelation[ChainStep] = ForeignKeyField('models.ChainStep', 'http')
 #
 #     class Meta:
 #         ordering = ("-id", )

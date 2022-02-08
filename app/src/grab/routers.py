@@ -1,26 +1,38 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Request, Depends
+from fastapi.exceptions import HTTPException
 from app.library.routers import CRUDRouter
-from app.src.grab.models import Project
+from app.src.grab.models import Chain
+from app.src.auth.services import auth_wrapper
 from app.src.grab.schemas import (
-    ProjectSchemaCreate,
-    ProjectSchemaReceive,
-    ProjectSchemaList,
+    ChainSchemaCreate,
+    ChainSchemaUpdate,
+    ChainSchemaReceive,
+    ChainSchemaList,
     # RequestSchemaCreate,
     # RequestSchemaReceive,
     # RequestSchemaList,
 )
 
-
-router_project = CRUDRouter(
-    model=Project,
-    lookup_field='uid',
-    schema=ProjectSchemaReceive,
-    schema_in=ProjectSchemaCreate,
-    schema_list=ProjectSchemaList,
-)
-
 router = APIRouter(tags=['Web Scraping'])
-router.include_router(router_project, prefix='/project')
+
+router_chain = CRUDRouter(
+    model=Chain,
+    lookup_field='uid',
+    schema=ChainSchemaReceive,
+    schema_in=ChainSchemaCreate,
+    schema_list=ChainSchemaList,
+    dependencies=[Depends(auth_wrapper)],
+    by_user=True,
+)
+router.include_router(router_chain, prefix='/chain')
+
+
+# @router.get('/')
+# async def list_items(user_id=Depends(get_current_user_id)):
+#     try:
+#         return await ChainSchemaList.from_queryset(Chain.filter(user_id=user_id))
+#     except Exception as e:
+#         raise HTTPException(400, str(e))
 
 
 # router_request = CRUDRouter(

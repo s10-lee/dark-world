@@ -1,5 +1,5 @@
 from tortoise.contrib.pydantic import pydantic_model_creator, pydantic_queryset_creator
-from app.src.grab.models import Project, ProjectStep
+from app.src.grab.models import Chain
 
 # RequestSchemaCreate = pydantic_model_creator(
 #     Request,
@@ -17,31 +17,39 @@ from app.src.grab.models import Project, ProjectStep
 #     name='RequestSchemaList',
 #     include=('uid', 'name', 'method', 'url', 'params', 'headers'),
 # )
-ProjectStepSchemaCreate = pydantic_model_creator(
-    ProjectStep,
-    name='ProjectStepSchemaCreate',
+# ChainStepSchemaCreate = pydantic_model_creator(
+#     ChainStep,
+#     name='ChainStepSchemaCreate',
+#     exclude_readonly=True,
+# )
+#
+# ChainStepSchemaReceive = pydantic_model_creator(
+#     ChainStep,
+#     name='ChainStepSchemaReceive',
+#     exclude=('id', ''),
+# )
+#
+
+ChainSchemaUpdate = pydantic_model_creator(
+    Chain,
+    name='ChainSchemaUpdate',
     exclude_readonly=True,
+    # exclude=('id', 'user', ),
 )
 
-ProjectStepSchemaReceive = pydantic_model_creator(
-    ProjectStep,
-    name='ProjectStepSchemaReceive',
-    exclude=('id', ''),
-)
-
-
-ProjectSchemaCreate = pydantic_model_creator(
-    Project,
-    name='ProjectSchemaCreate',
+ChainSchemaCreate = pydantic_model_creator(
+    Chain,
+    name='ChainSchemaCreate',
     exclude_readonly=True,
+    include=('name', )
 )
-ProjectSchemaReceive = pydantic_model_creator(
-    Project,
-    name='ProjectSchemaReceive',
-    exclude=('id', ),
+ChainSchemaReceive = pydantic_model_creator(
+    Chain,
+    name='ChainSchemaReceive',
+    exclude=('id', 'user'),
 )
-ProjectSchemaList = pydantic_queryset_creator(
-    Project,
-    name='ProjectSchemaList',
-    exclude=('id', 'steps'),
+ChainSchemaList = pydantic_queryset_creator(
+    Chain,
+    name='ChainSchemaList',
+    exclude=('id', 'user'),
 )

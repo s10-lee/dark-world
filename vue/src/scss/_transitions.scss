@@ -4,3 +4,11 @@
 .fade-enter-from, .fade-leave-to {
     opacity: 0;
 }
+
+.slideDown-enter-active, .slideDown-leave-active {
+    transition: all .3s ease-out;
+}
+
+.slideDown-enter-from, .slideDown-leave-to {
+    transform: translateY(-50px);
+}

@@ -15,9 +15,11 @@
     </div>
 
     <transition name="fade" mode="out-in">
+
       <div v-if="item">
-        <request-form v-model="item" />
+        {{ item }}
       </div>
+
       <div v-else>
         <div class="row" v-for="item in items" :key="item.uid">
           <div class="col">
@@ -33,10 +35,8 @@
 
 <script>
 import { apiCrudMixin } from 'mixins'
-import RequestForm from './RequestForm'
 export default {
   mixins: [ apiCrudMixin ],
-  components: { RequestForm },
   data() {
     return {
       endpoint: '/ws/request/'

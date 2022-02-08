@@ -49,14 +49,14 @@ async def grab_pin(data: PinSchemaGrab, user_id: UUID = Depends(get_current_user
     return {'status': response.status}
 
 
-@router.get('/{pk}/')
-async def receive_pin(pk, user_id: UUID = Depends(get_current_user_id)) -> PinSchemaReceive:
-    return await PinSchemaReceive.from_tortoise_orm(await Pin.get(id=pk))
-
-
-@router.patch('/{pk}/')
-async def update_pin(pk):
-    return {'data': True}
+# @router.get('/{pk}/')
+# async def receive_pin(pk, user_id: UUID = Depends(get_current_user_id)) -> PinSchemaReceive:
+#     return await PinSchemaReceive.from_tortoise_orm(Pin.get(id=pk))
+#
+#
+# @router.patch('/{pk}/')
+# async def update_pin(pk):
+#     return {'data': True}
 
 
 # @router.get('/private-route/')

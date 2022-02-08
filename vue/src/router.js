@@ -5,7 +5,6 @@ import Demo from 'views/Demo'
 import Landing from 'views/Landing'
 import UserProfile from 'views/user/Profile'
 import UserGallery from 'views/user/Gallery'
-import UserIndex from 'views/user/Index'
 import NotFound from 'views/errors/NotFound'
 import store from 'store'
 import { ROUTE_AUTH, ROUTE_GUEST } from 'services/const'
@@ -15,16 +14,13 @@ const routes = [
     {path: '/', component: Home},
     {path: '/land', component: Landing},
     {path: '/demo', component: Demo},
-    {path: '/n00b', component: UserIndex, ...ROUTE_AUTH, children:
-            [
-                {path: '', component: UserProfile},
-                {path: 'gallery', component: UserGallery},
-            ]
-    },
+    {path: '/n00b', component: UserProfile, ...ROUTE_AUTH},
+    {path: '/n00b/gallery', component: UserGallery, ...ROUTE_AUTH},
     {path: '/sux0r', component: Auth, ...ROUTE_GUEST},
     {path: '/m1r0/:pk?', component: () => import('views/miro/Board'), ...ROUTE_AUTH},
-    {path: '/ws/project/:pk?', component: () => import('views/ws/Project.vue'), props: true, meta: { authRequired: true }},
-    // {path: '/ws/request/:pk?', component: () => import('views/ws/Request.vue'), props: true, meta: { authRequired: true }},
+    {path: '/ws/chain/:pk?', component: () => import('views/ws/Chain'), ...ROUTE_AUTH},
+
+    // {path: '/ws/request/:pk?', component: () => import('views/ws/Request'), ...ROUTE_AUTH},
     {path: '/:pathMatch(.*)*', name: 'NotFound', component: NotFound, props: true},
 ]
 
