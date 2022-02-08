@@ -1,5 +1,6 @@
 from tortoise.contrib.pydantic import pydantic_model_creator, pydantic_queryset_creator
-from app.src.grab.models import Chain
+from pydantic import BaseModel
+from app.src.grab.models import Chain, Step
 
 # RequestSchemaCreate = pydantic_model_creator(
 #     Request,
@@ -30,26 +31,30 @@ from app.src.grab.models import Chain
 # )
 #
 
-ChainSchemaUpdate = pydantic_model_creator(
-    Chain,
-    name='ChainSchemaUpdate',
-    exclude_readonly=True,
-    # exclude=('id', 'user', ),
+
+StepSchemaList = pydantic_queryset_creator(
+    Step,
+    name='StepSchemaList',
+    include=('uid', 'name', 'object_id', 'object_type'),
 )
 
 ChainSchemaCreate = pydantic_model_creator(
     Chain,
     name='ChainSchemaCreate',
+    include=('name', ),
     exclude_readonly=True,
-    include=('name', )
+
 )
 ChainSchemaReceive = pydantic_model_creator(
     Chain,
     name='ChainSchemaReceive',
-    exclude=('id', 'user'),
+    include=('uid', 'name', 'steps'),
+    exclude=('steps.lft', 'steps.rgt', 'steps.id', 'steps.user', 'steps.user_id'),
 )
 ChainSchemaList = pydantic_queryset_creator(
     Chain,
     name='ChainSchemaList',
-    exclude=('id', 'user'),
+    exclude=('id', 'user', 'steps'),
 )
+
+

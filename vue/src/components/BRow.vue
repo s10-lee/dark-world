@@ -9,12 +9,14 @@ export default {
   name: 'BRow',
   data() {
     return {
-        align: ['start', 'center', 'end', 'between']
+        align: ['start', 'center', 'end', 'between', 'around', 'evenly']
     }
   },
   props: {
     alignV: String,
     alignH: String,
+    gx: [String, Number],
+    gy: [String, Number],
   },
   computed: {
     cssClasses() {
@@ -24,6 +26,12 @@ export default {
       }
       if (this.align.indexOf(this.alignV) > -1) {
         cls.push('align-items-' + this.alignV)
+      }
+      if (this.gx) {
+        cls.push(`gx-${this.gx}`)
+      }
+      if (this.gy) {
+        cls.push(`gy-${this.gy}`)
       }
       return cls
     }

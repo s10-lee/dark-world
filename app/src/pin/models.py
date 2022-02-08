@@ -38,4 +38,4 @@ class Pin(PrimaryKeyMixin, DateTimeMixin):
         table = 'pin_item'
 
 
-init_models(['app.src.pin.models'])
+# init_models(['app.src.pin.models'])

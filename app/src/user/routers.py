@@ -48,4 +48,15 @@ async def user_guest(request: Request):
 
 @router.get('/profile/')
 async def user_profile(request: Request, user: User = Depends(get_current_auth_user)):
-    return {'access': 'yes', 'user': user.username, 'uid': user.id}
+    return {'name': user.username, 'email': user.email}
+
+
+@router.put('/profile/email/')
+async def user_profile(request: Request, user: User = Depends(get_current_auth_user)):
+    data = await request.json()
+    email = data.get('email')
+    if email:
+        user.email = email
+        await user.save()
+
+    return {'old': user.email, 'new': email}

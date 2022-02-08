@@ -39,7 +39,7 @@ export default {
   mixins: [ apiCrudMixin ],
   data() {
     return {
-      endpoint: '/ws/request/'
+      endpoint: '/ws/request'
     }
   },
 }

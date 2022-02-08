@@ -1,11 +1,9 @@
-from fastapi import APIRouter, Request, Depends
-from fastapi.exceptions import HTTPException
+from fastapi import APIRouter, Depends
 from app.library.routers import CRUDRouter
 from app.src.grab.models import Chain
 from app.src.auth.services import auth_wrapper
 from app.src.grab.schemas import (
     ChainSchemaCreate,
-    ChainSchemaUpdate,
     ChainSchemaReceive,
     ChainSchemaList,
     # RequestSchemaCreate,

@@ -1,8 +1,10 @@
 <template>
-  <div>
+  <div class="container">
+      <!--
       <form class="row g-3">
         <div class="col-md-2">
           <label class="form-label">Method</label>
+
           <select class="form-select">
             <option v-for="(name, key) in methods" :key="key" :value="key" :selected="key === modelValue.method">
               {{ name }}
@@ -64,35 +66,33 @@
           <b-btn variant="green">Save Changes</b-btn>
         </div>
       </form>
+      -->
+    <b-row>
+      <b-col>
+
+      </b-col>
+    </b-row>
   </div>
 </template>
 
 <script>
-import BInputPair from 'blocks/BInputPair';
-const defaultForm = {url: null, method: 'GET', headers: {}, params: {}, data: {}}
+import { HTTP_METHODS } from "services/const";
+import { apiCrudMixin } from "mixins";
 
 export default {
-  props: {
-    modelValue: {
-      type: Object,
-      default: () => defaultForm,
-      required: true
-    },
-  },
-  components: {
-    BInputPair
-  },
+  mixins: [ apiCrudMixin ],
   data() {
     return {
-      methods: {
-        'GET': 'GET',
-        'POST': 'POST',
-        'PUT': 'PUT',
-        'PATCH': 'PATCH',
-        'DELETE': 'DELETE',
-      }
+      endpoint: '/ws/step',
+      fields: {
+        url: null,
+        method: 'GET',
+        headers: '',
+        params: {},
+        data: {},
+      },
+      methods: HTTP_METHODS,
     }
   }
-
 }
 </script>

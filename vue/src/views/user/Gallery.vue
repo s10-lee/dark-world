@@ -1,9 +1,9 @@
 <template>
-  <div class="fixed-container-scroll pt-6">
+  <div class="fixed-container-scroll" style="padding-top: 56px;">
   <div class="container">
-    <b-row align-v="center">
+    <b-row align-v="center" class="mt-3">
       <b-col>
-        <h1>Gallery</h1>
+        <h3>Gallery</h3>
       </b-col>
     </b-row>
     <b-row>

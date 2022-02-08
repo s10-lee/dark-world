@@ -1,9 +1,7 @@
 from fastapi import APIRouter, Request, Depends, UploadFile
 from app.library.web import make_request
 # from app.src.user.models import User
-from app.src.auth.services import auth_wrapper, get_current_user_id
-from typing import Optional
-# from fastapi.exceptions import HTTPException
+from app.src.auth.services import get_current_user_id
 from app.src.grab.services import grab_from_pinterest
 from app.src.pin.models import Pin
 from app.library.files import save_file

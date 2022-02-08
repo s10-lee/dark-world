@@ -10,7 +10,11 @@ from tortoise.fields import (
     ForeignKeyRelation,
     ForeignKeyNullableRelation,
     ReverseRelation,
+    OneToOneField,
+    OneToOneRelation,
+    BackwardOneToOneRelation,
     SmallIntField,
+    CASCADE,
 )
 from app.db.fields import IPAddressField, UUIDField
 from app.db.models import PrimaryKeyMixin, DateTimeMixin, NameSlugActiveMixin
@@ -20,9 +24,11 @@ from app.db.utils import init_models
 
 
 class TYPES(str, Enum):
-    JSON = "json"
-    XML = "xml"
-    HTML = "html"
+    JSON = 'json'
+    XML = 'xml'
+    HTML = 'html'
+    CSS = 'css'
+    JS = 'js'
 
 
 class METHODS(str, Enum):
@@ -42,61 +48,56 @@ class BaseModel(PrimaryKeyMixin):
 #               Models
 # *************************************
 
-
-# class ChainStep(BaseModel):
-#     name = CharField(255, default='')
-#     lft = IntField(null=True)
-#     rgt = IntField(null=True)
-#     level = IntField(default=0)
-#     chain: ForeignKeyRelation['Chain'] = ForeignKeyField('models.Chain', 'steps')
-#     user: ForeignKeyRelation[''] = ForeignKeyField('models.User', 'requests')
-#     object_id = IntField()
-#     object_type = CharField(255)
-#     parent: ForeignKeyNullableRelation['ChainStep'] = ForeignKeyField(
-#         'models.ChainStep', related_name="children", null=True
-#     )
-#     children: ReverseRelation['ChainStep']
-#
-#     class Meta:
-#         table = 'ws_chain_step'
-
-
 class Chain(BaseModel):
     name = CharField(255, default='')
     user: ForeignKeyRelation[User] = ForeignKeyField('models.User')
-    # requests: ReverseRelation['Request']
-    # parsers: ReverseRelation['Parser']
-    # steps: ReverseRelation[ChainStep]
+    steps: ReverseRelation['Step']
 
     class Meta:
+        ordering = ('-id', )
         table = 'ws_chain'
 
 
-# class Request(BaseModel):
-#     method: METHODS = CharEnumField(METHODS, default=METHODS.GET)
-#     url = CharField(255)
-#     params = JSONField(null=True)
-#     headers = TextField(null=True)
-#     data = JSONField(null=True)
-#     cert = CharField(255, null=True)
-#     chain: ForeignKeyRelation[Chain] = ForeignKeyField('models.Chain', 'requests')
-#     position = SmallIntField(default=0)
-#
-#     class Meta:
-#         table = 'ws_request'
-#
+class Request(BaseModel):
+    method: METHODS = CharEnumField(METHODS, default=METHODS.GET)
+    url = CharField(255)
+    params = JSONField(null=True)
+    headers = TextField(null=True)
+    data = JSONField(null=True)
+    cert = CharField(255, null=True)
+    chain: ForeignKeyRelation[Chain] = ForeignKeyField('models.Chain', 'requests')
+    user: ForeignKeyRelation[User] = ForeignKeyField('models.User')
+    # step: OneToOneRelation[Step] = OneToOneField(
+    #     'models.Step', on_delete=CASCADE, related_name='request', pk=True
+    # )
+
+    class Meta:
+        table = 'ws_request'
+
 
 # class Parser(BaseModel):
-#     search_rule = CharField(255)
-#     search_keys = JSONField(null=True)
-#     global_vars = JSONField(null=True)
+#     search = CharField(255)
 #     convert_from: TYPES = CharEnumField(TYPES, default=TYPES.JSON)
-#     single = BooleanField(default=False)
-#     user: ForeignKeyRelation[User] = ForeignKeyField('models.User', 'parsers')
 #     chain: ForeignKeyRelation[Chain] = ForeignKeyField('models.Chain', 'parsers')
+#     user: ForeignKeyRelation[User] = ForeignKeyField('models.User')
 #
 #     class Meta:
 #         table = 'ws_parser'
+
+
+class Step(BaseModel):
+    name = CharField(255, default='')
+    lft = IntField(null=True)
+    rgt = IntField(null=True)
+    level = IntField(default=0)
+    object_id = IntField()
+    object_type = CharField(255)
+    chain: ForeignKeyRelation[Chain] = ForeignKeyField('models.Chain', 'steps')
+    user: ForeignKeyRelation[User] = ForeignKeyField('models.User')
+
+    class Meta:
+        ordering = ('level', 'id', )
+        table = 'ws_chain_step'
 
 
 # class HttpRequestResponse(PrimaryKeyMixin):
