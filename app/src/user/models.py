@@ -1,8 +1,8 @@
 from tortoise.models import Model
 from tortoise.fields import (
-    IntField, UUIDField, CharField, ForeignKeyField, BooleanField, DatetimeField, ManyToManyField,
-    ForeignKeyRelation
+    IntField, CharField, ForeignKeyField, BooleanField, DatetimeField, ForeignKeyRelation
 )
+from app.db.fields import UUIDField
 from datetime import datetime
 
 
@@ -23,9 +23,9 @@ class RefreshToken(Model):
 
 class User(Model):
     id = UUIDField(pk=True)
-    username = CharField(max_length=50, unique=True)
+    email = CharField(max_length=100, unique=True, null=False)
+    username = CharField(max_length=50, unique=True, null=True)
     password = CharField(max_length=255)
-    email = CharField(max_length=100, unique=True, null=True)
     is_active = BooleanField(default=True)
     is_staff = BooleanField(default=False)
     last_login = DatetimeField(null=True)
@@ -35,7 +35,7 @@ class User(Model):
         await self.save()
 
     def __str__(self):
-        return self.username
+        return self.id
 
     class Meta:
         table = 'user'

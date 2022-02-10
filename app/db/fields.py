@@ -1,5 +1,14 @@
 from tortoise import fields
 from tortoise.models import Model
+from tortoise.fields import (
+    ForeignKeyField as FKey,
+    ForeignKeyRelation as FKeyRel,
+    ForeignKeyNullableRelation as FKeyNullRel,
+    BooleanField as Bool,
+    CharField as Char,
+    CharEnumField as Choice,
+    IntField as Int,
+)
 from typing import Any, Optional, Union, Type
 from ipaddress import IPv6Address, ip_address
 
@@ -15,6 +24,19 @@ class UUIDField(fields.UUIDField):
         if pk:
             kwargs["generated"] = bool(kwargs.get("generated", True))
         super().__init__(pk=pk, **kwargs)
+
+
+class UUIDKeyUnique(fields.UUIDField):
+    allows_generated = True
+
+    class _db_postgres:
+        SQL_TYPE = 'UUID'
+        GENERATED_SQL = 'UUID NOT NULL DEFAULT gen_random_uuid() UNIQUE'
+
+    def __init__(self, **kwargs: Any) -> None:
+        kwargs['unique'] = True
+        kwargs['generated'] = bool(kwargs.get('generated', True))
+        super().__init__(**kwargs)
 
 
 class IPAddressField(fields.Field, IPv6Address):

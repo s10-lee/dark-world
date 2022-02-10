@@ -26,7 +26,7 @@
 <script>
 import {postApiCall, uploadApiCall} from 'services/http'
 export default {
-  name: 'PinCreateForm',
+  name: 'Form',
   data() {
     return {
       url: null,
@@ -40,8 +40,8 @@ export default {
       this.active = true
       postApiCall('/pin/grab/', {url: this.url})
           .then(() => {
-              this.active = false
-              this.url = null
+            this.active = false
+            this.url = null
           })
     },
     submitUpload() {
@@ -53,8 +53,8 @@ export default {
       formData.append('file', this.file, this.file.name)
       uploadApiCall('/pin/upload/', formData)
           .then(() => {
-              this.active = false
-              this.file = null
+            this.active = false
+            this.file = null
           })
     }
   }

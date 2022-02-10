@@ -16,7 +16,7 @@ from app.src.auth.services import get_password_hash, generate_private_public_key
 from app.src.user.models import User, RefreshToken
 from app.src.auth.models import APIKeys, SignUpToken
 from app.settings import ORM, DATABASE_URL
-from app.src.functions import coro
+from app.library.functions import coro
 from app.db.utils import (
     write_version_file,
     get_models_describe,
@@ -56,20 +56,20 @@ async def user_group(ctx: Context):
 
 
 @user_group.command(name='add', help='Create user')
-@option('-u', '--username', prompt='Username')
-@option('-e', '--email', prompt='Email', required=False, default='')
+@option('-e', '--email', prompt='Email', default='')
+@option('-u', '--username', prompt='Username', required=False)
 @option('-p', '--password', prompt='Password', hide_input=True, confirmation_prompt=True, callback=validate_password)
 @option('-s', '--staff', required=False, default=False, is_flag=True)
 @coro
-async def user_create(username: str,
+async def user_create(email: str,
                       password: str,
-                      email: Optional[str] = '',
+                      username: Optional[str] = '',
                       staff: Optional[str] = False):
     try:
         await User.create(
+            email=email,
             username=username,
             password=get_password_hash(password),
-            email=email,
             is_staff=staff,
             is_active=True,
         )

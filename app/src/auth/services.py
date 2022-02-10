@@ -72,7 +72,7 @@ async def decode_token(token):
 
 
 async def authenticate_user(data: UserCredentials):
-    user = await User.get_or_none(username=data.username, is_active=True)
+    user = await User.get_or_none(email=data.email, is_active=True)
 
     if not user or not verify_password(data.password, user.password):
         raise HTTPException(status.HTTP_401_UNAUTHORIZED, detail='Invalid credentials')
@@ -105,7 +105,7 @@ async def create_access_token(user: User):
         'exp': datetime.utcnow() + timedelta(days=0, minutes=INTERVAL),
         'iat': datetime.utcnow(),
         'sub': str(user.id),
-        'name': user.username,
+        'name': user.username or user.email,
     }
     return jwt.encode(payload, private_key, algorithm=ALGORITHM, headers=headers)
 

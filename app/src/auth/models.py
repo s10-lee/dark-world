@@ -1,5 +1,6 @@
 from tortoise.models import Model
-from tortoise.fields import IntField, DatetimeField, TextField, UUIDField
+from tortoise.fields import IntField, DatetimeField, TextField
+from app.db.fields import UUIDField
 
 
 class APIKeys(Model):

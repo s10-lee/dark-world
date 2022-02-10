@@ -20,10 +20,10 @@ router = APIRouter()
 
 @router.post('/sign-up/{uid}/')
 async def user_signup(data: UserCredentials, uid: UUID = Depends(validate_signup)):
-    if not (data.password and data.username):
+    if not (data.password and data.email):
         raise HTTPException(400, 'All fields are required')
     try:
-        await User.create(username=data.username, password=get_password_hash(data.password))
+        await User.create(email=data.email, password=get_password_hash(data.password))
         await SignUpToken.filter(id=uid).update(activated_at=datetime.utcnow())
         return {'status': 'Success', 'detail': 'User created successfully !'}
     except Exception as e:
@@ -47,7 +47,7 @@ async def user_guest(request: Request):
 
 
 @router.get('/profile/')
-async def user_profile(request: Request, user: User = Depends(get_current_auth_user)):
+async def user_profile(user: User = Depends(get_current_auth_user)):
     return {'name': user.username, 'email': user.email}
 
 

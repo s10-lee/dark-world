@@ -5,7 +5,7 @@ from app.src.user.models import User
 UserCredentials = pydantic_model_creator(
     User,
     name='UserCredentials',
-    include=('username', 'password')
+    include=('email', 'password')
 )
 
 

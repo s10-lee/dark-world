@@ -8,7 +8,7 @@
     </b-row>
     <b-row>
       <b-col>
-        <pin-create-form/>
+        <gallery-form />
       </b-col>
     </b-row>
     <b-row class="mt-3 row-cols-1 row-cols-md-3 row-cols-lg-4 row-cols-xl-5 g-4">
@@ -29,12 +29,12 @@
 
 <script>
 import {uploadApiCall, getApiCall, deleteApiCall} from 'services/http'
-import PinCreateForm from "./PinCreateForm"
+import Form from "./Form"
 
 export default {
-  name: 'Gallery',
+  name: 'Index',
   components: {
-    PinCreateForm
+    GalleryForm: Form,
   },
   data() {
     return {
@@ -68,23 +68,6 @@ export default {
         console.log(e)
       })
     },
-    inputFile(newFile, oldFile) {
-      if (newFile && oldFile && !newFile.active && oldFile.active) {
-        // Get response data
-        console.log('response', newFile.response)
-        if (newFile.xhr) {
-          //  Get the response status code
-          console.log('status', newFile.xhr.status)
-        }
-      }
-    },
-    inputFilter(newFile, oldFile, prevent) {
-      newFile.blob = ''
-      let URL = window.URL || window.webkitURL
-      if (URL && URL.createObjectURL) {
-        newFile.blob = URL.createObjectURL(newFile.file)
-      }
-    }
   },
   created() {
     this.getFiles()

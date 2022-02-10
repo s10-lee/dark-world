@@ -33,32 +33,4 @@ CREATE TABLE IF NOT EXISTS "user_refresh_token" (
     "expires_at" TIMESTAMPTZ,
     "user_id" UUID NOT NULL REFERENCES "user" ("id") ON DELETE CASCADE
 );
-CREATE TABLE IF NOT EXISTS "user_permission" (
-    "permission_id" INT NOT NULL REFERENCES "permission" ("id") ON DELETE CASCADE,
-    "user_id" UUID NOT NULL REFERENCES "user" ("id") ON DELETE CASCADE
-);
-
--- "uid" UUID NOT NULL DEFAULT gen_random_uuid() UNIQUE,
-
-CREATE TABLE IF NOT EXISTS "pin_board"
-(
-    "id"         SERIAL       NOT NULL PRIMARY KEY,
-    "uid"        UUID         NOT NULL DEFAULT gen_random_uuid() UNIQUE,
-    "name"       VARCHAR(255) NOT NULL,
-    "user_id"    UUID         NOT NULL REFERENCES "user" ("id") ON DELETE CASCADE,
-    "created_at" TIMESTAMPTZ  NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updated_at" TIMESTAMPTZ  NOT NULL DEFAULT CURRENT_TIMESTAMP
-);
-CREATE TABLE IF NOT EXISTS "pin_item"
-(
-    "id"         SERIAL       NOT NULL PRIMARY KEY,
-    "uid"        UUID         NOT NULL DEFAULT gen_random_uuid() UNIQUE,
-    "name"       VARCHAR(255) NOT NULL,
-    "extension"  VARCHAR(10)  NOT NULL,
-    "type"       VARCHAR(5)   NOT NULL DEFAULT 'image',
-    "board_id"   INT          REFERENCES "pin_board" ("id") ON DELETE SET NULL,
-    "user_id"    UUID         NOT NULL REFERENCES "user" ("id") ON DELETE CASCADE,
-    "created_at" TIMESTAMPTZ  NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updated_at" TIMESTAMPTZ  NOT NULL DEFAULT CURRENT_TIMESTAMP
-);
-COMMENT ON COLUMN "pin_item"."type" IS 'IMAGE: image\nVIDEO: video\nAUDIO: audio';
+-- "uid" UUID NOT NULL DEFAULT gen_random_uuid() UNIQUE --
