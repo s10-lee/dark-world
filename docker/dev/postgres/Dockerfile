@@ -1,5 +1,5 @@
 # pull image
-FROM postgres:13
+FROM postgres:latest
 
 # bash aliases
 COPY ./docker/.bashrc /root/.bashrc
