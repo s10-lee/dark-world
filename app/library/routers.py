@@ -1,9 +1,10 @@
 from fastapi import Depends, APIRouter, Request, Response
 from fastapi.exceptions import HTTPException
+from tortoise.models import MODEL
+from tortoise.queryset import QuerySet, QuerySetSingle
 from tortoise.contrib.pydantic import PydanticModel, PydanticListModel
 # from tortoise.contrib.pydantic import pydantic_model_creator, pydantic_queryset_creator
 from typing import Optional, List, Type, Any, TypeVar, Union
-from app.db.models import Model, QuerySet, MODEL, QuerySetSingle
 # from app.src.grab.models import User
 from app.src.auth.services import get_current_auth_user
 
@@ -18,7 +19,6 @@ class CRUDRouter(APIRouter):
     schema_in: PydanticModel = None
     schema_up: PydanticModel = None
     schema_list: PydanticListModel = None
-
 
     _http_method = {
         'list': 'GET',

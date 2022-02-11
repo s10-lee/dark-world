@@ -1,6 +1,6 @@
 <template>
   <router-link
-      :to="to"
+      :to="toHref"
       custom
       v-slot="{ href, route, navigate, isActive, isExactActive }"
   >
@@ -28,5 +28,10 @@ export default {
       default: false,
     }
   },
+  computed: {
+    toHref() {
+      return this.to ? this.to : '#'
+    }
+  }
 }
 </script>

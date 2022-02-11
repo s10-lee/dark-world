@@ -26,7 +26,7 @@ async def custom_exception_handler(request: Request, exc: StarletteHTTPException
         **get_vue()
     }
 
-    if exc.status_code == 404:
+    if exc.status_code == 404 and not request.url.path.startswith('/api'):
         return templates.TemplateResponse('layout_vue.html', data)
 
     return await http_exception_handler(request, exc)

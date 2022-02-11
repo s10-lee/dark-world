@@ -1,5 +1,6 @@
 from datetime import datetime, timedelta
 # from typing import Any, Union, Optional
+from tortoise.expressions import Q
 from cryptography.hazmat.primitives import serialization as crypto_serialization
 from cryptography.hazmat.primitives.asymmetric import rsa
 from cryptography.hazmat.backends import default_backend as crypto_default_backend
@@ -72,7 +73,7 @@ async def decode_token(token):
 
 
 async def authenticate_user(data: UserCredentials):
-    user = await User.get_or_none(email=data.email, is_active=True)
+    user = await User.filter(Q(username=data.username) | Q(email=data.username), is_active=True).first()
 
     if not user or not verify_password(data.password, user.password):
         raise HTTPException(status.HTTP_401_UNAUTHORIZED, detail='Invalid credentials')

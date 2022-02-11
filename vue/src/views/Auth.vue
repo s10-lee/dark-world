@@ -2,16 +2,21 @@
   <div class="container">
     <div class="row mt-6 justify-content-center">
       <div class="col-4">
-        <div class="p-5 border rounded">
+        <div class="p-5 border-gray-900 rounded">
           <h1 class="text-100 text-center mb-5">Login</h1>
           <div class="mb-4">
-            <b-input label="Username" v-model="username"/>
+            <b-input size="lg" label="Username" v-model="username"/>
           </div>
           <div class="mb-5">
-            <b-input label="Password" type="password" v-model="password"/>
+            <b-input size="lg" label="Password" type="password" v-model="password"/>
           </div>
           <div class="mb-3">
-            <b-btn block variant="primary" @click.prevent.stop="handleLogin">Sign In</b-btn>
+            <b-btn block
+                   variant="primary"
+                   size="lg"
+                   @click.prevent.stop="handleLogin">
+              <b>Sign In</b>
+            </b-btn>
           </div>
         </div>
       </div>

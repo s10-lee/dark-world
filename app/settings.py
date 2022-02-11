@@ -1,10 +1,13 @@
 import os
 from glob import glob
+from pathlib import Path
 
 APP_NAME = 'd4rkvv0r1.de'
+BASE_DIR = Path(__file__).parent.parent.resolve()
 
-DEBUG = os.getenv('DEBUG', False)
+DEBUG = bool(os.getenv('DEBUG', False))
 MODE = os.getenv('MODE', False)
+
 
 DATABASE_URL = os.getenv('DATABASE_URL')
 JWT_SECRET = os.getenv('JWT_SECRET')
@@ -12,8 +15,10 @@ SECRET_KEY = os.getenv('SECRET_KEY')
 ALGORITHM = os.getenv('ALGORITHM')
 INTERVAL = int(os.getenv('INTERVAL', 10))
 
-MEDIA_ROOT = 'app/media'
+
+MEDIA_ROOT = BASE_DIR / 'app' / 'media'
 MEDIA_URL = '/media'
+
 
 CORS_ALLOW_ORIGINS = [
     'https://d4rkvv0r1.de',
@@ -39,6 +44,7 @@ def auto_load_models():
 APPS_MODELS = [
     'app.src.auth.models',
     'app.src.user.models',
+    'app.src.gallery.models',
 ]
 
 ORM = {

@@ -66,6 +66,9 @@ const store = createStore({
                 .catch(e => {
                     throw e
                 })
+        },
+        logoutToken({ commit }) {
+            commit('login', null)
         }
     }
 })

@@ -1,27 +1,22 @@
 from tortoise.contrib.pydantic import pydantic_model_creator, pydantic_queryset_creator
-from app.src.gallery.models import MediaItem
-from pydantic import BaseModel, HttpUrl
+from app.src.gallery.models import Pin
 
 
-class MediaItemGrab(BaseModel):
-    url: HttpUrl
-
-
-# SchemaCreate = pydantic_model_creator(
-#     Model,
-#     name='SchemaCreate',
+# PinCreate = pydantic_model_creator(
+#     Pin,
+#     name='PinCreate',
 #     exclude_readonly=True,
 # )
-MediaItemReceive = pydantic_model_creator(
-    MediaItem,
-    name='MediaItemReceive',
+PinReceive = pydantic_model_creator(
+    Pin,
+    name='PinReceive',
     exclude=('id', 'user', ),
     computed=('url', )
 )
 
-MediaItemList = pydantic_queryset_creator(
-    MediaItem,
-    name='MediaItemList',
+PinList = pydantic_queryset_creator(
+    Pin,
+    name='PinList',
     exclude=('id', 'user', ),
     computed=('url', ),
 )

@@ -33,4 +33,10 @@ CREATE TABLE IF NOT EXISTS "user_refresh_token" (
     "expires_at" TIMESTAMPTZ,
     "user_id" UUID NOT NULL REFERENCES "user" ("id") ON DELETE CASCADE
 );
--- "uid" UUID NOT NULL DEFAULT gen_random_uuid() UNIQUE --
+
+/***
+
+  "uid" UUID NOT NULL DEFAULT gen_random_uuid() UNIQUE,
+
+***/
+

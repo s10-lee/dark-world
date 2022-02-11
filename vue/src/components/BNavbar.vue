@@ -10,16 +10,14 @@
         <template v-if="$store.state.user">
           <b-link class="nav-link" to="/n00b" exact>Profile</b-link>
           <b-link class="nav-link" to="/n00b/gallery">Gallery</b-link>
-          <b-link class="nav-link" to="/ws/chain">WScrap</b-link>
           <slot></slot>
-          <!--
-          <b-link class="nav-link" to="/ws/project">wScrap</b-link>
-          <b-link class="nav-link" to="/m1r0">m1r0</b-link>
-          -->
         </template>
         <template v-else>
           <b-link class="nav-link" to="/sux0r">Sux0r</b-link>
         </template>
+      </div>
+      <div class="d-flex ms-auto" v-if="$store.state.user">
+        <b-link class="nav-link text-danger" @click.prevent.stop="$store.dispatch('logoutToken')">logout</b-link>
       </div>
     </div>
   </header>
@@ -27,9 +25,7 @@
 </template>
 
 <script>
-import BLink from "./BLink";
 export default {
   name: 'BNavbar',
-  components: {BLink}
 }
 </script>

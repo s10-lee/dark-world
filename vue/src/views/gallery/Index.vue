@@ -8,15 +8,15 @@
     </b-row>
     <b-row>
       <b-col>
-        <gallery-form />
+<!--  <gallery-form /> -->
       </b-col>
     </b-row>
     <b-row class="mt-3 row-cols-1 row-cols-md-3 row-cols-lg-4 row-cols-xl-5 g-4">
-      <b-col v-for="item in items" :key="item.uid">
+      <b-col v-for="pin in items" :key="pin.uid">
         <div class="card bg-dark">
-          <img :src="item.url" class="card-img-top" alt="">
+          <img :src="pin.url" class="card-img-top" alt="">
           <div class="card-body">
-            <h6 class="card-title">{{ item.name ? item.name : '&nbsp;'}}</h6>
+            <h6 class="card-title">{{ pin.name ? pin.name : '&nbsp;'}}</h6>
             <b-btn size="sm" variant="out-danger">delete</b-btn>
           </div>
         </div>
@@ -29,12 +29,12 @@
 
 <script>
 import {uploadApiCall, getApiCall, deleteApiCall} from 'services/http'
-import Form from "./Form"
+// import Form from "./Form"
 
 export default {
   name: 'Index',
   components: {
-    GalleryForm: Form,
+    // GalleryForm: Form,
   },
   data() {
     return {

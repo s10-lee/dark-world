@@ -41,11 +41,6 @@ async def auth_refresh_token(user: User = Depends(auth_check_refresh)):
     return await client_token_response(user)
 
 
-@router.get('/guest/')
-async def user_guest(request: Request):
-    return {'user': request.state.user}
-
-
 @router.get('/profile/')
 async def user_profile(user: User = Depends(get_current_auth_user)):
     return {'name': user.username, 'email': user.email}

@@ -1,15 +1,7 @@
-# from tortoise import Model, fields
-from tortoise import models, fields
-from tortoise.queryset import QuerySet, QuerySetSingle
-from typing import TypeVar
+from tortoise import models, fields, Model
 from app.db.fields import UUIDField
-from uuid import uuid4
 
-MODEL = TypeVar("MODEL", bound="Model")
-
-
-class Model(models.Model):
-    pass
+MODEL = models.MODEL
 
 
 class DateTimeMixin(Model):
@@ -22,7 +14,7 @@ class DateTimeMixin(Model):
 
 class PrimaryKeyMixin(Model):
     id = fields.IntField(pk=True)
-    uid = UUIDField(unique=True, default=uuid4)
+    uid = UUIDField(unique=True)
 
     class Meta:
         abstract = True

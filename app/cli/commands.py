@@ -179,7 +179,7 @@ async def db_init(ctx: Context, safe: bool):
 
 
 @db_group.command(name='migrate', help='Create migration file.')
-@option('--name', default='update', show_default=True, help='Migration name.')
+@option('-n', '--name', default='update', show_default=True, help='Migration name.')
 @pass_context
 @coro
 async def db_migrate(ctx: Context, name: str):
@@ -223,7 +223,7 @@ async def db_downgrade(ctx: Context, version: int, clear: bool):
 @pass_context
 @coro
 async def module_create(ctx: Context, name: str):
-    source_dirname = Path('app/library/module_template').resolve()
+    source_dirname = Path('app/cli/module_template').resolve()
     module_dirname = Path('app/src').resolve() / name
 
     if module_dirname.exists():

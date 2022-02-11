@@ -37,8 +37,8 @@ $spacers: map-merge(
     button.bg-gray-#{$color} {
         background-color: darken($value, 10%) !important;
     }
-    .border-#{$color} {
-        border-color: $value !important;
+    .border-gray-#{$color} {
+        border: $border-width solid $value !important;
     }
     .text-#{$color} {
         color: $value !important;

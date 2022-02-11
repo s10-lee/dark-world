@@ -1,4 +1,5 @@
 from fastapi import FastAPI, Request
+from fastapi.exceptions import HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from tortoise.contrib.fastapi import register_tortoise
@@ -48,7 +49,7 @@ if not DEBUG:
     @app.get("/redoc", include_in_schema=False)
     @app.get("/docs", include_in_schema=False)
     async def get_docs():
-        return
+        return HTTPException(status_code=404)
 
 
 register_tortoise(app, config=ORM)
