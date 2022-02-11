@@ -1,12 +1,10 @@
 <template>
   <div class="fixed-container">
-    <div class="container">
-      <div class="row mt-6">
-        <div class="col">
-          <h3>. . .</h3>
-        </div>
+      <div class="text-center" style="position:absolute;left:50%;top:20%;transform:translateX(-50%);">
+        <img src="~assets/error.png"
+             alt="Not Found"
+             style="opacity:0.1;width:10rem;height:auto;"/>
       </div>
-    </div>
   </div>
 </template>
 

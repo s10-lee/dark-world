@@ -29,8 +29,9 @@ app.mount('/', web)
 @app.middleware('http')
 async def get_current_user_middleware(request: Request, call_next):
     request.state.user = None
+    url_path = request.url.path
 
-    if request.url.path.startswith('/api'):
+    if url_path.startswith('/api') and not url_path.startswith('/api/obtain'):
         try:
             auth = await security(request)
             user_data = await auth_wrapper(auth)

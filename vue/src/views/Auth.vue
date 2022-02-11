@@ -1,24 +1,28 @@
 <template>
   <div class="container">
-    <div class="row mt-6 justify-content-center">
-      <div class="col-4">
-        <div class="p-5 border-gray-900 rounded">
-          <h1 class="text-100 text-center mb-5">Login</h1>
-          <div class="mb-4">
-            <b-input size="lg" label="Username" v-model="username"/>
+    <div class="row justify-content-center">
+      <div class="col" style="max-width: 18rem;">
+        <form @submit.prevent.stop="handleLogin">
+          <div class="mb-6 text-center">
+            <img src="~assets/error.png"
+                 alt="Image Not Found"
+                 style="opacity:0.1;max-width:100%;height:auto;"/>
           </div>
           <div class="mb-5">
-            <b-input size="lg" label="Password" type="password" v-model="password"/>
+            <b-input size="lg" v-model="username" label="Login / @email" />
           </div>
-          <div class="mb-3">
+          <div class="mb-7">
+            <b-input size="lg" v-model="password" label="Password" type="password" />
+          </div>
+          <div>
             <b-btn block
-                   variant="primary"
-                   size="lg"
-                   @click.prevent.stop="handleLogin">
+                   type="submit"
+                   variant="secondary"
+                   size="lg">
               <b>Sign In</b>
             </b-btn>
           </div>
-        </div>
+        </form>
       </div>
     </div>
   </div>
