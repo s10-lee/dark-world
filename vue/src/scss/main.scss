@@ -200,25 +200,10 @@ body {
 }
 
 
-
-.file-upload {
+.flex-center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
     text-align: center;
-    padding: 1rem 2rem;
-    border: 1px dashed #424242;
-    // color: #424242;
-    cursor: pointer;
-    overflow: hidden;
-    position: relative;
-
-    input[type="file"] {
-        cursor: pointer;
-        height: 100%;
-        width: 100%;
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        opacity: 0;
-    }
 }

@@ -3,6 +3,7 @@ import Auth from 'views/Auth'
 import Home from 'views/Home'
 import Profile from 'views/user/Profile'
 import Gallery from 'views/gallery/Index'
+import Upload from "views/gallery/Upload";
 import NotFound from 'views/errors/NotFound'
 import store from 'store'
 import { ROUTE_AUTH, ROUTE_GUEST } from 'services/const'
@@ -12,6 +13,7 @@ const routes = [
     {path: '/', component: Home},
     {path: '/n00b', component: Profile, ...ROUTE_AUTH},
     {path: '/n00b/gallery', component: Gallery, ...ROUTE_AUTH},
+    {path: '/n00b/upload', component: Upload, ...ROUTE_AUTH},
     {path: '/sux0r', component: Auth, ...ROUTE_GUEST},
 
     {path: '/:pathMatch(.*)*', name: 'NotFound', component: NotFound, props: true},

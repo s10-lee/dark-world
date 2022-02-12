@@ -8,8 +8,9 @@
       <div class="navbar-nav">
         <b-link class="nav-link" to="/" exact>#</b-link>
         <template v-if="$store.state.user">
-          <b-link class="nav-link" to="/n00b" exact>Profile</b-link>
-          <b-link class="nav-link" to="/n00b/gallery">Gallery</b-link>
+          <b-link class="nav-link ms-3" to="/n00b" exact>Profile</b-link>
+          <b-link class="nav-link ms-3" to="/n00b/gallery">Gallery</b-link>
+          <b-link class="nav-link ms-3" to="/n00b/upload">Upload</b-link>
           <slot></slot>
         </template>
         <template v-else>
@@ -21,7 +22,7 @@
       </div>
     </div>
   </header>
-  <div style="height:56px;"></div>
+  <div style="height:60px;"></div>
 </template>
 
 <script>

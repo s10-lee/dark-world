@@ -1,12 +1,12 @@
 <template>
   <div class="container">
-    <b-row class="my-3" gx="0">
-        <b-label>Username</b-label>
-        <h3 class="text-warning">{{ name }}</h3>
+    <b-row class="my-5" gx="0">
+        <b-label>USERNAME</b-label>
+        <h1>{{ name }}</h1>
     </b-row>
     <b-row align-v="end" class="mb-3">
       <b-col cols="auto">
-        <b-input size="lg" v-model="email" label="Email"/>
+        <b-input size="lg" v-model="email" label="EMAIL"/>
       </b-col>
       <b-col cols="auto">
         <b-btn size="lg" @click="saveForm">Save</b-btn>

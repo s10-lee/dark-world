@@ -1,10 +1,5 @@
 <template>
-  <div class="file-upload">
-    <input type="file"
-           @change="onChange"
-           v-bind="$attrs">
-    <slot></slot>
-  </div>
+    <input type="file" @change="onChange" v-bind="$attrs">
 </template>
 
 <script>

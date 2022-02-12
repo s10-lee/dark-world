@@ -48,7 +48,7 @@ $secondary: #474747;
 $info: $blue;
 
 $body-color: #f7f0f0;
-$body-bg: #111;
+$body-bg: $gray-1000;
 
 
 $border-width: 1px;
@@ -61,6 +61,9 @@ $input-border-color: $secondary;
 $input-focus-border-color: $blue;
 $input-placeholder-color: $secondary;
 
+$input-btn-padding-y-lg: .75rem;
+$input-btn-padding-x-lg:  1rem;
+
 
 $btn-padding-y: .35rem;
 $btn-padding-x: 1.25rem;
@@ -71,11 +74,12 @@ $btn-padding-x-sm: .75rem;
 
 //$btn-padding-y-sm: .35rem;
 //$btn-padding-x-sm: 1.25rem;
-//$btn-padding-y-lg: .75rem;
-//$btn-padding-x-lg: 1.875rem;
+$btn-padding-y-lg: .75rem;
+$btn-padding-x-lg: 1.875rem;
 
 
 $form-label-color: $gray-700;
+$form-label-font-weight: normal;
 $form-label-margin-bottom: .5rem;
 
 $border-radius-xs:    .125rem;
@@ -122,11 +126,48 @@ $table-cell-padding-x: 1rem;
 
 
 .vuesax {
-  $vs-primary: rgb(25, 91, 255);
+  // $vs-primary: rgb(25, 91, 255);
   $vs-warn: rgb(255, 186, 0);
-  $vs-danger: rgb(255,71,87);
+  // $vs-danger: rgb(255,71,87);
   $vs-success: rgb(70,201,58);
-  $vs-dark: rgb(30,30,30);
+  // $vs-dark: rgb(30,30,30);
+
   $vs-light: rgb(244,247,248);
-  $vs-color: rgb(17,18,20);
+  // $vs-color: rgb(17,18,20);
+
+  $vs-primary: #195BFF;
+  $vs-danger: #FF4757;
+  $vs-dark: #1E1E1E;
+  $vs-color: #111214;
+}
+
+.file-upload {
+  text-align: center;
+  padding: 4rem 7rem;
+  cursor: pointer;
+  overflow: hidden;
+  position: relative;
+
+  font-size: 5rem;
+  border: 2px dashed $gray-900;
+  color: $gray-700;
+
+  transition: all .35s ease;
+
+  &:hover {
+    color: $gray-400;
+    border-color: $gray-700;
+  }
+
+  input[type="file"] {
+    cursor: pointer;
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    opacity: 0;
+  }
 }

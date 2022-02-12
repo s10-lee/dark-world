@@ -9,16 +9,21 @@ from app.src.gallery import schemas
 router = APIRouter(tags=['Gallery'])
 
 
-@router.get('/')
+@router.get('/gallery/')
 async def gallery_index(user_id: UUID = Depends(get_current_user_id)) -> schemas.PinList:
     return await schemas.PinList.from_queryset(Pin.filter(user_id=user_id))
 
 
 @router.post('/upload/')
 async def upload_media(file: UploadFile, user_id: UUID = Depends(get_current_user_id)) -> schemas.PinReceive:
-    uid = uuid4()
+    item_id = uuid4()
     extension = file.filename.split('.')[-1]
     contents = await file.read()
 
-    await save_file_media(contents, path=user_id, filename=uid, extension=extension)
-    return await Pin.create(user_id=user_id, name=file.filename, uid=uid, extension=extension)
+    await save_file_media(contents, path=user_id, filename=item_id, extension=extension)
+    return await Pin.create(
+        id=item_id,
+        user_id=user_id,
+        name=file.filename,
+        extension=extension
+    )

@@ -12,7 +12,7 @@ export default {
   },
   data() {
     return {
-      sizes: ['xs', 'md', 'sm', 'lg', 'xl'],
+      sizes: ['xs', 'sm', 'md', 'lg', 'xl'],
       variants: ['primary', 'secondary', 'success', 'warning', 'danger', 'info', 'dark'],
       variants2: ['green', 'yellow', 'out']
     }

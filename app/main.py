@@ -1,16 +1,14 @@
-from fastapi import FastAPI, Request
+from fastapi import FastAPI
 from fastapi.exceptions import HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from tortoise.contrib.fastapi import register_tortoise
 from app.src.user.routers import router as api_user
+from app.src.gallery.routers import router as api_gallery
 from app.src.web.routers import web_router, web
-from app.src.auth.services import auth_wrapper, security
 from app.settings import ORM, CORS_ALLOW_ORIGINS, APP_PARAMS, DEBUG, MEDIA_URL, MEDIA_ROOT
 
 app = FastAPI(**APP_PARAMS)
-app.mount('/static', StaticFiles(directory='app/static'), name='static')
-app.mount(MEDIA_URL, StaticFiles(directory=MEDIA_ROOT), name='media')
 
 app.add_middleware(
     CORSMiddleware,
@@ -22,28 +20,11 @@ app.add_middleware(
 
 app.include_router(web_router)
 app.include_router(api_user, prefix='/api')
+app.include_router(api_gallery, prefix='/api')
 
+app.mount('/static', StaticFiles(directory='app/static'), name='static')
+app.mount(MEDIA_URL, StaticFiles(directory=MEDIA_ROOT), name='media')
 app.mount('/', web)
-
-
-@app.middleware('http')
-async def get_current_user_middleware(request: Request, call_next):
-    request.state.user = None
-    url_path = request.url.path
-
-    if url_path.startswith('/api') and not url_path.startswith('/api/obtain'):
-        try:
-            auth = await security(request)
-            user_data = await auth_wrapper(auth)
-            request.state.user = {
-                'id': user_data['sub'],
-                'username': user_data['name'],
-            }
-        except Exception as e:
-            print('Exception in middleware')
-            print(repr(e))
-
-    return await call_next(request)
 
 
 if not DEBUG:

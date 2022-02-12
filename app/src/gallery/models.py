@@ -27,7 +27,7 @@ class Pin(DateTimeMixin):
 
     id = UUIDField(pk=True)
     name = fields.CharField(255, blank=True)
-    description = fields.TextField(blank=True)
+    description = fields.TextField(blank=True, default='')
     extension = fields.CharField(50, blank=True)
     type: TYPES = fields.CharEnumField(TYPES, default=TYPES.IMAGE)
 
@@ -44,7 +44,7 @@ class Pin(DateTimeMixin):
     deleted_at = fields.DatetimeField(null=True)
 
     def url(self) -> str:
-        return f'{MEDIA_URL}/{self.user}/{self.pk}.{self.extension}'
+        return f'{MEDIA_URL}/{self.user_id}/{self.pk}.{self.extension}'
 
     class Meta:
         table = 'gallery_pin'

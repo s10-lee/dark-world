@@ -1,88 +1,88 @@
 // get color var css
 @function -color($color, $alpha: 1) {
-  @return unquote('rgba(var(--vs-#{$color}), #{$alpha})');
+  @return unquote('rgba(var(----vs-#{$color}), #{$alpha})');
 }
 
 @function -var($var) {
-  @return unquote('var(--vs-#{$var})');
+  @return unquote('var(----vs-#{$var})');
 };
 
 // COLORS
 :root {
-  vs-primary: 25, 91, 255;
-  vs-warn: 255, 186, 0;
-  vs-danger: 255,71,87;
-  vs-success: 70,201,58;
-  vs-dark: 30,30,30;
-  vs-light: 244,247,248;
-  vs-color: 17,18,20;
+  --vs-primary: rgb(25, 91, 255);
+  --vs-warn: rgb(255, 186, 0);
+  --vs-danger: rgb(255,71,87);
+  --vs-success: rgb(70,201,58);
+  --vs-dark: rgb(30,30,30);
+  --vs-light: rgb(244,247,248);
+  --vs-color: rgb(17,18,20);
 
   // theme
-  vs-background: 255, 255, 255;
-  vs-text: 44, 62, 80;
-  vs-gray-1: 249, 252, 253;
-  vs-gray-2: 244, 247, 248;
-  vs-gray-3: 240, 243, 244;
-  vs-gray-4: 230, 233, 234;
+  // --vs-background: #fff;
+  // --vs-text: #2C3E50;
+  //--vs-gray-1: rgb(249, 252, 253);
+  //--vs-gray-2: rgb(244, 247, 248);
+  //--vs-gray-3: rgb(240, 243, 244);
+  //--vs-gray-4: rgb(230, 233, 234);
 }
 [class*="--primary"] {
-  vs-color: var(vs-primary);
+  --vs-color: var(--vs-primary);
 }
 [class*="--default"] {
-  vs-color: var(vs-primary);
+  --vs-color: var(--vs-primary);
 }
 [class*="--danger"] {
-  vs-color: var(vs-danger);
+  --vs-color: var(--vs-danger);
 }
 [class*="--success"] {
-  vs-color: var(vs-success);
+  --vs-color: var(--vs-success);
 }
 [class*="--dark"] {
-  vs-color: var(vs-dark);
+  --vs-color: var(--vs-dark);
 }
 [class*="--warn"] {
-  vs-color: var(vs-warn);
+  --vs-color: var(--vs-warn);
 }
 
 
 // DARK
-[vs-theme="dark"] {
+[--vs-theme="dark"] {
 
 
-  --vs-theme-bg: #18191c;
-  --vs-theme-color: #fff;
-  --vs-theme-layout: #1e2023;
-  --vs-theme-bg2: #141417;
-  --vs-theme-code: #141417;
-  --vs-theme-code2: #161619;
+  ----vs-theme-bg: #18191c;
+  ----vs-theme-color: #fff;
+  ----vs-theme-layout: #1e2023;
+  ----vs-theme-bg2: #141417;
+  ----vs-theme-code: #141417;
+  ----vs-theme-code2: #161619;
 
-  vs-background: 30, 32, 35;
-  vs-text: 255, 255, 255;
-  vs-gray-1: 24, 25, 28;
-  vs-gray-2: 20, 20, 23;
-  vs-gray-3: 15, 16, 19;
-  vs-gray-4: 10, 11, 14;
-  vs-shadow-opacity: .3;
-  vs-dark: 0, 0, 0;
-  vs-background-opacity: .6;
-  .vs-pagination-content {
-    &.vs-component-dark {
-      .vs-pagination__active {
-        vs-color: 255, 255, 255;
+  --vs-background: rgb(30, 32, 35);
+  --vs-text: #fff;
+  --vs-gray-1: rgb(24, 25, 28);
+  --vs-gray-2: rgb(20, 20, 23);
+  --vs-gray-3: rgb(15, 16, 19);
+  --vs-gray-4: rgb(10, 11, 14);
+  --vs-shadow-opacity: .3;
+  --vs-dark: #000;
+  --vs-background-opacity: .6;
+  .--vs-pagination-content {
+    &.--vs-component-dark {
+      .--vs-pagination__active {
+        --vs-color: #fff;
         color: -color('gray-3');
       }
     }
   }
-  .vs-button {
-    &.vs-component-dark {
-      &.vs-button--transparent {
+  .--vs-button {
+    &.--vs-component-dark {
+      &.--vs-button--transparent {
         color: -color('text') !important;
         &:hover {
           &:before {
             background: -color('color', .2);
           }
         }
-        &.vs-button--active {
+        &.--vs-button--active {
           &:before {
             background: -color('color', -var('background-opacity'));
           }
@@ -90,27 +90,27 @@
       }
     }
   }
-  .vs-ripple,
-  .vs-ripple-invert,
-  .vs-ripple-content {
-    vs-color: 0,0,0;
+  .--vs-ripple,
+  .--vs-ripple-invert,
+  .--vs-ripple-content {
+    --vs-color: #000;
   }
-  .vs-loading {
-    vs-background: 0, 0, 0;
+  .--vs-loading {
+    --vs-background: #000;
   }
-  .vs-input-parent--state-dark {
-    vs-dark: 255, 255, 255 !important;
-    .vs-input {
+  .--vs-input-parent--state-dark {
+    --vs-dark: #fff !important;
+    .--vs-input {
       background: #000 !important;
     }
   }
-  .vs-component-dark {
-    vs-color: 0, 0, 0 !important;
-    .vs-avatar {
+  .--vs-component-dark {
+    --vs-color: #000 !important;
+    .--vs-avatar {
       color: #fff !important;
     }
-    &.vs-alert {
-      vs-color: 0, 0, 0 !important;
+    &.--vs-alert {
+      --vs-color: #000 !important;
       background: -color('color', 1) !important;
       color: -color('text', 1) !important;
     }

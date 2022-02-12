@@ -8,18 +8,6 @@
         <b-btn size="lg" variant="secondary" @click="submitGrab" :disabled="active">GO</b-btn>
       </b-col>
     </b-row>
-
-    <b-row align-v="center" class="mt-3">
-      <b-col cols="auto"><h1>or</h1></b-col>
-      <b-col>
-        <b-file v-model="file" :disabled="active">
-          <b class="text-muted">{{ file ? file.name : 'Choose File . . .'}}</b>
-        </b-file>
-      </b-col>
-      <b-col cols="auto">
-        <b-btn size="lg" variant="secondary" @click="submitUpload" :disabled="active">Upload</b-btn>
-      </b-col>
-    </b-row>
   </div>
 </template>
 
