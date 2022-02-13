@@ -2,18 +2,22 @@ import {createRouter, createWebHistory} from 'vue-router'
 import Auth from 'views/Auth'
 import Home from 'views/Home'
 import Profile from 'views/user/Profile'
-import Gallery from 'views/gallery/Index'
-import Upload from "views/gallery/Upload";
+
+import { Upload, List, Grabber } from 'views/gallery'
+
 import NotFound from 'views/errors/NotFound'
 import store from 'store'
 import { ROUTE_AUTH, ROUTE_GUEST } from 'services/const'
+import { SET_PAGE_LOADER } from 'store/types'
 
 
 const routes = [
     {path: '/', component: Home},
     {path: '/n00b', component: Profile, ...ROUTE_AUTH},
-    {path: '/n00b/gallery', component: Gallery, ...ROUTE_AUTH},
+    {path: '/n00b/gallery', component: List, ...ROUTE_AUTH},
     {path: '/n00b/upload', component: Upload, ...ROUTE_AUTH},
+    {path: '/n00b/grab', component: Grabber, ...ROUTE_AUTH},
+
     {path: '/sux0r', component: Auth, ...ROUTE_GUEST},
 
     {path: '/:pathMatch(.*)*', name: 'NotFound', component: NotFound, props: true},
@@ -27,7 +31,7 @@ const router = createRouter({
 })
 
 router.afterEach(() => {
-    store.commit('loaded')
+    store.commit(SET_PAGE_LOADER, false)
 })
 
 

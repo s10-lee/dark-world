@@ -35,3 +35,14 @@ async def save_file_media(
         MEDIA_ROOT / str(path) / (str(filename) + ('.' + str(extension) if extension else '')),
         mode=mode
     )
+
+
+async def remove_file_media(
+        path: [Type[PurePath], UUID, str],
+        filename: [UUID, str],
+        extension: str = None,
+):
+    media_file_path = MEDIA_ROOT / str(path) / (str(filename) + ('.' + str(extension) if extension else ''))
+    if os.path.exists(media_file_path):
+        return os.unlink(media_file_path)
+    return False

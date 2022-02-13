@@ -1,7 +1,8 @@
 import { createStore } from 'vuex'
 import parseJwt from 'services/jwt'
 import axios from 'axios';
-import {API_OBTAIN_URL, API_REFRESH_URL} from 'services/const';
+import { API_OBTAIN_URL, API_REFRESH_URL } from 'services/const';
+import { SET_USER_AUTH, SET_PAGE_LOADER } from 'store/types'
 
 const store = createStore({
     state() {
@@ -12,10 +13,10 @@ const store = createStore({
         }
     },
     mutations: {
-        loaded(state) {
-            state.loading = false
+        [SET_PAGE_LOADER]( state, payload ) {
+            state.loading = payload
         },
-        login(state, payload = null) {
+        [SET_USER_AUTH]( state, payload = null ) {
             if (payload) {
                 state.token = payload
                 state.user = parseJwt(payload)
@@ -29,32 +30,28 @@ const store = createStore({
     },
     actions: {
         checkUserAuth ({ commit, state }) {
+            if (!state.user && state.token) {
+                commit(SET_USER_AUTH, state.token)
+            }
             const now = Math.round(Date.now() / 1000)
-            try {
-                if (!state.user && state.token) {
-                    commit('login', state.token)
-                }
-                const { exp = 0 } = state.user
-                if (exp - now > 0) {
-                    return true
-                }
-            } catch (e) {}
-
-            commit('login', false)
+            if (state.user && state.user.exp - now > 0) {
+                return true
+            }
+            commit(SET_USER_AUTH, false)
             return false
         },
-        obtainToken ( { commit }, credentials ) {
+        obtainToken ({ commit }, credentials ) {
             return axios
                 .post(API_OBTAIN_URL, credentials)
                 .then(response => {
                     const { access_token = null } = response.data
-                    commit('login', access_token)
+                    commit(SET_USER_AUTH, access_token)
                 })
                 .catch(e => {
                     throw e
                 })
         },
-        refreshToken ( { commit, state } ) {
+        refreshToken ({ commit, state }) {
             return axios
                 .post(API_REFRESH_URL, {
                     refresh_token: state.token
@@ -68,8 +65,8 @@ const store = createStore({
                 })
         },
         logoutToken({ commit }) {
-            commit('login', null)
-        }
+            commit(SET_USER_AUTH, null)
+        },
     }
 })
 

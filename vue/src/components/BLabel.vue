@@ -3,24 +3,24 @@
 </template>
 
 <script>
-import { Component } from 'mixins'
+import { ComponentMixin } from 'mixins'
 export default {
   name: 'BLabel',
-  mixins: [Component],
+  mixins: [ ComponentMixin ],
   props: {
     size: String,
   },
   data() {
     return {
-      sizes: ['xl', 'lg', 'md', 'sm', 'xs']
+      sizes: ['xl', 'lg', 'sm', 'xs']
     }
   },
   computed: {
     cssClasses() {
       if (this.sizes.includes(this.size)) {
-        return 'form-label form-label-' + this.size
+        return 'form-label mb-0 col-form-label-' + this.size
       }
-      return 'form-label fw-bold'
+      return 'form-label mb-0'
     }
   }
 }

@@ -1,7 +1,7 @@
 <template>
-  <div class="container">
-    <b-row class="my-5" gx="0">
-        <b-label>USERNAME</b-label>
+  <b-wrapper container>
+    <b-row gx="0">
+        <b-label size="lg">USERNAME</b-label>
         <h1>{{ name }}</h1>
     </b-row>
     <b-row align-v="end" class="mb-3">
@@ -12,7 +12,7 @@
         <b-btn size="lg" @click="saveForm">Save</b-btn>
       </b-col>
     </b-row>
-  </div>
+  </b-wrapper>
 </template>
 
 <script>

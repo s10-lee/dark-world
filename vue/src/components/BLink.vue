@@ -10,8 +10,8 @@
        :data-exact-active="isExactActive ? 'true' : 'false'"
        :data-active="isActive ? 'true' : 'false'"
        :class="[
-           ($route.fullPath === route.fullPath || isExactActive) && exact && $router.options.linkExactActiveClass,
-           ($route.fullPath.indexOf(route.fullPath) === 0 || isActive) && !exact && $router.options.linkActiveClass
+           ($route.fullPath === route.fullPath || isExactActive) && to && exact && $router.options.linkExactActiveClass,
+           ($route.fullPath.indexOf(route.fullPath) === 0 || isActive) && to && !exact && $router.options.linkActiveClass
            ]">
       <slot></slot>
     </a>
@@ -30,7 +30,7 @@ export default {
   },
   computed: {
     toHref() {
-      return this.to ? this.to : '#'
+      return this.to ? this.to : ''
     }
   }
 }

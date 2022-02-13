@@ -1,0 +1,25 @@
+@use "sass:list";
+@use "sass:meta";
+@use "sass:string";
+
+
+
+@function step-percent($step, $total) {
+  @return percentage($step / $total);
+}
+
+@function generate-animation-steps($list, $steps, $condition) {
+  $total: 100;
+
+  $per-step: percentage($steps / $total);
+
+  $new-list: ();
+
+  $separator: list.separator($list);
+  @each $element in $list {
+    @if not meta.call($condition, $element) {
+      $new-list: list.append($new-list, $element, $separator: $separator);
+    }
+  }
+  @return $new-list;
+}

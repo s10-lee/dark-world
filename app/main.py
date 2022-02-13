@@ -5,6 +5,8 @@ from fastapi.staticfiles import StaticFiles
 from tortoise.contrib.fastapi import register_tortoise
 from app.src.user.routers import router as api_user
 from app.src.gallery.routers import router as api_gallery
+from app.src.grab.routers import router as api_grab
+
 from app.src.web.routers import web_router, web
 from app.settings import ORM, CORS_ALLOW_ORIGINS, APP_PARAMS, DEBUG, MEDIA_URL, MEDIA_ROOT
 
@@ -21,6 +23,7 @@ app.add_middleware(
 app.include_router(web_router)
 app.include_router(api_user, prefix='/api')
 app.include_router(api_gallery, prefix='/api')
+app.include_router(api_grab, prefix='/api')
 
 app.mount('/static', StaticFiles(directory='app/static'), name='static')
 app.mount(MEDIA_URL, StaticFiles(directory=MEDIA_ROOT), name='media')

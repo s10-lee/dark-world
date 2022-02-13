@@ -1,8 +1,10 @@
 <template>
-  <div class="fixed-container flex-center">
-    <div class="file-upload">
-      <h1>Choose file ...</h1>
-      <b-file v-model="file" :disabled="active"/>
+  <div class="fixed-wrapper flex-center">
+    <div class="gradient-border">
+      <label class="file-upload">
+        <b-file v-model="file" :disabled="active"/>
+        <span class="h1 fw-normal">Click to upload</span> <span class="h4 fw-normal">. . .</span>
+      </label>
     </div>
   </div>
 </template>

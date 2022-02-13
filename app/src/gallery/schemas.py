@@ -10,13 +10,13 @@ from app.src.gallery.models import Pin
 PinReceive = pydantic_model_creator(
     Pin,
     name='PinReceive',
-    exclude=('id', 'user', ),
+    exclude=('user', 'user_id', 'deleted_at'),
     computed=('url', )
 )
 
 PinList = pydantic_queryset_creator(
     Pin,
     name='PinList',
-    exclude=('id', 'user', ),
+    exclude=('user', 'user_id', 'deleted_at'),
     computed=('url', ),
 )

@@ -1,15 +1,19 @@
+@import "animations";
+
 $min-contrast-ratio: 2.5;
 
-$gray-100: #f8f9fa;
+$white: #fff;
+// $gray-100: #f8f9fa;
+$gray-100: #f7f0f0;
 $gray-200: #e9ecef;
 $gray-300: #dee2e6;
-$gray-400: #ced4da;
-$gray-500: #adb5bd;
-$gray-600: #6c757d;
-$gray-700: #495057;
-$gray-800: #343a40;
-$gray-900: #212529;
-
+// $gray-400: #ced4da;
+// $gray-500: #adb5bd;
+// $gray-600: #6c757d;
+// $gray-700: #495057;
+// $gray-800: #343a40;
+// $gray-900: #212529;
+$black: #000;
 
 
 $gray-400: #878282;
@@ -21,16 +25,16 @@ $gray-900: #252323;
 $gray-1000: #121212;
 
 $grays: (
-        "100": $gray-100,
-        "200": $gray-200,
-        "300": $gray-300,
-        "400": $gray-400,
-        "500": $gray-500,
-        "600": $gray-600,
-        "700": $gray-700,
-        "800": $gray-800,
-        "900": $gray-900,
-        "1000": $gray-1000
+    "100": $gray-100,
+    "200": $gray-200,
+    "300": $gray-300,
+    "400": $gray-400,
+    "500": $gray-500,
+    "600": $gray-600,
+    "700": $gray-700,
+    "800": $gray-800,
+    "900": $gray-900,
+    "1000": $gray-1000
 );
 
 
@@ -41,13 +45,13 @@ $blue: #009FFD;
 $green: #008148;
 $yellow: #facd19;
 $orange: #fa5f1a;
-$red: #D11149;
+$red: #ff0060;
 
 $primary: $orange;
 $secondary: #474747;
 $info: $blue;
 
-$body-color: #f7f0f0;
+$body-color: $gray-100;
 $body-bg: $gray-1000;
 
 
@@ -57,6 +61,7 @@ $border-color: $gray-800;
 $link-color: $blue;
 
 $input-bg: $body-bg;
+$input-disabled-bg: $gray-900;
 $input-border-color: $secondary;
 $input-focus-border-color: $blue;
 $input-placeholder-color: $secondary;
@@ -78,7 +83,7 @@ $btn-padding-y-lg: .75rem;
 $btn-padding-x-lg: 1.875rem;
 
 
-$form-label-color: $gray-700;
+$form-label-color: $gray-400;
 $form-label-font-weight: normal;
 $form-label-margin-bottom: .5rem;
 
@@ -125,49 +130,77 @@ $table-cell-padding-x: 1rem;
 }
 
 
-.vuesax {
-  // $vs-primary: rgb(25, 91, 255);
-  $vs-warn: rgb(255, 186, 0);
-  // $vs-danger: rgb(255,71,87);
-  $vs-success: rgb(70,201,58);
-  // $vs-dark: rgb(30,30,30);
-
-  $vs-light: rgb(244,247,248);
-  // $vs-color: rgb(17,18,20);
-
-  $vs-primary: #195BFF;
-  $vs-danger: #FF4757;
-  $vs-dark: #1E1E1E;
-  $vs-color: #111214;
-}
+//.vuesax {
+//  $vs-warn: rgb(255, 186, 0);
+//  $vs-success: rgb(70,201,58);
+//  $vs-light: rgb(244,247,248);
+//  $vs-primary: #195BFF;
+//  $vs-danger: #FF4757;
+//  $vs-dark: #1E1E1E;
+//  $vs-color: #111214;
+//}
 
 .file-upload {
+  display: block;
+  margin: 0;
   text-align: center;
   padding: 4rem 7rem;
   cursor: pointer;
   overflow: hidden;
   position: relative;
-
-  font-size: 5rem;
-  border: 2px dashed $gray-900;
-  color: $gray-700;
-
-  transition: all .35s ease;
+  border-radius: 2px;
+  color: $gray-200;
+  background-color: $gray-1000;
+  transition: all .35s ease-in-out;
 
   &:hover {
-    color: $gray-400;
-    border-color: $gray-700;
+    color: $white;
   }
 
   input[type="file"] {
-    cursor: pointer;
-    height: 100%;
-    width: 100%;
+    height: 1px;
+    width: 1px;
     position: absolute;
     top: 0;
     left: 0;
-    right: 0;
-    bottom: 0;
     opacity: 0;
+    z-index: -1;
   }
+}
+
+.box-image-fit {
+  display: flex;
+  height: 18rem;
+  position: relative;
+  overflow: hidden;
+  padding: 1rem;
+  cursor: pointer;
+  background: $dark;
+
+  img {
+    display: block;
+    object-fit: scale-down;
+    height: 100%;
+    width: 100%;
+    transition: all .3s ease;
+    // z-index: -1;
+    pointer-events: none;
+  }
+
+  &:hover {
+    img {
+      opacity: .5;
+    }
+  }
+
+  //&::after {
+  //  content: '';
+  //  position: absolute;
+  //  top: 0;
+  //  left: 0;
+  //  height: 100%;
+  //  width: 100%;
+  //  background: $dark;
+  //  z-index: -2;
+  //}
 }

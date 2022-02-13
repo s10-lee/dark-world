@@ -1,32 +1,21 @@
 <template>
-  <div class="container">
-    <div class="row justify-content-center">
-      <div class="col" style="max-width: 18rem;">
+  <b-wrapper container>
+    <b-row align-h="center">
+      <b-col cols="auto">
         <form @submit.prevent.stop="handleLogin">
-          <div class="mb-6 text-center">
-            <img src="~assets/error.png"
-                 alt="Image Not Found"
-                 style="opacity:0.1;max-width:100%;height:auto;"/>
+          <div class="mb-4">
+            <b-input size="lg" v-model="username" label="LOGIN / @EMAIL" />
           </div>
           <div class="mb-5">
-            <b-input size="lg" v-model="username" label="Login / @email" />
-          </div>
-          <div class="mb-7">
-            <b-input size="lg" v-model="password" label="Password" type="password" />
+            <b-input size="lg" v-model="password" label="PASSWORD" type="password" />
           </div>
           <div>
-            <b-btn block
-                   type="submit"
-                   variant="secondary"
-                   size="lg">
-              <b>Sign In</b>
-            </b-btn>
+            <b-btn type="submit" size="lg">Login</b-btn>
           </div>
         </form>
-      </div>
-    </div>
-  </div>
-
+      </b-col>
+    </b-row>
+  </b-wrapper>
 </template>
 
 <script>
@@ -41,7 +30,7 @@ export default {
   methods: {
     handleLogin() {
       this.$store.dispatch('obtainToken', {username: this.username, password: this.password}).then(() => {
-        this.$router.push({path: '/n00b'})
+        this.$router.push({path: '/n00b/upload'})
       })
     }
   }

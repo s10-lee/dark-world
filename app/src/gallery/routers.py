@@ -1,7 +1,7 @@
-from fastapi import APIRouter, Depends, UploadFile
+from fastapi import APIRouter, Depends, UploadFile, exceptions
 from app.src.auth.services import get_current_user_id
 from app.src.gallery.models import Pin
-from app.library.files import save_file_media
+from app.library.files import save_file_media, remove_file_media
 from uuid import uuid4, UUID
 from app.src.gallery import schemas
 
@@ -19,11 +19,18 @@ async def upload_media(file: UploadFile, user_id: UUID = Depends(get_current_use
     item_id = uuid4()
     extension = file.filename.split('.')[-1]
     contents = await file.read()
-
     await save_file_media(contents, path=user_id, filename=item_id, extension=extension)
-    return await Pin.create(
-        id=item_id,
-        user_id=user_id,
-        name=file.filename,
-        extension=extension
+    return await schemas.PinReceive.from_tortoise_orm(
+        await Pin.create(id=item_id, user_id=user_id, name=file.filename, extension=extension)
     )
+
+
+@router.delete('/gallery/{pk}/')
+async def delete_media(pk: UUID, user_id: UUID = Depends(get_current_user_id)):
+    pin = await Pin.get_or_none(pk=pk, user_id=user_id)
+    try:
+        await remove_file_media(user_id, pin.id, pin.extension)
+        await pin.delete()
+        return {'detail': 'deleted'}
+    except Exception as e:
+        return exceptions.HTTPException(400, detail=str(e))

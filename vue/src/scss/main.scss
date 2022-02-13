@@ -2,7 +2,6 @@
 @import "init";
 @import "dark";
 
-
 @import "~bootstrap/scss/functions";
 @import "~bootstrap/scss/variables";
 @import "~bootstrap/scss/mixins";
@@ -55,7 +54,7 @@ $spacers: map-merge(
     left: 0;
     right: 0;
     bottom: 0;
-    z-index: $zindex-tooltip + 10;
+    z-index: $zindex-fixed;
     background-color: $body-bg;
 
     display: flex;
@@ -78,20 +77,22 @@ $spacers: map-merge(
     Additional Classes
 ********************************/
 
-%fixed-container {
+%fixed-wrapper {
     position: fixed;
     top: 0;
     left: 0;
     right: 0;
     bottom: 0;
 }
-.fixed-container {
-    @extend %fixed-container;
+.fixed-wrapper {
+    @extend %fixed-wrapper;
     overflow: hidden;
+    padding: 5rem 0;
 }
-.fixed-container-scroll {
-    @extend %fixed-container;
+.fixed-wrapper-scroll {
+    @extend %fixed-wrapper;
     overflow-y: scroll;
+    padding: 5rem 0;
 }
 
 html, body {
@@ -100,7 +101,7 @@ html, body {
     -ms-text-size-adjust: 100%;
 }
 body {
-    @extend %fixed-container;
+    @extend %fixed-wrapper;
     overflow: hidden;
     -webkit-font-smoothing: antialiased;
 }

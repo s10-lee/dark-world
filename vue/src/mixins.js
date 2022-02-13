@@ -1,3 +1,4 @@
+import { SET_PAGE_LOADER } from 'store/types'
 import { getApiCall, postApiCall, putApiCall, deleteApiCall } from 'services/http'
 
 export const apiCrudMixin = {
@@ -88,7 +89,15 @@ export const apiCrudMixin = {
     }
 }
 
-export const Component = {
+export const PageMixin = {
+    methods: {
+        loading(status) {
+            this.$store.commit(SET_PAGE_LOADER, status)
+        },
+    }
+}
+
+export const ComponentMixin = {
     data() {
         return {
             sizes: ['xl', 'lg', 'md', 'sm', 'xs']
