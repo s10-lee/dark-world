@@ -9,7 +9,7 @@ export default {
   emits: ['update:modelValue'],
   methods: {
     onChange(event) {
-      this.$emit('update:modelValue', event.target.files[0])
+      this.$emit('update:modelValue', event.target.files)
     }
   }
 }

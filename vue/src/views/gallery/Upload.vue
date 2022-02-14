@@ -2,7 +2,7 @@
   <div class="fixed-wrapper flex-center">
     <div class="gradient-border">
       <label class="file-upload">
-        <b-file v-model="file" :disabled="active"/>
+        <b-file v-model="files" :disabled="active" multiple accept="image/*, audio/*, video/*"/>
         <span class="h1 fw-normal">Click to upload</span> <span class="h4 fw-normal">. . .</span>
       </label>
     </div>
@@ -16,12 +16,12 @@ export default {
   data() {
     return {
       file: null,
+      files: null,
       active: false,
     }
   },
   watch: {
-    file(value, prevValue) {
-      console.log(value, prevValue)
+    files(value, prevValue) {
       if (value && value !== prevValue) {
         this.submitUpload()
       }
@@ -31,8 +31,12 @@ export default {
     submitUpload() {
       this.active = true
       let formData = new FormData()
-      formData.append('file', this.file, this.file.name)
-      return uploadApiCall('/upload/', formData).then( () => this.active = false )
+      for (let file of this.files){
+        formData.append('files', file, file.name)
+      }
+      return uploadApiCall('/upload/many/', formData).then( data => {
+        this.active = false
+      })
     }
   }
 }

@@ -26,10 +26,10 @@ class Pin(DateTimeMixin):
         AUDIO = 'audio'
 
     id = UUIDField(pk=True)
-    name = fields.CharField(255, blank=True)
+    name = fields.CharField(255, blank=True, default='')
     description = fields.TextField(blank=True, default='')
     extension = fields.CharField(50, blank=True)
-    type: TYPES = fields.CharEnumField(TYPES, default=TYPES.IMAGE)
+    content_type = fields.CharField(255, blank=True)
 
     gallery: fields.ForeignKeyNullableRelation[Board] = fields.ForeignKeyField(
         'models.Board',
@@ -45,6 +45,9 @@ class Pin(DateTimeMixin):
 
     def url(self) -> str:
         return f'{MEDIA_URL}/{self.user_id}/{self.pk}.{self.extension}'
+
+    def type(self) -> str:
+        return self.content_type.split('/')[0]
 
     class Meta:
         table = 'gallery_pin'

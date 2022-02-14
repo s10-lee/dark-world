@@ -3,9 +3,13 @@
     <b-row class="row-cols-1 row-cols-md-3 row-cols-lg-4 row-cols-xl-5 g-4">
       <b-col v-for="pin in items" :key="pin.id">
         <div class="box-image-fit with-toolbar" style="max-height:18rem;">
-          <b-light-box :src="pin.url">
+          <b-light-box :src="pin.url" v-if="pin.type === 'image'">
             <img :src="pin.url"  alt="">
           </b-light-box>
+          <div class="p-3" v-else>
+            <h5 class="text-300">{{ pin.name ? pin.name : '' }}</h5>
+            <b class="text-500">{{ pin.content_type }}</b>
+          </div>
           <b-toolbar>
             <b-btn class="px-3" variant="out-danger" @click.stop.prevent="removeFile(pin.id)">
               <i class="bi bi-trash-fill"></i>
@@ -27,7 +31,7 @@ import { getApiCall, deleteApiCall } from 'services/http'
 import { PageMixin } from 'mixins'
 
 export default {
-  name: 'Index',
+  name: 'List',
   mixins: [ PageMixin ],
   data() {
     return {

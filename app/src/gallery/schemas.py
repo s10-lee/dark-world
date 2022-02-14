@@ -11,12 +11,12 @@ PinReceive = pydantic_model_creator(
     Pin,
     name='PinReceive',
     exclude=('user', 'user_id', 'deleted_at'),
-    computed=('url', )
+    computed=('url', 'type')
 )
 
 PinList = pydantic_queryset_creator(
     Pin,
     name='PinList',
     exclude=('user', 'user_id', 'deleted_at'),
-    computed=('url', ),
+    computed=('url', 'type'),
 )

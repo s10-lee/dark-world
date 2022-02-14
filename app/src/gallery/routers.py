@@ -21,8 +21,42 @@ async def upload_media(file: UploadFile, user_id: UUID = Depends(get_current_use
     contents = await file.read()
     await save_file_media(contents, path=user_id, filename=item_id, extension=extension)
     return await schemas.PinReceive.from_tortoise_orm(
-        await Pin.create(id=item_id, user_id=user_id, name=file.filename, extension=extension)
+        await Pin.create(
+            id=item_id,
+            user_id=user_id,
+            name=file.filename,
+            extension=extension,
+            content_type=file.content_type,
+        )
     )
+
+
+@router.post('/upload/many/')
+async def upload_media_many(files: list[UploadFile], user_id: UUID = Depends(get_current_user_id)) -> schemas.PinReceive:
+    pins = []
+    for file in files:
+        item_id = uuid4()
+        extension = file.filename.split('.')[-1]
+        contents = await file.read()
+        await save_file_media(contents, path=user_id, filename=item_id, extension=extension)
+        pin = await Pin.create(
+            id=item_id,
+            user_id=user_id,
+            name=file.filename,
+            extension=extension,
+            content_type=file.content_type,
+        )
+        pins.append(
+            await schemas.PinReceive.from_tortoise_orm(pin)
+        )
+    return pins
+    # item_id = uuid4()
+    # extension = file.filename.split('.')[-1]
+    # contents = await file.read()
+    # await save_file_media(contents, path=user_id, filename=item_id, extension=extension)
+    # return await schemas.PinReceive.from_tortoise_orm(
+    #     await Pin.create(id=item_id, user_id=user_id, name=file.filename, extension=extension)
+    # )
 
 
 @router.delete('/gallery/{pk}/')
