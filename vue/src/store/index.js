@@ -2,17 +2,21 @@ import { createStore } from 'vuex'
 import parseJwt from 'services/jwt'
 import axios from 'axios';
 import { API_OBTAIN_URL, API_REFRESH_URL } from 'services/const';
-import { SET_USER_AUTH, SET_PAGE_LOADER } from 'store/types'
+import { SET_USER_AUTH, SET_PAGE_LOADER, SET_NAVBAR_DISPLAY } from 'store/types'
 
 const store = createStore({
     state() {
         return {
+            navbar: true,
             loading: true,
             user: null,
             token: localStorage.getItem('t') || null,
         }
     },
     mutations: {
+        [SET_NAVBAR_DISPLAY]( state, payload ) {
+            state.navbar = payload
+        },
         [SET_PAGE_LOADER]( state, payload ) {
             state.loading = payload
         },

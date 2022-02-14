@@ -1,2 +1,3 @@
 export const SET_PAGE_LOADER = 'SET_PAGE_LOADER'
 export const SET_USER_AUTH = 'SET_USER_AUTH'
+export const SET_NAVBAR_DISPLAY = 'SET_NAVBAR_DISPLAY'

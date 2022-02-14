@@ -1,3 +1,49 @@
+@mixin make-transitions($name,
+            $from: (),
+            $to: (),
+            $from-t: all .3s ease-out,
+            $to-t: all .3s ease-out) {
+
+    @if ($to == ()) {
+        $to: $from;
+    }
+
+    .#{$name}-enter-from {
+        @each $k, $v in $from {
+            #{$k}: $v;
+        }
+    }
+
+    .#{$name}-leave-to {
+        @each $k, $v in $to {
+            #{$k}: $v;
+        }
+    }
+
+    .#{$name}-enter-active {
+        transition: $from-t;
+    }
+    .#{$name}-leave-active {
+        transition: $to-t;
+    }
+}
+
+$slideUp: (
+    transform: translateY(30px),
+    opacity: 0
+);
+
+$slideDown: (
+    transform: translateY(-30px),
+    opacity: 0,
+);
+
+
+@include make-transitions('slideUp', $slideUp, $slideDown);
+// $from-t: all .3s ease-in-out, $to-t: all .3s ease-in-out
+
+
+
 .fade-enter-active, .fade-leave-active {
     transition: opacity .3s ease-out;
 }

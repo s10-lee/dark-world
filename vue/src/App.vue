@@ -2,7 +2,7 @@
   <b-loading />
 
   <transition name="fade" mode="out-in">
-    <b-navbar v-if="$store.state.user" />
+    <b-navbar v-if="$store.state.user && $store.state.navbar" />
   </transition>
 
   <router-view v-slot="{ Component, route }">

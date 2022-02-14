@@ -176,20 +176,27 @@ $table-cell-padding-x: 1rem;
   padding: 1rem;
   cursor: pointer;
   background: $dark;
+  // border-radius: $bor;
 
-  img {
-    display: block;
-    object-fit: scale-down;
+  .light-box-preview {
     height: 100%;
     width: 100%;
-    transition: all .3s ease;
-    // z-index: -1;
-    pointer-events: none;
+    img {
+      display: block;
+      object-fit: scale-down;
+      height: 100%;
+      width: 100%;
+      transition: all .3s ease;
+      // z-index: -1;
+      pointer-events: none;
+    }
   }
 
   &:hover {
-    img {
-      opacity: .5;
+    .light-box-preview {
+      img {
+        opacity: .5;
+      }
     }
   }
 

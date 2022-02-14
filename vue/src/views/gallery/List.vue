@@ -1,12 +1,22 @@
 <template>
   <b-wrapper scroll container>
     <b-row class="row-cols-1 row-cols-md-3 row-cols-lg-4 row-cols-xl-5 g-4">
-      <b-col v-for="pin in items" :key="pin.uid">
-        <div class="box-image-fit"
-             @click.prevent.stop="removeFile(pin.id)"
-             style="max-height:18rem;">
-          <img :src="pin.url"  alt="">
+      <b-col v-for="pin in items" :key="pin.id">
+        <div class="box-image-fit with-toolbar" style="max-height:18rem;">
+          <b-light-box :src="pin.url">
+            <img :src="pin.url"  alt="">
+          </b-light-box>
+          <b-toolbar>
+            <b-btn class="px-3" variant="out-danger" @click.stop.prevent="removeFile(pin.id)">
+              <i class="bi bi-trash-fill"></i>
+            </b-btn>
+          </b-toolbar>
         </div>
+      </b-col>
+    </b-row>
+    <b-row align-h="center" v-if="!items.length">
+      <b-col cols="auto">
+        <h1 class="mt-9 text-center text-muted">No Media</h1>
       </b-col>
     </b-row>
   </b-wrapper>

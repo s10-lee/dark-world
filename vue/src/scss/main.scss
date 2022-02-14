@@ -2,6 +2,7 @@
 @import "init";
 @import "dark";
 
+@import "~bootstrap-icons/font/bootstrap-icons.css";
 @import "~bootstrap/scss/functions";
 @import "~bootstrap/scss/variables";
 @import "~bootstrap/scss/mixins";
@@ -168,8 +169,8 @@ body {
 
 //************* Mine *************/
 @import "transitions";
+@import "lightbox";
 @import "errors";
-@import "miro";
 
 
 .check {
@@ -207,4 +208,25 @@ body {
     align-items: center;
     flex-direction: column;
     text-align: center;
+}
+
+
+.tool-bar {
+    display: flex;
+    position: absolute;
+    padding: .5rem;
+
+    top: 0;
+    right: 0;
+    transition: all .3s ease;
+}
+
+.with-toolbar {
+    .tool-bar {
+        opacity: 0;
+    }
+
+    &:hover .tool-bar {
+        opacity: 1;
+    }
 }
