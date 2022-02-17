@@ -5,34 +5,16 @@ from app.library.files import save_file_media, remove_file_media
 from uuid import uuid4, UUID
 from app.src.gallery import schemas
 
-
 router = APIRouter(tags=['Gallery'])
 
 
-@router.get('/gallery/')
+@router.get('/gallery/',)
 async def gallery_index(user_id: UUID = Depends(get_current_user_id)) -> schemas.PinList:
     return await schemas.PinList.from_queryset(Pin.filter(user_id=user_id))
 
 
 @router.post('/upload/')
-async def upload_media(file: UploadFile, user_id: UUID = Depends(get_current_user_id)) -> schemas.PinReceive:
-    item_id = uuid4()
-    extension = file.filename.split('.')[-1]
-    contents = await file.read()
-    await save_file_media(contents, path=user_id, filename=item_id, extension=extension)
-    return await schemas.PinReceive.from_tortoise_orm(
-        await Pin.create(
-            id=item_id,
-            user_id=user_id,
-            name=file.filename,
-            extension=extension,
-            content_type=file.content_type,
-        )
-    )
-
-
-@router.post('/upload/many/')
-async def upload_media_many(files: list[UploadFile], user_id: UUID = Depends(get_current_user_id)) -> schemas.PinReceive:
+async def upload_media(files: list[UploadFile], user_id: UUID = Depends(get_current_user_id)) -> schemas.PinList:
     pins = []
     for file in files:
         item_id = uuid4()
@@ -50,13 +32,6 @@ async def upload_media_many(files: list[UploadFile], user_id: UUID = Depends(get
             await schemas.PinReceive.from_tortoise_orm(pin)
         )
     return pins
-    # item_id = uuid4()
-    # extension = file.filename.split('.')[-1]
-    # contents = await file.read()
-    # await save_file_media(contents, path=user_id, filename=item_id, extension=extension)
-    # return await schemas.PinReceive.from_tortoise_orm(
-    #     await Pin.create(id=item_id, user_id=user_id, name=file.filename, extension=extension)
-    # )
 
 
 @router.delete('/gallery/{pk}/')

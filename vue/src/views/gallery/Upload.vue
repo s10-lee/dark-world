@@ -34,7 +34,7 @@ export default {
       for (let file of this.files){
         formData.append('files', file, file.name)
       }
-      return uploadApiCall('/upload/many/', formData).then( data => {
+      return uploadApiCall('/upload/', formData).then( data => {
         this.active = false
       })
     }

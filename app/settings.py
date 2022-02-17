@@ -15,6 +15,8 @@ SECRET_KEY = os.getenv('SECRET_KEY')
 ALGORITHM = os.getenv('ALGORITHM')
 INTERVAL = int(os.getenv('INTERVAL', 10))
 
+STATIC_ROOT = BASE_DIR / 'app' / 'static'
+STATIC_URL = '/static'
 
 MEDIA_ROOT = BASE_DIR / 'app' / 'media'
 MEDIA_URL = '/media'

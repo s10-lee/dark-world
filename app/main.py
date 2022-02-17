@@ -8,7 +8,7 @@ from app.src.gallery.routers import router as api_gallery
 from app.src.grab.routers import router as api_grab
 
 from app.src.web.routers import web_router, web
-from app.settings import ORM, CORS_ALLOW_ORIGINS, APP_PARAMS, DEBUG, MEDIA_URL, MEDIA_ROOT
+from app.settings import ORM, CORS_ALLOW_ORIGINS, APP_PARAMS, DEBUG, MEDIA_URL, MEDIA_ROOT, STATIC_ROOT, STATIC_URL
 
 app = FastAPI(**APP_PARAMS)
 
@@ -25,7 +25,7 @@ app.include_router(api_user, prefix='/api')
 app.include_router(api_gallery, prefix='/api')
 app.include_router(api_grab, prefix='/api')
 
-app.mount('/static', StaticFiles(directory='app/static'), name='static')
+app.mount(STATIC_URL, StaticFiles(directory=STATIC_ROOT), name='static')
 app.mount(MEDIA_URL, StaticFiles(directory=MEDIA_ROOT), name='media')
 app.mount('/', web)
 
