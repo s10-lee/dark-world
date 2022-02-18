@@ -25,6 +25,9 @@ source venv/bin/activate
 ```
 
 
+
+
+
 ## DB
 ```shell
 aerich init -t app.config.settings.ORM --location app/db/migrations
