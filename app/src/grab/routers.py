@@ -1,42 +1,67 @@
 from fastapi import APIRouter, Depends
 from app.src.auth.services import get_current_user_id
-from app.library.web import get_request_binary
-from app.library.files import save_file_media
-from app.src.gallery.models import Pin
-from app.src.gallery.schemas import PinReceive
-from app.src.grab.services import grab_from_pinterest, grab_from_dribble
-from app.src.grab.schemas import GrabUrl
+from app.library.web import parse_html_response, send_http_request, MyResponse
+# from app.src.gallery.schemas import PinReceive
+from app.src.gallery.services import create_pin
+from app.src.grab.schemas import GrabberSchema
 import uuid
+from pprint import pp
+from typing import Union
 
 
 router = APIRouter(tags=['Grabbers'])
 
 
 @router.post('/grab/')
-async def grab_media_from_url(data: GrabUrl, user_id: uuid.UUID = Depends(get_current_user_id)):
-    item_id = uuid.uuid4()
+async def grab_media_from_url(data: GrabberSchema, user_id: uuid.UUID = Depends(get_current_user_id)):
     url = data.url
+    hostname = url.host
+    pattern = ''
+    elements = [url]
+    result = dict()
 
-    url_host = url.host
+    response = await send_http_request(url, debug=True)
+    if hostname == 'www.pinterest.com':
+        pattern = '//head/link[@as="image"]/@href'
 
-    # TODO: Grab service
-    if url_host == 'www.pinterest.com':
-        url = await grab_from_pinterest(url)
+    if hostname == 'dribbble.com':
+        # //head/meta[@property="og:image"]/@content
+        pattern = '//img[@data-animated-url]/@data-animated-url'
 
-    if url_host == 'dribbble.com':
-        url = await grab_from_dribble(url)
+    if pattern:
+        elements = await parse_html_response(response.body, pattern=pattern)
 
-    extension = url.split('.')[-1]
-    response = await get_request_binary(url)
+    for el in elements:
+        print(el)
+        response = await send_http_request(url)
+        result[el] = response.status
 
-    if response.status == 200 and url:
-        await save_file_media(response.data, path=user_id, filename=item_id, extension=extension)
-        return await PinReceive.from_tortoise_orm(
-            await Pin.create(id=item_id, user_id=user_id, extension=extension, content_type=response.content_type)
-        )
+        # if 400 > response.status >= 200 and elements:
+        #     if data.save:
+        #         await create_pin(content=response.body, user_id=user_id, filename=url, content_type=response.content_type)
 
-    return {'status': response.status}
+    return result
 
 
+@router.post('/grab/html/')
+async def grab_html_from_url(
+        data: GrabberSchema,
+        user_id: uuid.UUID = Depends(get_current_user_id)
+) -> dict[str, Union[MyResponse, list]]:
 
+    url = data.url
+    elements = []
+
+    response = await send_http_request(url, debug=True)
+    if data.pattern:
+        elements = await parse_html_response(response.body, pattern=data.pattern)
+
+    result = {
+        'elements': elements,
+        'response': response,
+    }
+
+    return result
+
+# async def download_media_file
 

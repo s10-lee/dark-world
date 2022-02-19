@@ -1,5 +1,9 @@
 @import "fonts";
+
+/*global*/
 @import "init";
+
+/*global*/
 @import "dark";
 
 @import "~bootstrap-icons/font/bootstrap-icons.css";
@@ -7,7 +11,6 @@
 @import "~bootstrap/scss/variables";
 @import "~bootstrap/scss/mixins";
 
-// scss-docs-start spacers
 $spacers: map-merge(
     (
         0: 0,
@@ -23,7 +26,6 @@ $spacers: map-merge(
     ),
     $spacers
 );
-
 
 /****************************************
     Gray - Color, Background, Border
@@ -171,35 +173,8 @@ body {
 @import "transitions";
 @import "lightbox";
 @import "errors";
+@import "checkbox";
 
-
-.check {
-    padding: $input-btn-padding-y $input-font-size $input-btn-padding-y 2.5rem;
-    cursor: pointer;
-    display: inline-block;
-    position: relative;
-}
-.check .mark {
-    width: $input-btn-padding-y + $input-font-size-sm;
-    height: $input-btn-padding-y + $input-font-size-sm;
-    top: $input-btn-padding-y;
-    left: 0;
-    position: absolute;
-    background-color: $input-bg;
-    border: $input-border-width solid $input-border-color;
-    border-radius: $border-radius;
-    transition: all .15s ease-in-out;
-}
-.check input:checked ~ .mark {
-    border-color: transparent;
-    background: $primary;
-}
-.check input {
-    position: absolute;
-    width: 0;
-    height: 0;
-    opacity: 0;
-}
 
 
 .flex-center {
