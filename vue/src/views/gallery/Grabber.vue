@@ -11,14 +11,26 @@
       </b-row>
       <b-row>
           <b-col cols="6">
-            <b-input size="lg" v-model="extractPattern" placeholder="xpath . . ."></b-input>
+            <b-input size="lg" v-model="extractPattern" placeholder="// . . ."></b-input>
           </b-col>
           <b-col cols="auto">
             <b-check size="lg" v-model="sourceCode">Source Code</b-check>
           </b-col>
           <b-col cols="auto">
-            <b-check v-model="savePin">Save</b-check>
+            <b-check size="lg" v-model="savePin">Save</b-check>
           </b-col>
+      </b-row>
+      <b-row>
+        <b-col class="text-700 mt-3">
+          Pinterest
+          <div class="text-muted mb-3">
+            //head/link[@as="image"]/@href
+          </div>
+          Dribbble
+          <div class="text-muted">
+            //img[@data-animated-url]/@data-animated-url
+          </div>
+        </b-col>
       </b-row>
     </form>
   </b-wrapper>

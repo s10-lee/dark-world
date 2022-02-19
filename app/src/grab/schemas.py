@@ -7,3 +7,4 @@ class GrabberSchema(BaseModel):
     pattern: Optional[str] = None
     source: Optional[bool] = None
     save: Optional[bool] = None
+    # raw save

@@ -7,7 +7,7 @@ import os
 
 async def create_pin(content: bytes, user_id: UUID, filename: str, content_type: str = None):
     primary_key = uuid4()
-    extension = filename.split('.')[-1]
+    extension = filename.rsplit('.')[-1]
     name = os.path.basename(filename)
 
     await save_file_media(content, path=user_id, filename=primary_key, extension=extension)

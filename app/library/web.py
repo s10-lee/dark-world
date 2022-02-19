@@ -13,7 +13,7 @@ from yarl import URL
 class HttpResponse:
     def __init__(
             self,
-            url: URL,
+            url: Union[URL, str],
             status: int,
             encoding: str,
             content_type: str,
@@ -46,13 +46,15 @@ class HttpResponse:
             convert_to: str = None
     ) -> "HttpResponse":
 
+        print('\n\n\r', client_response.content_disposition, '\n\n\r', sep='')
+
         if raw_body:
             body = await client_response.read()
         else:
             body = await convert_http_response_body(client_response, convert_to=convert_to)
 
         return cls(
-            url=client_response.url,
+            url=str(client_response.url),
             status=client_response.status,
             encoding=client_response.get_encoding(),
             content_type=client_response.content_type,
@@ -95,16 +97,6 @@ async def convert_http_response_body(
     return content
 
 
-# async def prepare_http_response_body(
-#         resp: aiohttp.ClientResponse,
-#         raw_body: bool = False,
-#         convert_to: str = None
-# ) -> Union[bytes, str, dict, list]:
-#     if raw_body:
-#         return await resp.read()
-#     return await convert_http_response_body(resp=resp, convert_to=convert_to)
-
-
 async def send_http_request(
         url,
         method='get',
@@ -113,19 +105,9 @@ async def send_http_request(
         debug: bool = False,
         **kwargs,
 ) -> "HttpResponse":
-
     async with aiohttp.ClientSession() as session:
         async with session.request(url=url, method=method, ssl=False, **kwargs) as resp:
             response = await response_object_factory(resp, raw_body=raw, convert_to=convert_to)
-
-            # response = response_object_creator(
-            #     url=resp.url,
-            #     status=resp.status,
-            #     encoding=resp.get_encoding(),
-            #     headers=dict(resp.headers),
-            #     content_type=resp.content_type,
-            #     body=await prepare_http_response_body(resp, raw=raw, convert_to=convert_to),
-            # )
 
             if debug:
                 print('-' * 50)
@@ -137,11 +119,6 @@ async def send_http_request(
                 print('-' * 50)
 
             return response
-
-
-async def get_http_request(url, **kwargs):
-    kwargs['method'] = 'get'
-    return await send_http_request(url, **kwargs)
 
 
 def convert_xml_to_dict(content) -> dict:
