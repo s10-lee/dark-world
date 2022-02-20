@@ -62,7 +62,7 @@ async def grab_html_from_url(
             resp = await send_http_request(el, raw=True, debug=True)
             elements[el] = resp.status
 
-            if 400 > resp.status >= 200 and el and data.save:
+            if 400 > resp.status >= 200 and el and data.save and resp.content_disposition:
                 await create_pin(content=resp.body, user_id=user_id, filename=el, content_type=resp.content_type)
 
     return {

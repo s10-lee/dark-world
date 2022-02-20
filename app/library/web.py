@@ -17,6 +17,7 @@ class HttpResponse:
             status: int,
             encoding: str,
             content_type: str,
+            content_disposition: str = None,
             headers: dict = None,
             body: Union[str, bytes, dict, list] = None,
     ) -> None:
@@ -24,6 +25,7 @@ class HttpResponse:
         self.status = status
         self.encoding = encoding
         self.content_type = content_type
+        self.content_disposition = content_disposition
         self.headers = headers
         self.body = body
 
@@ -58,6 +60,7 @@ class HttpResponse:
             status=client_response.status,
             encoding=client_response.get_encoding(),
             content_type=client_response.content_type,
+            content_disposition=client_response.content_disposition,
             headers=dict(client_response.headers),
             body=body,
         )
