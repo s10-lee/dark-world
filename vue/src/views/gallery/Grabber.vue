@@ -33,14 +33,32 @@
         </b-col>
       </b-row>
     </form>
+
+    <b-row class="mt-5">
+      <b-col cols="auto">
+        <b-input v-model="message" placeholde="message..." />
+      </b-col>
+      <b-col cols="auto">
+        <b-input v-model="duration" placeholde="duration... ms" type="number" />
+      </b-col>
+      <b-col cols="auto">
+        <b-input v-model="type" placeholde="type..." />
+      </b-col>
+      <b-col cols="auto">
+        <b-btn @click.stop.prevent="notify">Test</b-btn>
+      </b-col>
+    </b-row>
+
   </b-wrapper>
 </template>
 
 <script>
 import { postApiCall } from 'services/http'
+import { PageMixin } from 'mixins'
 
 export default {
   name: 'Grabber',
+  mixins: [ PageMixin ],
   data() {
     return {
       url: null,
@@ -48,9 +66,19 @@ export default {
       active: false,
       sourceCode: null,
       extractPattern: null,
+      message: 'This is a test message !!',
+      duration: 5000,
+      type: 'dark',
     }
   },
   methods: {
+    notify() {
+      this.$store.dispatch('notify', {
+        message: this.message,
+        duration: parseInt(this.duration),
+        type: this.type,
+      })
+    },
     submitGrab() {
       this.active = true
       const payload = {
@@ -61,6 +89,7 @@ export default {
       }
       postApiCall('/grab/html/', payload).then(data => {
 
+        this.notify('Data received !!', 'success')
         console.log(data)
 
       }).finally(() => {

@@ -28,6 +28,10 @@
     }
 }
 
+$fadeOut: (
+    opacity: 0
+);
+
 $slideUp: (
     transform: translateY(30px),
     opacity: 0
@@ -40,6 +44,7 @@ $slideDown: (
 
 
 @include make-transitions('slideUp', $slideUp, $slideDown);
+@include make-transitions('notification', $slideUp, $fadeOut, $to-t: opacity .2s ease-out);
 // $from-t: all .3s ease-in-out, $to-t: all .3s ease-in-out
 
 

@@ -94,6 +94,13 @@ export const PageMixin = {
         loading(status) {
             this.$store.commit(SET_PAGE_LOADER, status)
         },
+        notify(message, type = null, duration = null) {
+            this.$store.dispatch('notify', {
+                message: message,
+                type: type,
+                duration: duration || 5000,
+            })
+        }
     }
 }
 

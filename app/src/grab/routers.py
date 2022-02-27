@@ -45,11 +45,7 @@ router = APIRouter(tags=['Grabbers'])
 
 # -> dict[str, Union[MyResponse, list]]
 @router.post('/grab/html/')
-async def grab_html_from_url(
-        data: GrabberSchema,
-        user_id: uuid.UUID = Depends(get_current_user_id)
-):
-
+async def grab_html_from_url(data: GrabberSchema, user_id: uuid.UUID = Depends(get_current_user_id)):
     url = data.url
     elements = {}
 

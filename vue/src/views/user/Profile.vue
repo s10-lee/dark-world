@@ -17,8 +17,12 @@
 
 <script>
 import { getApiCall, putApiCall } from 'services/http'
+import { PageMixin } from 'mixins'
+
+
 export default {
   name: 'Profile',
+  mixins: [ PageMixin ],
   data() {
     return {
       name: null,
@@ -27,7 +31,10 @@ export default {
   },
   methods: {
     saveForm() {
+      this.loading(true)
       putApiCall('/profile/email/', {email: this.email}).then(data => {
+        this.notify('Email was updated !', 'success')
+        this.loading(false)
         console.log(data)
       })
     }

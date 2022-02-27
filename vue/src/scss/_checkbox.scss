@@ -47,7 +47,7 @@
 }
 
 .check input:checked ~ .mark {
-  background: darken($primary, 12);
+  background: darken($primary, 10);
   border-color: transparent;
   &:after{
     opacity: 1;

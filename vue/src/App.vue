@@ -1,6 +1,4 @@
 <template>
-  <b-loading />
-
   <transition name="fade" mode="out-in">
     <b-navbar v-if="$store.state.user && $store.state.navbar" />
   </transition>
@@ -10,4 +8,7 @@
       <component :is="Component" :key="route.fullPath" />
     </transition>
   </router-view>
+
+  <b-toaster />
+  <b-loading />
 </template>

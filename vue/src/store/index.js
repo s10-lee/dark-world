@@ -2,7 +2,7 @@ import { createStore } from 'vuex'
 import parseJwt from 'services/jwt'
 import axios from 'axios';
 import { API_OBTAIN_URL, API_REFRESH_URL } from 'services/const';
-import { SET_USER_AUTH, SET_PAGE_LOADER, SET_NAVBAR_DISPLAY } from 'store/types'
+import { SET_USER_AUTH, SET_PAGE_LOADER, SET_NAVBAR_DISPLAY, ADD_NOTIFICATION, POP_NOTIFICATION } from 'store/types'
 
 const store = createStore({
     state() {
@@ -11,6 +11,7 @@ const store = createStore({
             loading: true,
             user: null,
             token: localStorage.getItem('t') || null,
+            notifications: [],
         }
     },
     mutations: {
@@ -31,6 +32,12 @@ const store = createStore({
                 localStorage.removeItem('t')
             }
         },
+        [ADD_NOTIFICATION] ( state, payload ) {
+            state.notifications.push(payload)
+        },
+        [POP_NOTIFICATION] ( state ) {
+            state.notifications.splice(0, 1)
+        }
     },
     actions: {
         checkUserAuth ({ commit, state }) {
@@ -62,7 +69,7 @@ const store = createStore({
                 })
                 .then(response => {
                     const { access_token = null } = response.data
-                    commit('login', access_token)
+                    commit(SET_USER_AUTH, access_token)
                 })
                 .catch(e => {
                     throw e
@@ -71,6 +78,12 @@ const store = createStore({
         logoutToken({ commit }) {
             commit(SET_USER_AUTH, null)
         },
+        notify({ commit, state }, message ) {
+            commit(ADD_NOTIFICATION, message)
+            if (message.duration) {
+                setTimeout(() => commit(POP_NOTIFICATION), message.duration)
+            }
+        }
     }
 })
 

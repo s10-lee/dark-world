@@ -1,0 +1,65 @@
+.b-toast-container {
+  position: fixed;
+  display: flex;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 2rem;
+  overflow: hidden;
+  //z-index: 9999;
+  z-index: $zindex-fixed;
+  pointer-events: none;
+
+  &--top {
+    flex-direction: column;
+  }
+
+  &--bottom {
+    flex-direction: column-reverse;
+  }
+}
+
+//.b-toast-container--bottom {
+//  flex-direction: column-reverse;
+//}
+
+.b-toast {
+  display: grid;
+  align-items: center;
+  animation-duration: .15s;
+  margin: .5rem 0;
+  border-radius: $alert-border-radius;
+  pointer-events: auto;
+  color: $white;
+  min-height: 3rem;
+  cursor: pointer;
+  padding: .5rem 2rem;
+  word-break: break-word;
+
+  &--top, &--bottom {
+    align-self: center;
+  }
+  &--top-right, &--bottom-right {
+    align-self: flex-end;
+  }
+  &--top-left, &--bottom-left {
+    align-self: flex-start;
+  }
+}
+
+@each $state, $value in $theme-colors {
+  $toast-background: shift-color($value, $alert-bg-scale);
+  $toast-border: shift-color($value, $alert-border-scale);
+  $toast-color: shift-color($value, $alert-color-scale);
+
+  .b-toast--#{$state} {
+    background-color: $toast-background;
+    border-color: $toast-border;
+    color: $toast-color;
+
+    .alert-link {
+      color: shade-color($toast-color, 20%);
+    }
+  }
+}

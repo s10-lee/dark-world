@@ -12,7 +12,7 @@ export default {
   name: 'BInput',
   components: { BLabel },
   props: {
-    modelValue: String,
+    modelValue: [String, Number],
     size: String,
     label: String
   },
