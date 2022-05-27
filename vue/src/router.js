@@ -2,6 +2,7 @@ import {createRouter, createWebHistory} from 'vue-router'
 import Auth from 'views/Auth'
 import Home from 'views/Home'
 import Profile from 'views/user/Profile'
+import Debug from 'views/Debug'
 
 import { Upload, List, Grabber } from 'views/gallery'
 
@@ -17,6 +18,7 @@ const routes = [
     {path: '/n00b/gallery', component: List, ...ROUTE_AUTH},
     {path: '/n00b/upload', component: Upload, ...ROUTE_AUTH},
     {path: '/n00b/grab', component: Grabber, ...ROUTE_AUTH},
+    {path: '/debug', component: Debug, ...ROUTE_AUTH},
 
     {path: '/sux0r', component: Auth, ...ROUTE_GUEST},
 

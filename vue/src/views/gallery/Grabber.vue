@@ -23,31 +23,16 @@
       <b-row>
         <b-col class="text-700 mt-3">
           Pinterest
-          <div class="text-muted mb-3">
+          <div class="text-400 mb-3">
             //head/link[@as="image"]/@href
           </div>
           Dribbble
-          <div class="text-muted">
+          <div class="text-400">
             //img[@data-animated-url]/@data-animated-url
           </div>
         </b-col>
       </b-row>
     </form>
-
-    <b-row class="mt-5">
-      <b-col cols="auto">
-        <b-input v-model="message" placeholde="message..." />
-      </b-col>
-      <b-col cols="auto">
-        <b-input v-model="duration" placeholde="duration... ms" type="number" />
-      </b-col>
-      <b-col cols="auto">
-        <b-input v-model="type" placeholde="type..." />
-      </b-col>
-      <b-col cols="auto">
-        <b-btn @click.stop.prevent="notify">Test</b-btn>
-      </b-col>
-    </b-row>
 
   </b-wrapper>
 </template>
@@ -66,17 +51,14 @@ export default {
       active: false,
       sourceCode: null,
       extractPattern: null,
-      message: 'This is a test message !!',
-      duration: 5000,
-      type: 'dark',
     }
   },
   methods: {
-    notify() {
+    notify(message, type) {
       this.$store.dispatch('notify', {
-        message: this.message,
-        duration: parseInt(this.duration),
-        type: this.type,
+        message: message,
+        duration: 5000,
+        type: type,
       })
     },
     submitGrab() {
@@ -88,14 +70,10 @@ export default {
         pattern: this.extractPattern,
       }
       postApiCall('/grab/html/', payload).then(data => {
-
         this.notify('Data received !!', 'success')
         console.log(data)
-
       }).finally(() => {
-
         this.active = false
-
       })
     }
   }

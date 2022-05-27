@@ -108,7 +108,9 @@ export default {
       }
     },
     stopTimer() {
-      this.timer && clearTimeout(this.timer)
+      if (this.timer) {
+        clearTimeout(this.timer)
+      }
     },
     close() {
       this.stopTimer()

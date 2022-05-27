@@ -1,5 +1,4 @@
-from fastapi import FastAPI
-from fastapi.exceptions import HTTPException
+from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from tortoise.contrib.fastapi import register_tortoise
