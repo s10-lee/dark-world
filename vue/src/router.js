@@ -4,7 +4,7 @@ import Home from 'views/Home'
 import Profile from 'views/user/Profile'
 import Debug from 'views/Debug'
 
-import { Upload, List, Grabber } from 'views/gallery'
+import { Upload, List, Grabber, Youtube } from 'views/gallery'
 
 import NotFound from 'views/errors/NotFound'
 import store from 'store'
@@ -18,6 +18,7 @@ const routes = [
     {path: '/n00b/gallery', component: List, ...ROUTE_AUTH},
     {path: '/n00b/upload', component: Upload, ...ROUTE_AUTH},
     {path: '/n00b/grab', component: Grabber, ...ROUTE_AUTH},
+    {path: '/n00b/youtube', component: Youtube, ...ROUTE_AUTH},
     {path: '/debug', component: Debug, ...ROUTE_AUTH},
 
     {path: '/sux0r', component: Auth, ...ROUTE_GUEST},

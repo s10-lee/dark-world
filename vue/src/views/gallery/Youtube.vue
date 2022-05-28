@@ -3,37 +3,29 @@
     <form @submit.prevent.stop="submitGrab">
       <b-row class="mb-5">
         <b-col>
-          <b-input size="lg" placeholder="https://" v-model="url" :disabled="active"/>
+          <b-input size="lg" placeholder="https://www.youtube.com/watch..." v-model="url" :disabled="active"/>
         </b-col>
         <b-col cols="auto">
           <b-btn size="lg" type="submit" :disabled="active">Grab</b-btn>
         </b-col>
       </b-row>
+
       <b-row>
-          <b-col cols="6">
-            <b-input size="lg" v-model="extractPattern" placeholder="// . . ."></b-input>
-          </b-col>
-          <b-col cols="auto">
-            <b-check size="lg" v-model="sourceCode">Source Code</b-check>
-          </b-col>
-          <b-col cols="auto">
-            <b-check size="lg" v-model="savePin">Save</b-check>
-          </b-col>
+        <b-col>
+          <b-select size="lg" v-model="itag" :options="streams" :disabled="active || !streams"/>
+        </b-col>
       </b-row>
-      <b-row>
-        <b-col class="text-700 mt-3">
-          Pinterest
-          <div class="text-400 mb-3">
-            //head/link[@as="image"]/@href
-          </div>
-          Dribbble
-          <div class="text-400">
-            //img[@data-animated-url]/@data-animated-url
+
+      <b-row class="mt-3">
+        <b-col>
+          <h4 v-if="title">{{ title }}</h4>
+          <div v-if="thumbnail">
+            <img :src="thumbnail" :alt="title" />
           </div>
         </b-col>
       </b-row>
-    </form>
 
+    </form>
   </b-wrapper>
 </template>
 
@@ -42,16 +34,16 @@ import { postApiCall } from 'services/http'
 import { PageMixin } from 'mixins'
 
 export default {
-  name: 'Grabber',
+  name: 'Youtube',
   mixins: [ PageMixin ],
   data() {
     return {
       url: null,
       itag: null,
-      savePin: false,
+      title: null,
+      thumbnail: null,
       active: false,
-      sourceCode: null,
-      extractPattern: null,
+      streams: null,
     }
   },
   methods: {
@@ -66,12 +58,14 @@ export default {
       this.active = true
       const payload = {
         url: this.url,
-        save: this.savePin,
-        source: this.sourceCode,
-        pattern: this.extractPattern,
+        itag: this.itag,
       }
-      postApiCall('/grab/html/', payload).then(data => {
+      postApiCall('/grab/youtube/', payload).then(data => {
         this.notify('Data received !!', 'success')
+        this.streams = data.result
+        this.thumbnail = data.thumbnail
+        this.title = data.title
+
         console.log(data)
       }).finally(() => {
         this.active = false

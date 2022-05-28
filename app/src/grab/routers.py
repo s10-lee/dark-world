@@ -3,11 +3,18 @@ from app.src.auth.services import get_current_user_id
 from app.library.web import parse_html_response, send_http_request, MyResponse
 # from app.src.gallery.schemas import PinReceive
 from app.src.gallery.services import create_pin
-from app.src.grab.schemas import GrabberSchema
-import uuid
+from app.src.grab.schemas import GrabberSchema, GrabberYoutubeSchema
 from urllib.parse import urlparse
 from pprint import pp
 from typing import Union
+from io import BytesIO
+from pytube import YouTube
+from settings import MEDIA_ROOT
+import uuid
+import ssl
+
+# TODO: Fix this shit
+ssl._create_default_https_context = ssl._create_unverified_context
 
 
 router = APIRouter(tags=['Grabbers'])
@@ -67,3 +74,26 @@ async def grab_html_from_url(data: GrabberSchema, user_id: uuid.UUID = Depends(g
     }
 
 
+@router.post('/grab/youtube/')
+async def grab_video_from_youtube(data: GrabberYoutubeSchema, user_id: uuid.UUID = Depends(get_current_user_id)):
+    yt = YouTube(data.url)
+    result = []
+
+    streams = yt.streams.filter(progressive=True, file_extension='mp4').order_by('resolution').desc()
+    for stream in streams:
+        # print(stream)
+        result.append({'value': stream.itag, 'text': f'{stream.resolution} ({stream.fps}fps)'})
+
+    if data.itag:
+        buffer = BytesIO()
+        stream = yt.streams.get_by_itag(data.itag)
+        stream.stream_to_buffer(buffer)
+        buffer.seek(0)
+        content = buffer.read()
+        await create_pin(content, user_id, filename=stream.title + '.mp4', content_type=stream.mime_type)
+
+    return {
+        'title': yt.title,
+        'thumbnail': yt.thumbnail_url,
+        'result': result,
+    }
