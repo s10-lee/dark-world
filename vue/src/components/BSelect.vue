@@ -1,6 +1,6 @@
 <template>
   <div class="dropdown">
-    <button :class="'btn border-secondary bg-dark block fw-normal w-100 dropdown-toggle' + (shown ? ' show' : '') + ' ' + getSize"
+    <button :class="'btn dropdown-toggle' + (shown ? ' show' : '') + ' ' + getSize"
             type="button"
             style="text-align: left;"
             data-bs-toggle="dropdown"
@@ -9,7 +9,7 @@
       {{ displayTitle }}
     </button>
     <ul :class="'dropdown-menu dropdown-menu-dark block w-100'  + (shown ? ' show' : '')">
-      <li v-for="item in options" :key="item.value">
+      <li v-for="item in getOptions" :key="item.value">
         <button :class="'dropdown-item block w-100 ' + (item.value === modelValue ? ' active': '')"
                 :disabled="disabled"
                 @click="onSelect(item.value)"
@@ -23,7 +23,7 @@
 export default {
   name: 'BSelect',
   props: {
-    modelValue: String,
+    modelValue: [String, Number],
     size: String,
     label: String,
     options: [Array, Object],
@@ -44,9 +44,23 @@ export default {
       }
       return ''
     },
+    getOptions() {
+      if (this.options && !Array.isArray(this.options)) {
+        const options = []
+        for (const [value, text] of Object.entries(this.options)) {
+          options.push({'value': value, 'text': text})
+        }
+        return options
+      }
+      return this.options
+    },
     displayTitle() {
       if (this.modelValue && this.options) {
-        return this.options.find(item => this.modelValue === item.value).text
+
+        if (Array.isArray(this.options)) {
+          return this.options.find(item => this.modelValue === item.value).text
+        }
+        return this.options[this.modelValue]
       }
       return this.emptyTitle || ' --- '
     }

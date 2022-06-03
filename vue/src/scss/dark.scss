@@ -67,6 +67,10 @@ $input-border-color: $secondary;
 $input-focus-border-color: $blue;
 $input-placeholder-color: $secondary;
 
+
+$input-btn-padding-y: .375rem;
+$input-btn-padding-x: .75rem;
+
 $input-btn-padding-y-lg: .75rem;
 $input-btn-padding-x-lg:  1rem;
 
@@ -97,6 +101,19 @@ $border-radius-lg:    .3rem;
 $table-hover-bg: rgba($gray-800, .25);
 $table-cell-padding-y: .5rem;
 $table-cell-padding-x: 1rem;
+
+
+
+$dropdown-color: $body-color;
+$dropdown-bg: $body-bg;
+$dropdown-border-color: $secondary;
+
+$caret-width:                 .3em;
+$caret-vertical-align:        $caret-width * .85;
+$caret-spacing:               $caret-width * .85;
+
+
+
 
 /********************************
     Additional Classes
@@ -211,4 +228,29 @@ $table-cell-padding-x: 1rem;
   //  background: $dark;
   //  z-index: -2;
   //}
+}
+
+
+.dropdown {
+  > .btn {
+    color: $dropdown-color;
+    border-color: $dropdown-border-color;
+    text-align: left;
+    display: block;
+    width: 100%;
+    padding: $input-btn-padding-y $input-btn-padding-x;
+
+  }
+  > .btn-lg {
+    padding: $input-btn-padding-y-lg $input-btn-padding-x-lg;
+  }
+  > .dropdown-toggle::after {
+    margin: 0;
+    position: absolute;
+    right: $input-btn-padding-x;
+    top: 50%;
+    transform: translateY(-50%);
+    // margin-right: $caret-width;
+
+  }
 }

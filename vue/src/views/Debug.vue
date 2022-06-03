@@ -1,7 +1,7 @@
 <template>
   <b-wrapper container>
 
-    <b-row class="mt-7">
+    <b-row class="mt-5">
       <h4 class="text-info">DEBUG TOAST</h4>
     </b-row>
 
@@ -20,6 +20,19 @@
       </b-col>
     </b-row>
 
+    <b-row class="mt-5">
+      <h4 class="text-info">DROPDOWN</h4>
+    </b-row>
+
+    <b-row>
+      <b-col cols="3">
+        <b-select v-model="selected" :options="options" />
+      </b-col>
+      <b-col cols="auto">
+        selected: {{ selected }}
+      </b-col>
+    </b-row>
+
   </b-wrapper>
 </template>
 
@@ -31,9 +44,8 @@ export default {
   mixins: [ PageMixin ],
   data() {
     return {
-      url: null,
-      savePin: false,
-      active: false,
+      selected: null,
+      options: {1: 'Brest', 2: 'Vitebsk', 3: 'Gomel', 4: 'Grodno', 5: 'Minskaya oblast'},
       sourceCode: null,
       extractPattern: null,
       message: 'This is a test message !!',
