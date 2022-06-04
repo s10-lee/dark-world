@@ -48,8 +48,6 @@ class HttpResponse:
             convert_to: str = None
     ) -> "HttpResponse":
 
-        print('\n\n\r', client_response.content_disposition, '\n\n\r', sep='')
-
         if raw_body:
             body = await client_response.read()
         else:

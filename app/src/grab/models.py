@@ -9,21 +9,12 @@ from enum import Enum
 
 class Grabber(DateTimeMixin):
     id = UUIDField(pk=True)
-
-    # Dribble
     name = fields.CharField(255)
-
-    # MEDIA_URL / grabber / icons /
     icon = fields.CharField(255)
-
-    # https://dribbble.com/shots/([-a-zA-Z_0-9]+)(/?)
-    url_mask = fields.CharField(50, null=False, index=True)
-
-    # //img[@data-animated-url]/@data-animated-url
+    type = fields.CharField(50, null=False, default='html')
+    patterns = fields.JSONField(default=list)
     search_xpath = fields.CharField(255)
-
-    # Element index, if many needed
-    index = fields.IntField(null=True)
+    element_index = fields.IntField(null=True)
 
     class Meta:
         table = 'grabber'
