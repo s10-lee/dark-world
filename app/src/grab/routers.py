@@ -18,7 +18,7 @@ router = APIRouter(tags=['Grabbers'])
 
 
 @router.get('/grab/')
-async def get_icon_patterns():
+async def list_grabbers():
     return await Grabber.all()
 
 
@@ -26,22 +26,31 @@ async def get_icon_patterns():
 async def grab_html_from_url(data: GrabberSchema, user_id: uuid.UUID = Depends(get_current_user_id)):
     url = data.url
     elements = {}
-    response = await send_http_request(url, debug=True)
+    response = await send_http_request(url)
 
     if data.pattern:
         res = parse_html_response(response.body, pattern=data.pattern)
 
         for el in res:
-            resp = await send_http_request(el, raw=True, debug=True)
+            resp = await send_http_request(el, raw=True)
             elements[el] = resp.status
 
-            if 400 > resp.status >= 200 and el and data.save:
+            if 300 > resp.status >= 200 and el and data.save:
                 await create_pin(content=resp.body, user_id=user_id, filename=el, content_type=resp.content_type)
 
     return {
         'elements': elements,
         'response': response,
     }
+
+
+@router.post('/grab/download/')
+async def download_media_file(url, user_id: uuid.UUID = Depends(get_current_user_id)):
+    resp = await send_http_request(url, raw=True, debug=True)
+    item = dict()
+    if 300 > resp.status >= 200 and resp.content_type:
+        item = await create_pin(content=resp.body, user_id=user_id, filename=url, content_type=resp.content_type)
+    return item
 
 
 @router.post('/grab/youtube/')

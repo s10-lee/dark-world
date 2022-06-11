@@ -107,7 +107,7 @@ async def send_http_request(
         **kwargs,
 ) -> "HttpResponse":
     async with aiohttp.ClientSession() as session:
-        async with session.request(url=url, method=method, ssl=False, **kwargs) as resp:
+        async with session.request(url=url, method=method, ssl=False, allow_redirects=True, **kwargs) as resp:
             response = await response_object_factory(resp, raw_body=raw, convert_to=convert_to)
 
             if debug:
