@@ -1,6 +1,6 @@
 <template>
   <b-wrapper scroll container>
-    <b-row class="row-cols-1 row-cols-md-3 row-cols-lg-4 row-cols-xl-5 g-4">
+    <b-row v-if="items.length" class="row-cols-1 row-cols-md-3 row-cols-lg-4 row-cols-xl-5 g-4">
       <b-col v-for="pin in items" :key="pin.id">
         <div class="box-image-fit with-toolbar" style="max-height:18rem;">
 
@@ -28,7 +28,7 @@
         </div>
       </b-col>
     </b-row>
-    <b-row align-h="center" v-if="!items.length">
+    <b-row align-h="center" v-else>
       <b-col cols="auto">
         <h1 class="mt-9 text-center text-muted">No Media</h1>
       </b-col>
@@ -45,7 +45,7 @@ export default {
   mixins: [ PageMixin ],
   data() {
     return {
-      items: [],
+      items: []
     }
   },
   methods: {

@@ -113,7 +113,8 @@ $caret-vertical-align:        $caret-width * .85;
 $caret-spacing:               $caret-width * .85;
 
 
-
+$zindex-sticky: 1020;
+$zindex-fixed:  1030;
 
 /********************************
     Additional Classes
@@ -253,4 +254,26 @@ $caret-spacing:               $caret-width * .85;
     // margin-right: $caret-width;
 
   }
+}
+
+.add-to-gallery {
+  $size: 4rem;
+  position: absolute;
+  top: 36px;
+  right: 10%;
+  display: block;
+  border: $border-width solid $input-border-color;
+  border-radius: 50%;
+  width: $size;
+  height: $size;
+  font-size: 3.5rem;
+  font-weight: bolder;
+  line-height: 3rem;
+  padding: 0;
+  margin: 0;
+  vertical-align: center;
+  background: $red;
+  color: $white;
+
+  z-index: $zindex-fixed + 10;
 }

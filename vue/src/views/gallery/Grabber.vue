@@ -1,5 +1,6 @@
 <template>
   <b-wrapper container>
+
     <form @submit.prevent.stop="submitGrab">
       <b-row class="mb-5">
         <b-col cols="auto" class="align-self-center">
@@ -119,7 +120,7 @@ export default {
       })
     },
   },
-  mounted() {
+  created() {
     getApiCall('/grab/').then(data => {
       this.iconSettings = data
     })

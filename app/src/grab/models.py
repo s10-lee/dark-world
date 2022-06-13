@@ -7,6 +7,8 @@ from app.db.utils import init_models
 from enum import Enum
 
 
+# //img[@data-test="v-img"]/@src
+# //img[@data-animated-url]/@data-animated-url
 class Grabber(DateTimeMixin):
     id = UUIDField(pk=True)
     name = fields.CharField(255)

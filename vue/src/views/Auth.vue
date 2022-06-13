@@ -30,7 +30,7 @@ export default {
   methods: {
     handleLogin() {
       this.$store.dispatch('obtainToken', {username: this.username, password: this.password}).then(() => {
-        this.$router.push({path: '/n00b/upload'})
+        this.$router.push({path: '/n00b'})
       })
     }
   }
