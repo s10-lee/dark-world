@@ -15,7 +15,6 @@ export default {
   name: 'Upload',
   data() {
     return {
-      file: null,
       files: null,
       active: false,
     }

@@ -85,13 +85,6 @@ export default {
       this.extractPattern = null
       this.itag = null
     },
-    notify(message, type) {
-      this.$store.dispatch('notify', {
-        message: message,
-        duration: 5000,
-        type: type,
-      })
-    },
     submitGrab() {
       this.active = true
       let payload = {
