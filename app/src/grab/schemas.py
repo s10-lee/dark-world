@@ -10,6 +10,5 @@ class GrabberYoutubeSchema(BaseModel):
 class GrabberSchema(BaseModel):
     url: HttpUrl
     pattern: Optional[str] = None
-    source: Optional[bool] = None
     save: Optional[bool] = None
     # raw save
