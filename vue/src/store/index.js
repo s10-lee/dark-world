@@ -2,7 +2,7 @@ import { createStore } from 'vuex'
 import parseJwt from 'services/jwt'
 import axios from 'axios';
 import { API_OBTAIN_URL, API_REFRESH_URL } from 'services/const';
-import { SET_USER_AUTH, SET_PAGE_LOADER, SET_NAVBAR_DISPLAY, ADD_NOTIFICATION, POP_NOTIFICATION } from 'store/types'
+import { SET_USER, SET_TOKEN, SET_PAGE_LOADER, SET_NAVBAR_DISPLAY, ADD_NOTIFICATION, POP_NOTIFICATION } from 'store/types'
 
 const store = createStore({
     state() {
@@ -21,14 +21,15 @@ const store = createStore({
         [SET_PAGE_LOADER]( state, payload ) {
             state.loading = payload
         },
-        [SET_USER_AUTH]( state, payload = null ) {
+        [SET_USER] ( state, payload = null ) {
+            state.user = payload
+        },
+        [SET_TOKEN] ( state, payload = null ) {
             if (payload) {
                 state.token = payload
-                state.user = parseJwt(payload)
                 localStorage.setItem('t', payload)
             } else {
                 state.token = null
-                state.user = null
                 localStorage.removeItem('t')
             }
         },
@@ -40,43 +41,51 @@ const store = createStore({
         }
     },
     actions: {
+        setTokenFromResponse({ commit, state, dispatch }, data) {
+            const { access_token = null } = data
+            const user = parseJwt(access_token)
+
+            commit(SET_USER, user)
+            commit(SET_TOKEN, access_token)
+
+            const now = Math.ceil(Date.now() / 1000)
+            const timeout = (user.exp - now) * 1000
+            setTimeout(() => dispatch('refreshToken'), timeout)
+            return true
+        },
         checkUserAuth ({ commit, state }) {
             if (!state.user && state.token) {
-                commit(SET_USER_AUTH, state.token)
+                commit(SET_USER, parseJwt(state.token))
             }
-            const now = Math.round(Date.now() / 1000)
+            const now = Math.ceil(Date.now() / 1000)
+
             if (state.user && state.user.exp - now > 0) {
+                // console.log('checkUserAuth = ', state.user.exp - now)
                 return true
             }
-            commit(SET_USER_AUTH, false)
+            commit(SET_USER, null)
+            commit(SET_TOKEN, null)
             return false
         },
-        obtainToken ({ commit }, credentials ) {
+        obtainToken ({ state, dispatch }, credentials ) {
             return axios
                 .post(API_OBTAIN_URL, credentials)
-                .then(response => {
-                    const { access_token = null } = response.data
-                    commit(SET_USER_AUTH, access_token)
-                })
+                .then(response => dispatch('setTokenFromResponse', response.data))
                 .catch(e => {
                     throw e
                 })
         },
-        refreshToken ({ commit, state }) {
+        refreshToken ({ state, dispatch }) {
             return axios
-                .post(API_REFRESH_URL, {
-                    refresh_token: state.token
-                })
-                .then(response => {
-                    const { access_token = null } = response.data
-                    commit(SET_USER_AUTH, access_token)
-                })
+                .post(API_REFRESH_URL, {refresh_token: state.token})
+                .then(response => dispatch('setTokenFromResponse', response.data))
                 .catch(e => {
                     throw e
                 })
         },
         logoutToken({ commit }) {
-            commit(SET_USER_AUTH, null)
+            commit(SET_USER, null)
+            commit(SET_TOKEN, null)
         },
         notify({ commit, state }, message ) {
             commit(ADD_NOTIFICATION, message)

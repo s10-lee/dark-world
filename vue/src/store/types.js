@@ -1,6 +1,7 @@
 export const SET_PAGE_LOADER = 'SET_PAGE_LOADER'
-export const SET_USER_AUTH = 'SET_USER_AUTH'
 export const SET_NAVBAR_DISPLAY = 'SET_NAVBAR_DISPLAY'
+export const SET_USER = 'SET_USER'
+export const SET_TOKEN = 'SET_TOKEN'
 
 export const ADD_NOTIFICATION = 'ADD_NOTIFICATION'
 export const POP_NOTIFICATION = 'POP_NOTIFICATION'
