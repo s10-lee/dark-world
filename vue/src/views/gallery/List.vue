@@ -1,5 +1,15 @@
 <template>
   <b-wrapper scroll container>
+
+    <b-row class="row-cols-1 row-cols-md-3 row-cols-lg-4 row-cols-xl-5" align-h="end">
+      <b-col cols="1" class="position-relative">
+        <label class="file-upload-btn">
+          &plus;
+          <b-file v-model="files" :disabled="active" multiple accept="image/*, audio/*, video/*"/>
+        </label>
+      </b-col>
+    </b-row>
+
     <b-row v-if="items.length" class="row-cols-1 row-cols-md-3 row-cols-lg-4 row-cols-xl-5 g-4">
       <b-col v-for="pin in items" :key="pin.id">
         <div class="box-image-fit with-toolbar" style="max-height:18rem;">
@@ -37,7 +47,7 @@
 </template>
 
 <script>
-import { getApiCall, deleteApiCall } from 'services/http'
+import {getApiCall, deleteApiCall, uploadApiCall} from 'services/http'
 import { PageMixin } from 'mixins'
 
 export default {
@@ -45,7 +55,16 @@ export default {
   mixins: [ PageMixin ],
   data() {
     return {
-      items: []
+      items: [],
+      active: null,
+      files: null,
+    }
+  },
+  watch: {
+    files(value, prevValue) {
+      if (value && value !== prevValue) {
+        this.submitUpload()
+      }
     }
   },
   methods: {
@@ -60,8 +79,19 @@ export default {
     getFiles() {
       return getApiCall('/gallery/').then(data => this.items = data)
     },
+    submitUpload() {
+      this.active = true
+      let formData = new FormData()
+      for (let file of this.files){
+        formData.append('files', file, file.name)
+      }
+      return uploadApiCall('/upload/', formData).then( data => {
+        this.active = false
+        this.getFiles()
+      })
+    }
   },
-  created() {
+  mounted() {
     this.getFiles()
   }
 }

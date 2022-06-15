@@ -8,13 +8,17 @@
 export default {
   name: 'BCol',
   props: {
-    cols: String
+    cols: [String, Number],
+    offset: [String, Number]
   },
   computed: {
     cssClasses() {
       let cls = ['col']
       if (this.cols) {
         cls = ['col-' + this.cols]
+      }
+      if (this.offset) {
+        cls.push('offset-' + this.cols)
       }
       return cls
     }

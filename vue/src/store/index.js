@@ -49,7 +49,9 @@ const store = createStore({
             commit(SET_TOKEN, access_token)
 
             const now = Math.ceil(Date.now() / 1000)
-            const timeout = (user.exp - now) * 1000
+            const timeout = (user.exp - now - 10) * 1000
+
+            console.log('setTokenFromResponse', timeout, user.exp)
             setTimeout(() => dispatch('refreshToken'), timeout)
             return true
         },
@@ -59,8 +61,10 @@ const store = createStore({
             }
             const now = Math.ceil(Date.now() / 1000)
 
+            if (state.user) {
+                console.log('checkUserAuth = ', state.user.exp - now)
+            }
             if (state.user && state.user.exp - now > 0) {
-                // console.log('checkUserAuth = ', state.user.exp - now)
                 return true
             }
             commit(SET_USER, null)
@@ -68,6 +72,7 @@ const store = createStore({
             return false
         },
         obtainToken ({ state, dispatch }, credentials ) {
+            console.log('obtainToken')
             return axios
                 .post(API_OBTAIN_URL, credentials)
                 .then(response => dispatch('setTokenFromResponse', response.data))
@@ -76,6 +81,7 @@ const store = createStore({
                 })
         },
         refreshToken ({ state, dispatch }) {
+            console.log('refreshToken')
             return axios
                 .post(API_REFRESH_URL, {refresh_token: state.token})
                 .then(response => dispatch('setTokenFromResponse', response.data))

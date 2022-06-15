@@ -120,18 +120,6 @@ $zindex-fixed:  1030;
     Additional Classes
 ********************************/
 
-//body:after {
-//  content: '';
-//  display: block;
-//  position: absolute;
-//  top: 0;
-//  left: 0;
-//  right: 0;
-//  background: linear-gradient(to bottom, #12181b, #111);
-//  height: 300px;
-//  z-index: -1;
-//}
-
 .copy-link {
   color: #073e0a;
   &:hover, &:active {
@@ -186,6 +174,42 @@ $zindex-fixed:  1030;
     z-index: -1;
   }
 }
+
+.file-upload-btn {
+  position: fixed;
+  right: 3rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 3rem;
+  height: 3rem;
+  background: $pink;
+  cursor: pointer;
+
+  font-weight: bolder;
+  // font-size: 2rem;
+
+  padding: 0;
+  margin: 0;
+  text-align: center;
+  overflow: hidden;
+
+  border-radius: 50%;
+  z-index: $zindex-sticky;
+  transition: all .35s ease-in-out;
+
+  input[type="file"] {
+    height: 1px;
+    width: 1px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    opacity: 0;
+    z-index: -1;
+  }
+}
+
 
 .box-image-fit {
   display: flex;
@@ -256,24 +280,4 @@ $zindex-fixed:  1030;
   }
 }
 
-.add-to-gallery {
-  $size: 4rem;
-  position: absolute;
-  top: 36px;
-  right: 10%;
-  display: block;
-  border: $border-width solid $input-border-color;
-  border-radius: 50%;
-  width: $size;
-  height: $size;
-  font-size: 3.5rem;
-  font-weight: bolder;
-  line-height: 3rem;
-  padding: 0;
-  margin: 0;
-  vertical-align: center;
-  background: $red;
-  color: $white;
-
-  z-index: $zindex-fixed + 10;
-}
+// @import "monaco";
