@@ -1,16 +1,16 @@
 <template>
-  <b-wrapper container>
+  <b-wrapper scroll container>
 
     <form @submit.prevent.stop="submitGrab">
       <b-row class="mb-5">
-        <b-col cols="auto" class="align-self-center">
-          <div style="width: 30px;height:30px; text-align: right; margin-left: auto;">
+        <b-col class="position-relative">
+
+          <div style="width: 30px;height:30px; position: absolute; top: 12px; left: -36px;">
             <transition name="fade" mode="out-in">
               <img v-if="icon" alt="" :src="icon" class="img-fluid"/>
             </transition>
           </div>
-        </b-col>
-        <b-col>
+
           <b-input size="lg" placeholder="https://" v-model="url" :disabled="active" @keyup="showIcon"/>
         </b-col>
         <b-col cols="auto">
@@ -25,6 +25,23 @@
           <b-col cols="auto">
             <b-check size="lg" v-model="savePin">Save</b-check>
           </b-col>
+      </b-row>
+
+      <b-row v-if="htmlSource" class="mt-5">
+        <b-col>
+          <h3>Source code</h3>
+
+          <MonacoEditor
+              width="100%"
+              height="500"
+              theme="vs-dark"
+              language="text/html"
+              :value="htmlSource"
+              :options="editorOptions"
+              @editorDidMount="editorDidMount"
+              @change="onChange"
+          ></MonacoEditor>
+        </b-col>
       </b-row>
 
       <b-row class="mt-3" v-if="endpoint === 'youtube' && thumbnail && title">
@@ -46,13 +63,15 @@
 <script>
 import { getApiCall, postApiCall } from 'services/http'
 import { PageMixin } from 'mixins'
+import MonacoEditor from 'monaco-editor-vue3'
 
 export default {
   name: 'Grabber',
   mixins: [ PageMixin ],
+  components: { MonacoEditor },
   data() {
     return {
-      url: null,
+      url: 'https://',
       icon: null,
       savePin: false,
       active: false,
@@ -60,11 +79,25 @@ export default {
       iconSettings: [],
       endpoint: null,
 
+      editor: null,
+
       // Youtube
       itag: null,
       title: null,
       thumbnail: null,
       streams: null,
+
+      // HTML
+      htmlSource: null,
+      editorOptions: {
+        minimap: { enabled: false },
+        // autoIndent: 'full',
+        // wrappingIndent: 'none',
+        formatOnPaste: true,
+        formatOnType: true,
+        // automaticLayout: true,
+        quickSuggestions: true,
+      },
     }
   },
   methods: {
@@ -81,12 +114,13 @@ export default {
         }
       }
       this.icon = null
-      this.endpoint = null
+      this.endpoint = 'html'
       this.extractPattern = null
       this.itag = null
     },
     submitGrab() {
       this.active = true
+      this.htmlSource = null
       let payload = {
         url: this.url,
         save: this.savePin,
@@ -103,6 +137,10 @@ export default {
           this.title = data['title']
           this.thumbnail = data['thumbnail']
           this.streams = data['streams']
+        } else {
+          let { body = '' } = data['response']
+          body = body.replace(/\^\s+/, '')
+          this.htmlSource = body
         }
         console.log(data)
       }).catch(e => {
@@ -111,6 +149,13 @@ export default {
       }).finally(() => {
         this.active = false
       })
+    },
+    editorDidMount(editor) {
+      this.editor = editor
+      console.log('editor mounted !')
+    },
+    onChange(value) {
+      // console.log(this.editor)
     },
   },
   created() {

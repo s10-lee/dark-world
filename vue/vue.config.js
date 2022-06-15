@@ -1,7 +1,6 @@
 const path = require('path');
 const BundleTracker = require('webpack-bundle-tracker');
-// const MonacoWebpackPlugin = require('monaco-editor-webpack-plugin');
-
+const MonacoWebpackPlugin = require('monaco-editor-webpack-plugin')
 const isLocal = process.env.VUE_APP_MODE === 'local'
 const publicPath = process.env.VUE_APP_PUBLIC
 const statFile = process.env.VUE_APP_STAT_FILE
@@ -28,7 +27,12 @@ module.exports = {
     chainWebpack: (config) => {
         // config.optimization.splitChunks(false);
         config.plugin('BundleTracker').use(BundleTracker, [{path: statRoot, filename: statFile}]);
-        // new MonacoWebpackPlugin()
+        config.plugin('monaco-editor').use(MonacoWebpackPlugin, [
+            {
+                // Languages are loaded on demand at runtime
+                languages: ['json', 'javascript', 'html', 'xml']
+            }
+        ])
 
         // config.resolve.alias.set('__STATIC__', 'static');
         config.resolve.modules.add('./src');

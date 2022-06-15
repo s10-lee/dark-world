@@ -25,6 +25,7 @@ export default {
   methods: {
     logout() {
       this.$store.dispatch('logoutToken')
+      this.$router.push('/sux0r/')
     }
   }
 }

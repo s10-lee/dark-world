@@ -19,6 +19,8 @@
     "core-js": "^3.6.5",
     "es6-promise": "^4.2.8",
     "jwt-decode": "^3.1.2",
+    "monaco-editor-vue3": "^0.1.5",
+    "monaco-editor-webpack-plugin": "^6.0.0",
     "vue": "^3.1.5",
     "vue-router": "^4.0.10",
     "vuex": "^4.0.2"
