@@ -10,12 +10,13 @@ export const apiCrudMixin = {
     },
     data() {
         return {
+            title: null,
             pkName: 'id',
             item: null,
             items: null,
             endpoint: null,
             errors: [],
-            fields: {},
+            fields: [],
             notifyDuration: 5000,
         }
     },

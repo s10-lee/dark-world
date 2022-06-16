@@ -38,8 +38,7 @@
         <div class="text-end mb-5">
           <b-btn size="lg"
                  variant="out-primary"
-                 @click="$router.push(routePath + '/add')">
-            Create</b-btn>
+                 @click="$router.push(routePath + '/add')">Create</b-btn>
         </div>
         <b-table bordered
                  :pk-name="pkName"
@@ -54,11 +53,9 @@
 
 <script>
 import { apiCrudMixin } from 'mixins'
-import BPage from 'views/Page'
 export default {
   name: 'Collection',
   mixins: [ apiCrudMixin ],
-  components: { BPage },
   data() {
     return {
       title: 'Collections',

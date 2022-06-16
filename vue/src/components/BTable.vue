@@ -3,7 +3,7 @@
       <thead :class="headClass">
       <tr>
         <th scope="col" v-for="f in fields" :key="f.field">
-          {{ f.name || f.field }}
+          {{ f.title || f.field }}
         </th>
       </tr>
       </thead>
