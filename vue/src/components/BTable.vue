@@ -9,9 +9,9 @@
       </thead>
       <tbody :class="bodyClass">
         <tr v-for="item in getItems" :key="item.uid">
-          <td v-for="f in fields" :key="`${f.field}-${item.uid}`">
+          <td v-for="f in fields" :key="`${f.field}-${item[pkName]}`">
             <template v-if="f.link">
-              <b-link :to="href + '/' + item[pkName]">{{ item[f.field] }}</b-link>
+              <b-link :to="routePath + '/' + item[pkName]">{{ item[f.field] }}</b-link>
             </template>
             <template v-else>
               {{ item[f.field] }}
@@ -28,7 +28,7 @@ export default {
   props: {
     items: Array,
     fields: Array,
-    href: String,
+    routePath: String,
     pkName: {
       type: String,
       default: 'uid',

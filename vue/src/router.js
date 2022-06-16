@@ -4,7 +4,10 @@ import Home from 'views/Home'
 import Profile from 'views/user/Profile'
 import Debug from 'views/Debug'
 
-import { List, Grabber } from 'views/gallery'
+import { List } from 'views/gallery'
+import Collection from 'views/web/Collection'
+import Request from 'views/web/Request'
+
 
 import NotFound from 'views/errors/NotFound'
 import store from 'store'
@@ -15,8 +18,12 @@ import { SET_PAGE_LOADER } from 'store/types'
 const routes = [
     {path: '/', component: Home},
     {path: '/n00b', component: Profile, ...ROUTE_AUTH},
+
+    {path: '/n00b/collection/:pk?', component: Collection, ...ROUTE_AUTH},
+    {path: '/n00b/request', component: Request, ...ROUTE_AUTH},
+
     {path: '/n00b/gallery', component: List, ...ROUTE_AUTH},
-    {path: '/n00b/grab', component: Grabber, ...ROUTE_AUTH},
+    // {path: '/n00b/grab', component: Grabber, ...ROUTE_AUTH},
     {path: '/debug', component: Debug, ...ROUTE_AUTH},
 
     {path: '/sux0r', component: Auth, ...ROUTE_GUEST},

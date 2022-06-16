@@ -15,6 +15,20 @@ export function httpHeader() {
     }
 }
 
+export const requestApiCall = ( method, url, payload = null, formData = null) => {
+    const data = payload || formData
+    const additionalHeaders = formData ? {'Content-Type': 'multipart/form-data'} : {}
+    return xhr.request({
+        method: method,
+        url: url,
+        data: data,
+        headers: {
+            ...httpHeader(),
+            ...additionalHeaders,
+        },
+    }).then( response => response.data )
+}
+
 export const getApiCall = (url) => {
     return xhr.get( url, { headers: httpHeader() } )
         .then( response => response.data )

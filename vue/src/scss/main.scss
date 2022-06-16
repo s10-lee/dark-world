@@ -153,6 +153,9 @@ body {
 // @import "pagination";
 @import "~bootstrap/scss/tables";
 // @import "table";
+.table > :not(:first-child) {
+    border-top-width: 1px;
+}
 
 @import "~bootstrap/scss/badge";
 @import "~bootstrap/scss/alert";
