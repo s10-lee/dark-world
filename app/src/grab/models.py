@@ -60,10 +60,27 @@ class Request(Model):
         related_name='requests',
         on_delete=fields.CASCADE,
     )
+    responses: fields.ReverseRelation['Response']
 
     class Meta:
         ordering = ('position',)
         table = 'http_request'
+
+
+class Response(Model):
+    id = fields.IntField(pk=True)
+    status = fields.IntField()
+    headers = fields.TextField(null=True)
+    body = fields.TextField(null=True)
+    created_at = fields.DatetimeField(auto_now_add=True)
+    request: fields.ForeignKeyRelation[Request] = fields.ForeignKeyField(
+        'models.Request',
+        related_name='responses',
+        on_delete=fields.CASCADE,
+    )
+
+    class Meta:
+        table = 'http_response'
 
 
 class Variable(Model):
