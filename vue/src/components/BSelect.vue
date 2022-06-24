@@ -1,4 +1,5 @@
 <template>
+  <b-label v-if="label" :size="size">{{ label }}</b-label>
   <div class="dropdown">
     <button :class="'btn dropdown-toggle' + (shown ? ' show' : '') + ' ' + getSize"
             type="button"

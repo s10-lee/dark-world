@@ -5,10 +5,11 @@
   @include font-size($font-size);
 
   .mark {
-    top: $size;
+    top: 50%;
     width: $size + $font-size;
     height: $size + $font-size;
     border-radius: $border-radius;
+    transform: translateY(-50%);
   }
   .mark:after {
     width: $font-size * $size-mul;

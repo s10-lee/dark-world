@@ -9,6 +9,7 @@
     <b-row v-if="item">
       <b-col>
         <form @submit.prevent.stop="saveFormItem">
+
           <b-row align-h="start" align-v="end">
             <b-col cols="4">
               <b-input size="lg" label="Name" v-model="item['name']"/>
@@ -61,9 +62,9 @@ export default {
       title: 'Collections',
       endpoint: '/http-collection/',
       fields: [
-        {field: 'id', name: 'ID', type: String},
-        {field: 'name', name: 'Name', link: true, type: String},
-        {field: 'position', name: 'Pos', type: Number},
+        {field: 'id', title: 'ID', type: String, link: true},
+        {field: 'name', title: 'Name', type: String},
+        {field: 'position', title: 'Pos', type: Number},
       ]
     }
   }

@@ -1,6 +1,7 @@
 import asyncio
 import time
 import random
+import uuid
 from datetime import datetime
 from functools import wraps
 from app.db.utils import close_connections
@@ -43,3 +44,7 @@ def generate_unique_string(k=5):
     chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
     result = random.choices(chars, k=k)
     return ''.join(result)
+
+
+def uuid4_str():
+    return str(uuid.uuid4())

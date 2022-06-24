@@ -18,7 +18,7 @@ export default {
         cls = ['col-' + this.cols]
       }
       if (this.offset) {
-        cls.push('offset-' + this.cols)
+        cls.push('offset-' + this.offset)
       }
       return cls
     }

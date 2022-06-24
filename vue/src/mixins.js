@@ -54,7 +54,11 @@ export const apiCrudMixin = {
             this.item = {}
             this.fields.map(item => {
                 if (item.field !== this.pkName) {
-                    this.item[item.field] = null
+                    if (item[item.field] && item[item.field]['default']) {
+                        this.item[item.field] = item[item.field]['default']
+                    } else {
+                        this.item[item.field] = null
+                    }
                 }
             })
         },
@@ -103,8 +107,11 @@ export const apiCrudMixin = {
                     })
             }
         },
+        preSave(payload) {
+            return payload
+        },
         saveFormItem() {
-            const payload = this.makePayload()
+            const payload = this.preSave(this.makePayload())
             // console.log('saveFormItem -> payload', payload)
             this.pk === 'add' ? this.createItem(payload) : this.updateItem(this.pk, payload)
 

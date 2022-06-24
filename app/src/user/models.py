@@ -40,4 +40,5 @@ class User(Model):
     class Meta:
         table = 'user'
 
-
+    class PydanticMeta:
+        pass

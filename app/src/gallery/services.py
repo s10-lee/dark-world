@@ -1,14 +1,14 @@
 from fastapi import APIRouter, Depends, UploadFile, File, exceptions
 from app.src.gallery.models import Pin
-from app.library.files import save_file_media, remove_file_media
+from app.library.files import save_file_media, remove_file_media, get_extension
 from uuid import uuid4, UUID
 import os
 
 
 async def create_pin(content: bytes, user_id: UUID, filename: str, content_type: str = None):
     primary_key = uuid4()
-    extension = filename.rsplit('.')[-1]
     name = os.path.basename(filename)
+    extension = get_extension(filename)
 
     await save_file_media(content, path=user_id, filename=primary_key, extension=extension)
     pin = await Pin.create(

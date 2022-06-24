@@ -9,7 +9,11 @@
         <b-link class="nav-link" to="/" exact>#</b-link>
         <b-link class="nav-link ms-3" to="/n00b" exact>Profile</b-link>
         <b-link class="nav-link ms-3" to="/n00b/gallery">Gallery</b-link>
-        <b-link class="nav-link ms-3" to="/n00b/collection">Web</b-link>
+        <b-link class="nav-link ms-3" to="/n00b/grab">Grabber</b-link>
+
+        <b-link class="nav-link ms-3" to="/n00b/collection">Collections</b-link>
+        <b-link class="nav-link ms-3" to="/n00b/request">Requests</b-link>
+
       </div>
       <div class="navbar-nav ms-auto">
         <b-link class="nav-link" @click.prevent="logout">Logout</b-link>

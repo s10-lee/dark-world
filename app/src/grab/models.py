@@ -27,9 +27,6 @@ class HttpHeader(Model):
         ordering = ('name',)
         table = 'http_header'
 
-# class Settings(Model):
-#     id = fields.IntField(pk=True)
-
 
 class Collection(Model):
     id = UUIDField(pk=True)
@@ -39,45 +36,72 @@ class Collection(Model):
         'models.User',
         on_delete=fields.CASCADE,
     )
+    requests: fields.ReverseRelation['Request']
+    variables: fields.ReverseRelation['Variable']
 
     class Meta:
         ordering = ('position',)
         table = 'http_collection'
-#
-#
-# class Request(Model):
-#     id = UUIDField(pk=True)
-#     method: METHOD = fields.CharEnumField(METHOD, default=METHOD.GET)
-#     url = fields.TextField()
-#     params = fields.JSONField(default=dict)
-#     headers = fields.JSONField(default=dict)
-#     data = fields.JSONField(default=dict)
-#     json = fields.JSONField(default=dict)
-#     body = fields.BinaryField(null=True)
-#     collection: fields.ForeignKeyRelation[Collection] = fields.ForeignKeyField(
-#         'models.Collection',
-#         on_delete=fields.CASCADE,
-#     )
-#
-#     class Meta:
-#         table = 'api_request'
 
 
+class Request(Model):
+    id = UUIDField(pk=True)
+    method: HttpMethod = fields.CharEnumField(HttpMethod, default=HttpMethod.GET)
+    url = fields.CharField(500)
+    params = fields.JSONField(default=list, null=True)
+    headers = fields.JSONField(default=list, null=True)
+    data = fields.TextField(default='', null=True)
+    cookies = fields.TextField(null=True)
+    cert = fields.BinaryField(null=True)
+
+    position = fields.SmallIntField(default=1)
+    collection: fields.ForeignKeyRelation[Collection] = fields.ForeignKeyField(
+        'models.Collection',
+        related_name='requests',
+        on_delete=fields.CASCADE,
+    )
+
+    class Meta:
+        ordering = ('position',)
+        table = 'http_request'
+
+
+class Variable(Model):
+    id = fields.IntField(pk=True)
+    name = fields.CharField(255)
+    value = fields.TextField(default='')
+    call = fields.CharField(255, null=True)
+
+    collection: fields.ForeignKeyRelation[Collection] = fields.ForeignKeyField(
+        'models.Collection',
+        related_name='variables',
+        on_delete=fields.CASCADE,
+    )
+
+    class Meta:
+        table = 'http_variable'
+
+
+#
 # Pinterest
-# //img[@data-test="v-img"]/@src
-# //img[@data-animated-url]/@data-animated-url
+#   //img[@data-animated-url]/@data-animated-url
+#
 # Dribble
-# //img[@data-test="v-img"]/@src
-# class Grabber(DateTimeMixin):
-#     id = UUIDField(pk=True)
-#     name = fields.CharField(255)
-#     icon = fields.CharField(255)
-#     type = fields.CharField(50, null=False, default='html')
-#     patterns = fields.JSONField(default=list)
-#     search_xpath = fields.CharField(255)
-#     element_index = fields.IntField(null=True)
+#   //meta[@property="og:image"]/@content
+#   //img[@data-test="v-img"]/@src
 #
-#     class Meta:
-#         table = 'grabber'
-#
+class Grabber(Model):
+    id = UUIDField(pk=True)
+    name = fields.CharField(255)
+    icon = fields.CharField(255)
+    type = fields.CharField(50, null=False, default='html')
+    patterns = fields.JSONField(default=list)
+    search_xpath = fields.CharField(255)
+    element_index = fields.IntField(null=True)
+
+    class Meta:
+        table = 'grabber'
+
+
+init_models(['app.src.grab.models'])
 

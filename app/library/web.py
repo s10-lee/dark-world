@@ -2,17 +2,25 @@ import aiohttp
 import base64
 import xmltodict
 import orjson
-import collections
 from lxml import html
-from pprint import pp
 import typing
-from typing import Union, TypeVar
+from enum import Enum
+from typing import Union
 from yarl import URL
+
+
+class HttpRequest(aiohttp.ClientRequest):
+    def __init__(self, method, url, *args, **kwargs):
+        if isinstance(method, Enum):
+            method = method.name
+        url = URL(url)
+        super().__init__(method, url, *args, **kwargs)
 
 
 class HttpResponse:
     def __init__(
             self,
+            method: str,
             url: Union[URL, str],
             status: int,
             encoding: str,
@@ -21,6 +29,7 @@ class HttpResponse:
             headers: dict = None,
             body: Union[str, bytes, dict, list] = None,
     ) -> None:
+        self.method = method
         self.url = url
         self.status = status
         self.encoding = encoding
@@ -33,27 +42,30 @@ class HttpResponse:
     async def prepare_body(
             cls,
             client_response: aiohttp.ClientResponse,
-            raw_body: bool = None,
-            convert_to: str = None
-    ):
-        if raw_body:
+            raw: bool = None,
+            convert: str = None,
+    ) -> [str, dict, list, bytes]:
+        if raw:
             return await client_response.read()
-        return await convert_http_response_body(client_response, convert_to=convert_to)
+
+        content = await client_response.text()
+        if content:
+            if convert == 'xml':
+                return convert_xml_to_dict(content)
+            if convert == 'json':
+                return convert_json_to_dict(content)
+        return content
 
     @classmethod
     async def from_client_response(
             cls,
             client_response: aiohttp.ClientResponse,
-            raw_body: bool = None,
-            convert_to: str = None
+            raw: bool = None,
+            convert: str = None,
     ) -> "HttpResponse":
-
-        if raw_body:
-            body = await client_response.read()
-        else:
-            body = await convert_http_response_body(client_response, convert_to=convert_to)
-
+        body = await cls.prepare_body(client_response, raw, convert)
         return cls(
+            method=str(client_response.method),
             url=str(client_response.url),
             status=client_response.status,
             encoding=client_response.get_encoding(),
@@ -64,70 +76,44 @@ class HttpResponse:
         )
 
 
-MyResponse = TypeVar('MyResponse', bound=HttpResponse)
-
-
-async def response_object_factory(
-        client_response: aiohttp.ClientResponse,
-        raw_body: bool = False,
-        convert_to: str = None
+async def send_http_request(
+        method: str,
+        url: Union[str, URL],
+        raw: bool = False,
+        convert: str = None,
+        debug: bool = False,
+        **kwargs,
 ) -> "HttpResponse":
-    return await HttpResponse.from_client_response(client_response, raw_body=raw_body, convert_to=convert_to)
+    async with aiohttp.ClientSession() as session:
+        async with session.request(method, url, ssl=False, **kwargs) as resp:
+            response = await HttpResponse.from_client_response(resp, raw=raw, convert=convert)
 
+            if debug:
+                print('-' * 50)
+                print(response.method, response.status, response.url)
+                print(response.headers)
+                print(type(response.body), len(response.body))
+                print('-' * 50)
+                print(response.body)
+                print('-' * 50)
 
-response_object_creator = collections.namedtuple(
-    'response_namedtuple', [
-        'url', 'status', 'encoding', 'content_type', 'headers', 'body'
-    ]
-)
+            return response
 
 
 def generate_basic_auth(first, second):
     return base64.b64encode(f"{first}:{second}".encode("utf-8")).decode("utf-8")
 
 
-async def convert_http_response_body(
-        resp: aiohttp.ClientResponse,
-        convert_to: str = None
-) -> Union[str, dict, list]:
-    content = await resp.text()
-    if convert_to == 'xml':
-        return convert_xml_to_dict(content)
-    if convert_to == 'json':
-        return convert_json_to_dict(content)
-    return content
-
-
-async def send_http_request(
-        url,
-        method='get',
-        raw: bool = False,
-        convert_to: str = None,
-        debug: bool = False,
-        **kwargs,
-) -> "HttpResponse":
-    async with aiohttp.ClientSession() as session:
-        async with session.request(url=url, method=method, ssl=False, allow_redirects=True, **kwargs) as resp:
-            response = await response_object_factory(resp, raw_body=raw, convert_to=convert_to)
-
-            if debug:
-                print('-' * 50)
-                print(response.status, response.url)
-                print(response.content_type, ' = ', response.encoding)
-                pp(response.headers)
-                print(type(response.body))
-                print(len(response.body))
-                print('-' * 50)
-
-            return response
-
-
 def convert_xml_to_dict(content) -> dict:
     return xmltodict.parse(content)
 
 
-def convert_json_to_dict(content) -> dict:
+def convert_json_to_dict(content: str) -> dict:
     return orjson.loads(content)
+
+
+def convert_data_to_json(data) -> bytes:
+    return orjson.dumps(data)
 
 
 # lxml.html

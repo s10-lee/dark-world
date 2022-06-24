@@ -7,8 +7,8 @@ import os
 
 
 def get_extension(file_path):
-    parts = str(file_path).split('.')
-    return parts[-1]
+    last_part = str(file_path).split('.')[-1]
+    return last_part.split('?')[0]
 
 
 async def read_file(filepath, mode='r'):
@@ -33,7 +33,7 @@ async def save_file_media(
     return await save_file(
         content,
         MEDIA_ROOT / str(path) / (str(filename) + ('.' + str(extension) if extension else '')),
-        mode=mode
+        mode=mode,
     )
 
 
