@@ -8,6 +8,7 @@ from app.settings import MEDIA_URL
 from typing import Union
 from app.db.utils import init_models
 from enum import Enum
+from uuid import uuid4
 
 
 class HttpMethod(str, Enum):
@@ -56,7 +57,6 @@ class Request(Model):
     data = fields.TextField(default='', null=True)
     cookies = fields.TextField(null=True)
     cert = fields.BinaryField(null=True)
-
     position = fields.SmallIntField(default=1)
     collection: fields.ForeignKeyRelation[Collection] = fields.ForeignKeyField(
         'models.Collection',
@@ -90,12 +90,41 @@ class Response(Model):
         table = 'http_response'
 
 
+def make_unique_slug():
+    return str(uuid4())
+
+
+class Parser(Model):
+    id = fields.IntField(pk=True)
+    name = fields.CharField(255, null=True)
+    slug = fields.CharField(30, unique=True, null=True, default=make_unique_slug)
+
+    # application/json
+    # text/html
+    content_type = fields.CharField(50, null=False, default='text/html')
+
+    # headers
+    # body
+    # cookies
+    source_field = fields.CharField(255, default='body')
+
+    search_pattern = fields.CharField(255)
+    index = fields.IntField(null=True, default=0)
+    user: fields.ForeignKeyRelation[User] = fields.ForeignKeyField(
+        'models.User',
+        related_name='parsers',
+        on_delete=fields.CASCADE,
+    )
+
+    class Meta:
+        table = 'http_parser'
+
+
 class Variable(Model):
     id = fields.IntField(pk=True)
     name = fields.CharField(255)
     value = fields.TextField(default='')
     call = fields.CharField(255, null=True)
-
     collection: fields.ForeignKeyRelation[Collection] = fields.ForeignKeyField(
         'models.Collection',
         related_name='variables',

@@ -1,5 +1,7 @@
 import aiohttp
 import base64
+
+import lxml.html
 import xmltodict
 import orjson
 from lxml import html
@@ -27,6 +29,7 @@ class HttpResponse:
             content_disposition: str = None,
             headers: dict = None,
             body: Union[str, bytes, dict, list] = None,
+            request_info: Union[dict, aiohttp.RequestInfo] = None,
     ) -> None:
         self.method = method
         self.url = url
@@ -36,6 +39,7 @@ class HttpResponse:
         self.content_disposition = content_disposition
         self.headers = headers
         self.body = body
+        self.request_info = request_info
 
     def __str__(self):
         return str(self.to_dict())
@@ -50,6 +54,7 @@ class HttpResponse:
             'content_disposition': self.content_disposition,
             'headers': self.headers,
             'body': self.body,
+            'request_info': self.request_info,
         }
 
     def json(self):
@@ -81,6 +86,10 @@ class HttpResponse:
             convert: str = None,
     ) -> "HttpResponse":
         body = await cls.prepare_body(client_response, raw, convert)
+        request_info = {
+            'url': str(client_response.request_info.real_url),
+            'headers': dict(client_response.request_info.headers),
+        }
         return cls(
             method=str(client_response.method),
             url=str(client_response.url),
@@ -90,6 +99,7 @@ class HttpResponse:
             content_disposition=client_response.content_disposition,
             headers=dict(client_response.headers),
             body=body,
+            request_info=request_info,
         )
 
 
@@ -101,6 +111,13 @@ async def send_http_request(
         debug: bool = False,
         **kwargs,
 ) -> "HttpResponse":
+
+    # TODO fix this
+    headers = kwargs.get('headers', dict())
+    if not headers.get('User-Agent'):
+        headers['User-Agent'] = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.0.0 Safari/537.36'
+        kwargs['headers'] = headers
+
     async with aiohttp.ClientSession() as session:
         async with session.request(method, url, ssl=False, **kwargs) as resp:
             response = await HttpResponse.from_client_response(resp, raw=raw, convert=convert)

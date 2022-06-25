@@ -33,9 +33,8 @@
       <b-row class="mb-5" v-if="foundElements">
         <b-col>
           <h3>Elements</h3>
-          <div v-for="(status, el) in foundElements" class="mb-3">
-            <div class="text-muted">{{ status }}</div>
-            <a target="_blank" class="text-truncate" :href="el">{{ el }}</a>
+          <div v-for="item in foundElements" class="mb-3 small">
+            <div class="mono">{{ item }}</div>
           </div>
         </b-col>
       </b-row>
