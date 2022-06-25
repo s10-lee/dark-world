@@ -34,7 +34,7 @@
               <b-label size="lg">Params</b-label>
               <b-row v-for="(p, index) in item.params" class="mb-3" align-v="start">
                 <b-col cols="4" class="d-flex">
-                  <b-check size="lg" v-model="item.params[index].is_active" class="mr-2"/>
+                  <b-check size="lg" v-model="item.params[index].is_active" class="mr-2 dark"/>
                   <b-input v-model="item.params[index].name" />
                 </b-col>
                 <b-col cols="4">
@@ -58,7 +58,7 @@
 
               <b-row v-for="(h, index) in item.headers" class="mb-3" align-v="center">
                 <b-col cols="4" class="d-flex">
-                  <b-check size="lg" v-model="item.headers[index].is_active" class="mr-2"/>
+                  <b-check size="lg" v-model="item.headers[index].is_active" class="mr-2 dark"/>
                   <b-input v-model="item.headers[index].name" />
                 </b-col>
                 <b-col cols="4">
@@ -102,21 +102,24 @@
           </b-row>
         </form>
 
-        <b-row v-if="result">
+        <b-row v-if="item.last_response">
           <b-col>
-            <h2 class="text-500 mb-3">{{ result['method'] }} &nbsp; <span :class="statusColor">{{ result['status'] }}</span></h2>
-            <h4 class="text-300 mono fw-normal mb-5">{{ result['url']}}</h4>
 
-            <div class="p-3 rounded-3 bg-gray-600 mb-3">
-              <div v-for="(value, key) in result['headers']">
-                <b>{{ key }}:</b>  &nbsp; {{ value }}
+            <h2 class="text-500 mb-5">{{ item.last_response.method }} <span :class="statusColor">{{ item.last_response.status }}</span></h2>
+            <h4 class="text-300 mono fw-normal mb-5">{{ item.last_response.url }}</h4>
+
+            <div class="p-4 mono fs-6 rounded-5 mb-5"
+                 style="background: #14283b; color: #dee2e6; font-family: SFMono-Regular, Menlo, Monaco, 'Courier New', monospace">
+              <div v-for="(value, key) in item.last_response.headers">
+                <span>{{ key }}:</span> <span style="color: #00dcff;">{{ value }}</span>
               </div>
             </div>
 
-            <div class="p-3 rounded-3 bg-secondary">
-              <pre><code>{{ result.body ? result.body : 'EMPTY' }}</code></pre>
+            <div class="p-4 mono fs-6 rounded-5 mb-5" style="background: #2b3035;">
+              <pre><code>{{ item.last_response.body ? item.last_response.body : 'EMPTY' }}</code></pre>
             </div>
           </b-col>
+
         </b-row>
 
       </b-col>
@@ -183,17 +186,18 @@ export default {
   computed: {
     statusColor() {
       let cssClass = ''
-      if (this.result['status']) {
-        if (this.result['status'] >= 200) {
+      const result = this.item.last_response
+      if (result['status']) {
+        if (result['status'] >= 200) {
           cssClass = 'text-success'
         }
-        if (this.result['status'] >= 300) {
+        if (result['status'] >= 300) {
           cssClass = 'text-info'
         }
-        if (this.result['status'] >= 400) {
+        if (result['status'] >= 400) {
           cssClass = 'text-warning'
         }
-        if (this.result['status'] >= 500) {
+        if (result['status'] >= 500) {
           cssClass = 'text-danger'
         }
       }
@@ -204,7 +208,7 @@ export default {
     executeRequest() {
       this.loading(true)
       getApiCall('/http-request/' + this.pk + '/exec/')
-          .then(data => this.result = data)
+          .then(data => this.item['last_response'] = data)
           .then(() => this.loading(false))
     },
     addParam() {
@@ -230,6 +234,6 @@ export default {
         }
       })
     })
-  }
+  },
 }
 </script>

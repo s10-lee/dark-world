@@ -62,8 +62,8 @@ export default {
       title: 'Collections',
       endpoint: '/http-collection/',
       fields: [
-        {field: 'id', title: 'ID', type: String, link: true},
-        {field: 'name', title: 'Name', type: String},
+        {field: 'name', title: 'Name', type: String, link: true},
+        {field: 'id', title: 'ID', type: String},
         {field: 'position', title: 'Pos', type: Number},
       ]
     }

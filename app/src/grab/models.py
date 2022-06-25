@@ -1,8 +1,11 @@
 from tortoise import fields, Model
+from tortoise.exceptions import NoValuesFetched
 from app.db.models import DateTimeMixin
 from app.db.fields import UUIDField
 from app.src.user.models import User
+from app.library.web import convert_data_to_json, convert_json_to_dict
 from app.settings import MEDIA_URL
+from typing import Union
 from app.db.utils import init_models
 from enum import Enum
 
@@ -62,6 +65,12 @@ class Request(Model):
     )
     responses: fields.ReverseRelation['Response']
 
+    def last_response(self) -> Union[str, dict, None]:
+        try:
+            return convert_json_to_dict(self.responses.related_objects[-1].data)
+        except (NoValuesFetched, IndexError):
+            return None
+
     class Meta:
         ordering = ('position',)
         table = 'http_request'
@@ -69,9 +78,7 @@ class Request(Model):
 
 class Response(Model):
     id = fields.IntField(pk=True)
-    status = fields.IntField()
-    headers = fields.TextField(null=True)
-    body = fields.TextField(null=True)
+    data = fields.TextField()
     created_at = fields.DatetimeField(auto_now_add=True)
     request: fields.ForeignKeyRelation[Request] = fields.ForeignKeyField(
         'models.Request',

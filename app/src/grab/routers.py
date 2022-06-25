@@ -1,10 +1,10 @@
 from fastapi import APIRouter, Depends
 from app.src.auth.services import get_current_user_id
-from app.library.web import parse_html_response, send_http_request, HttpRequest
+from app.library.web import parse_html_response, send_http_request, convert_json_to_dict, convert_data_to_json
 from app.src.gallery.services import create_pin
 from app.src.grab import schemas
 # from app.src.grab.models import Grabber
-from app.src.grab.models import HttpHeader, HttpMethod, Collection, Request, Variable, Grabber
+from app.src.grab.models import HttpHeader, HttpMethod, Collection, Request, Variable, Grabber, Response
 from urllib.parse import urlparse, urljoin
 from app.src.grab.services import GRAB_UTILS, filter_json
 from io import BytesIO
@@ -78,19 +78,28 @@ async def list_requests(user_id: UUID = Depends(get_current_user_id)):
 
 @router.get('/http-request/{pk}/', response_model=schemas.RequestReceive)
 async def receive_request(pk: UUID, user_id: UUID = Depends(get_current_user_id)):
-    return await Request.get(id=pk, collection__user__id=user_id)
+    item = await Request.get(id=pk, collection__user__id=user_id)
+    await item.fetch_related('responses')
+    return item
 
 
 @router.post('/http-request/', response_model=schemas.RequestReceive)
 async def create_request(data: schemas.RequestCreate, user_id: UUID = Depends(get_current_user_id)):
-    return await Request.create(**data.dict(exclude_unset=True))
+    return await Request.create(**data.dict(exclude_unset=True, exclude_none=True))
 
 
 @router.put('/http-request/{pk}/', response_model=schemas.RequestReceive)
 async def update_request(pk: UUID, data: schemas.RequestCreate, user_id: UUID = Depends(get_current_user_id)):
-    item = await Request.get(id=pk, collection__user__id=user_id)
-    await item.update_from_dict(data.dict(exclude_unset=True)).save()
+    item = await Request.get(id=pk, collection__user__id=user_id).prefetch_related('responses')
+    await item.update_from_dict(data.dict(exclude_unset=True, exclude_none=True)).save()
     return item
+
+
+@router.delete('/http-request/{pk}/')
+async def delete_request(pk: UUID, user_id: UUID = Depends(get_current_user_id)):
+    item = await Request.get(id=pk, collection__user__id=user_id)
+    await item.delete()
+    return {}
 
 
 @router.get('/http-request/{pk}/exec/')
@@ -120,7 +129,14 @@ async def execute_request(pk: UUID, user_id: UUID = Depends(get_current_user_id)
 
     prepared_request_data = orjson.loads(prepared_request.encode('utf-8'))
 
-    return await send_http_request(**prepared_request_data, debug=True, convert='json')
+    cr = await send_http_request(**prepared_request_data, debug=True)
+
+    response = await Response.create(
+        data=cr.json(),
+        request=req,
+    )
+
+    return convert_json_to_dict(response.data)
 
 
 # --------------- #
@@ -141,49 +157,6 @@ async def execute_request(pk: UUID, user_id: UUID = Depends(get_current_user_id)
 #     return await Variable.filter(id=pk, collection__user__id=user_id).delete()
 
 
-# --------------- #
-#     Execute     #
-# --------------- #
-@router.get('/http-execute/{pk}/')
-async def pipeline_execute(pk: UUID):
-    collection = await Collection.get(id=pk).prefetch_related('variables', 'requests')
-    # item = await schemas.CollectionReceive.from_tortoise_orm(collection)
-    # item = (await schemas.RequestReceive.from_tortoise_orm(r)).json()
-    item = {}
-    for r in collection.requests:
-
-        params = filter_json(r.params)
-        headers = filter_json(r.headers)
-
-        request_data = {
-            'method': r.method,
-            'url': r.url,
-            'params': params,
-            'headers': headers,
-            'data': r.data,
-            'cookies': r.cookies,
-        }
-
-        prepared_request = orjson.dumps(request_data).decode('utf-8')
-
-        for v in collection.variables:
-            replace_value = v.value
-            if v.call:
-                replace_value = GRAB_UTILS.get(v.call)()
-            prepared_request = prepared_request.replace('{{' + v.name + '}}', replace_value)
-
-        for name, callback in GRAB_UTILS.items():
-            prepared_request = prepared_request.replace('{{@' + name + '}}', callback())
-
-        prepared_request_data = orjson.loads(prepared_request.encode('utf-8'))
-        item = prepared_request_data
-
-        resp = await send_http_request(**prepared_request_data, debug=True)
-        item = resp
-
-    return item
-
-
 @router.post('/grab/html/')
 async def grab_html_from_url(data: schemas.GrabberSchema, user_id: UUID = Depends(get_current_user_id)):
     url = data.url
@@ -191,6 +164,9 @@ async def grab_html_from_url(data: schemas.GrabberSchema, user_id: UUID = Depend
     response = await send_http_request('get', url)
 
     if data.pattern:
+        if data.update_id:
+            await Grabber.filter(id=data.update_id).update(search_xpath=data.pattern)
+
         res = parse_html_response(response.body, pattern=data.pattern)
 
         for el in res:

@@ -3,7 +3,6 @@ import base64
 import xmltodict
 import orjson
 from lxml import html
-import typing
 from enum import Enum
 from typing import Union
 from yarl import URL
@@ -37,6 +36,24 @@ class HttpResponse:
         self.content_disposition = content_disposition
         self.headers = headers
         self.body = body
+
+    def __str__(self):
+        return str(self.to_dict())
+
+    def to_dict(self):
+        return {
+            'method': self.method,
+            'url': self.url,
+            'status': self.status,
+            'encoding': self.encoding,
+            'content_type': self.content_type,
+            'content_disposition': self.content_disposition,
+            'headers': self.headers,
+            'body': self.body,
+        }
+
+    def json(self):
+        return convert_data_to_json(self.to_dict(), decode=True)
 
     @classmethod
     async def prepare_body(
@@ -112,8 +129,9 @@ def convert_json_to_dict(content: str) -> dict:
     return orjson.loads(content)
 
 
-def convert_data_to_json(data) -> bytes:
-    return orjson.dumps(data)
+def convert_data_to_json(data, decode=None) -> Union[bytes, str]:
+    result = orjson.dumps(data, option=orjson.OPT_NON_STR_KEYS)
+    return result.decode() if decode else result
 
 
 # lxml.html

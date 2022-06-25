@@ -7,10 +7,9 @@
 
           <div style="width: 30px;height:30px; position: absolute; top: 12px; left: -36px;">
             <transition name="fade" mode="out-in">
-              <img v-if="icon" alt="" :src="icon" class="img-fluid"/>
+              <img v-if="grabber && grabber.icon" alt="" :src="icon" class="img-fluid"/>
             </transition>
           </div>
-
           <b-input size="lg" placeholder="https://" v-model="url" :disabled="active" @keyup="showIcon"/>
         </b-col>
         <b-col cols="auto">
@@ -18,19 +17,31 @@
         </b-col>
       </b-row>
 
-      <b-row v-if="endpoint === 'html'" class="mt-3">
+      <b-row v-if="endpoint === 'html'" class="mb-5">
           <b-col cols="6">
             <b-input size="lg" v-model="extractPattern" :disabled="active" placeholder="// . . ."></b-input>
           </b-col>
           <b-col cols="auto">
             <b-check size="lg" v-model="savePin">Save</b-check>
           </b-col>
+          <b-col>
+            <b-check size="lg" v-model="updateParse">Update</b-check>
+          </b-col>
       </b-row>
 
-      <b-row v-if="htmlSource" class="mt-5">
-        <b-col>
-          <h3>Source code</h3>
 
+      <b-row class="mb-5" v-if="foundElements">
+        <b-col>
+          <h3>Elements</h3>
+          <div v-for="(status, el) in foundElements" class="mb-3">
+            <div class="text-muted">{{ status }}</div>
+            <a target="_blank" class="text-truncate" :href="el">{{ el }}</a>
+          </div>
+        </b-col>
+      </b-row>
+
+      <b-row v-if="htmlSource" class="mb-5">
+        <b-col>
           <MonacoEditor
               width="100%"
               height="500"
@@ -38,11 +49,10 @@
               language="text/html"
               :value="htmlSource"
               :options="editorOptions"
-              @editorDidMount="editorDidMount"
-              @change="onChange"
-          ></MonacoEditor>
+              @editorDidMount="editorDidMount"/>
         </b-col>
       </b-row>
+
 
       <b-row class="mt-3" v-if="endpoint === 'youtube' && thumbnail && title">
         <b-col cols="3">
@@ -64,21 +74,25 @@
 import { getApiCall, postApiCall } from 'services/http'
 import { PageMixin } from 'mixins'
 import MonacoEditor from 'monaco-editor-vue3'
+import BRow from "../../components/BRow";
+import BCol from "../../components/BCol";
 
 export default {
   name: 'Grabber',
   mixins: [ PageMixin ],
-  components: { MonacoEditor },
+  components: {BCol, BRow, MonacoEditor },
   data() {
     return {
       url: 'https://',
       icon: null,
       savePin: false,
+      updateParse: false,
       active: false,
       extractPattern: null,
-      iconSettings: [],
+      grabberSettings: [],
       endpoint: null,
-
+      foundElements: null,
+      grabber: null,
       editor: null,
 
       // Youtube
@@ -102,21 +116,24 @@ export default {
   },
   methods: {
     showIcon() {
-      for (let { icon, patterns, type, search_xpath } of this.iconSettings) {
-        for (let pattern of patterns) {
+      for (let grabber of this.grabberSettings) {
+        for (let pattern of grabber.patterns) {
           let re = new RegExp(pattern, 'gi')
           if (re.test(this.url)) {
-            this.icon = icon
-            this.endpoint = type
-            this.extractPattern = search_xpath
+            this.icon = grabber.icon
+            this.grabber = grabber
+            this.endpoint = 'html'
+            this.extractPattern = grabber.search_xpath
             return true
           }
         }
       }
       this.icon = null
+      this.grabber = null
       this.endpoint = 'html'
       this.extractPattern = null
       this.itag = null
+      this.foundElements = null
     },
     submitGrab() {
       this.active = true
@@ -125,6 +142,7 @@ export default {
         url: this.url,
         save: this.savePin,
         pattern: this.extractPattern,
+        update_id: this.updateParse && this.grabber.id ? this.grabber.id : null,
       }
 
       if (this.endpoint === 'youtube') {
@@ -133,16 +151,16 @@ export default {
 
       postApiCall(`/grab/${this.endpoint}/`, payload).then(data => {
         this.notify('Data received !!', 'success')
+
         if (this.endpoint === 'youtube') {
           this.title = data['title']
           this.thumbnail = data['thumbnail']
           this.streams = data['streams']
         } else {
           let { body = '' } = data['response']
-          body = body.replace(/\^\s+/, '')
-          this.htmlSource = body
+          this.foundElements = !!data['elements'] ? data['elements'] : null
+          this.htmlSource = body.replace(/\^\s+/, '')
         }
-        console.log(data)
       }).catch(e => {
         this.notify('Server Error', 'danger')
         console.log(e.response)
@@ -154,13 +172,10 @@ export default {
       this.editor = editor
       console.log('editor mounted !')
     },
-    onChange(value) {
-      // console.log(this.editor)
-    },
   },
   created() {
     getApiCall('/grab/').then(data => {
-      this.iconSettings = data
+      this.grabberSettings = data
     })
   }
 }

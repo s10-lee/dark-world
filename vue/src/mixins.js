@@ -83,7 +83,7 @@ export const apiCrudMixin = {
                 .catch(error => this.errors.push(error))
                 .then(() => {
                     this.notify('Item was created !')
-                    this.$router.push(this.routePath + '/' + this.item[this.pkName])
+                    this.$router.push(this.routePath)
                 })
         },
         updateItem(pk, payloadData) {

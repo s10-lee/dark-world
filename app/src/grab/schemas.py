@@ -1,6 +1,7 @@
 from tortoise.contrib.pydantic import pydantic_model_creator, pydantic_queryset_creator
 from app.src.grab.models import Collection, Request, Variable
 from pydantic import BaseModel, HttpUrl
+from uuid import UUID
 from typing import Optional
 
 
@@ -13,6 +14,7 @@ class GrabberSchema(BaseModel):
     url: HttpUrl
     pattern: Optional[str] = None
     save: Optional[bool] = None
+    update_id: Optional[UUID] = None
     # raw save
 
 
@@ -25,7 +27,8 @@ CollectionCreate = pydantic_model_creator(
 CollectionReceive = pydantic_model_creator(
     Collection,
     name='CollectionReceive',
-    include=('id', 'name', 'position', 'requests', 'variables')
+    include=('id', 'name', 'position', 'requests', 'variables'),
+    exclude_readonly=True,
 )
 CollectionList = pydantic_queryset_creator(
     Collection,
@@ -42,7 +45,8 @@ RequestCreate = pydantic_model_creator(
 RequestReceive = pydantic_model_creator(
     Request,
     name='RequestReceive',
-    exclude_readonly=True,
+    exclude=('collection',),
+    computed=('last_response',)
 )
 RequestList = pydantic_queryset_creator(
     Request,
