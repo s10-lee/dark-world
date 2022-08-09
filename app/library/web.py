@@ -1,7 +1,6 @@
 import aiohttp
 import base64
 
-import lxml.html
 import xmltodict
 import orjson
 from lxml import html
@@ -111,13 +110,6 @@ async def send_http_request(
         debug: bool = False,
         **kwargs,
 ) -> "HttpResponse":
-
-    # TODO fix this
-    headers = kwargs.get('headers', dict())
-    if not headers.get('User-Agent'):
-        headers['User-Agent'] = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.0.0 Safari/537.36'
-        kwargs['headers'] = headers
-
     async with aiohttp.ClientSession() as session:
         async with session.request(method, url, ssl=False, **kwargs) as resp:
             response = await HttpResponse.from_client_response(resp, raw=raw, convert=convert)

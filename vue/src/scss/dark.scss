@@ -104,13 +104,21 @@ $table-cell-padding-x: 1rem;
 
 
 
-$dropdown-color: $body-color;
-$dropdown-bg: $body-bg;
-$dropdown-border-color: $secondary;
+$dropdown-color:                    $body-color;
+$dropdown-bg:                       $body-bg;
+$dropdown-border-color:             $secondary;
 
-$caret-width:                 .3em;
-$caret-vertical-align:        $caret-width * .85;
-$caret-spacing:               $caret-width * .85;
+$caret-width:                       .3em;
+$caret-vertical-align:              $caret-width * .85;
+$caret-spacing:                     $caret-width * .85;
+
+$nav-link-color:                    $gray-500;
+$nav-link-hover-color:              $white;
+
+$nav-pills-link-active-color:       $gray-300;
+$nav-pills-link-active-bg:          $dark;
+
+
 
 
 $zindex-sticky: 1020;

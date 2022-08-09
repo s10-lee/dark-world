@@ -41,9 +41,10 @@ CREATE TABLE IF NOT EXISTS "user_refresh_token" (
 ***/
 
 
--- INSERT INTO "grabber" (name, icon, type, patterns, search_xpath, element_index) VALUES ('Youtube', '/static/icons/web/youtube-144.png', 'youtube', '["youtu\\.be", "youtube\\.com"]', '', null);
--- INSERT INTO "grabber" (name, icon, type, patterns, search_xpath, element_index) VALUES ('Dribbble', '/static/icons/web/dribbble-192.png', 'html', '["dribbble\\.com"]', '//img[@data-animated-url]/@data-animated-url', null);
+-- INSERT INTO "grabber" (name, icon, type, patterns, search_xpath, element_index) VALUES ('Youtube', '/static/icons/web/youtube.png', 'youtube', '["youtu\\.be", "youtube\\.com"]', '', null);
+-- INSERT INTO "grabber" (name, icon, type, patterns, search_xpath, element_index) VALUES ('Dribbble', '/static/icons/web/dribbble.png', 'html', '["dribbble\\.com"]', '//img[@data-animated-url]/@data-animated-url', null);
 -- INSERT INTO "grabber" (name, icon, type, patterns, search_xpath, element_index) VALUES ('Pinterest', '/static/icons/web/pinterest.png', 'html', '["pinterest\\.", "wwww\\.pinterest", "pin\\.it"]', '//head/link[@as="image"]/@href', null);
+-- INSERT INTO "grabber" (name, icon, type, patterns, search_xpath, element_index) VALUES ('One Page Love', '/static/icons/web/onepagelove.png', 'html', '["onepagelove\\.com"]', '//a[@rel="nofollow"][@class="noBorder"]/img[@srcset]/@src', null);
 
 
 -- INSERT INTO public.http_header (id, name, in_request, in_response) VALUES (1, 'A-IM', true, false);

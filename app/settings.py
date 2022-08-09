@@ -48,6 +48,7 @@ APPS_MODELS = [
     'app.src.user.models',
     'app.src.gallery.models',
     'app.src.grab.models',
+    'app.src.scrape.models',
 ]
 
 ORM = {

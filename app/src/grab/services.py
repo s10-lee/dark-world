@@ -8,9 +8,13 @@ GRAB_UTILS = {
 
 
 def filter_json(items):
+    if not items:
+        return None
+
     result = {}
-    if items:
-        for item in items:
-            if item.get('is_active'):
-                result[item['name']] = item['value']
+
+    for item in items:
+        if item.get('is_active'):
+            result[item['name']] = item['value']
+
     return result

@@ -34,7 +34,7 @@
         <b-col>
           <h3>Elements</h3>
           <div v-for="item in foundElements" class="mb-3 small">
-            <div class="mono">{{ item }}</div>
+            <div class="mono">{{ item.result }}</div>
           </div>
         </b-col>
       </b-row>
@@ -159,6 +159,7 @@ export default {
           let { body = '' } = data['response']
           this.foundElements = !!data['elements'] ? data['elements'] : null
           this.htmlSource = body.replace(/\^\s+/, '')
+          console.log(data)
         }
       }).catch(e => {
         this.notify('Server Error', 'danger')

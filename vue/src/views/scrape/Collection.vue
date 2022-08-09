@@ -60,7 +60,7 @@ export default {
   data() {
     return {
       title: 'Collections',
-      endpoint: '/http-collection/',
+      endpoint: '/ws-collection/',
       fields: [
         {field: 'name', title: 'Name', type: String, link: true},
         {field: 'id', title: 'ID', type: String},

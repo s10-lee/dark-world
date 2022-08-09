@@ -11,8 +11,8 @@
         <b-link class="nav-link ms-3" to="/n00b/gallery">Gallery</b-link>
         <b-link class="nav-link ms-3" to="/n00b/grab">Grabber</b-link>
 
-        <b-link class="nav-link ms-3" to="/n00b/collection">Collections</b-link>
-        <b-link class="nav-link ms-3" to="/n00b/request">Requests</b-link>
+        <!-- <b-link class="nav-link ms-3" to="/n00b/collection">Collections</b-link> -->
+        <!-- <b-link class="nav-link ms-3" to="/n00b/request">Requests</b-link> -->
 
       </div>
       <div class="navbar-nav ms-auto">
