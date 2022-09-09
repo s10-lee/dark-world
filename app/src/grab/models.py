@@ -25,4 +25,3 @@ class Grabber(Model):
 
 
 init_models(['app.src.grab.models'])
-
