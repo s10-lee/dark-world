@@ -3,9 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from tortoise.contrib.fastapi import register_tortoise
 from app.src.user.routers import router as api_user
-from app.src.gallery.routers import router as api_gallery
-from app.src.grab.routers import router as api_grab
-from app.src.scrape.routers import collections as api_scrape
+from app.src.project.routers import router as project_router
 
 
 from app.src.web.routers import web_router, web
@@ -23,9 +21,7 @@ app.add_middleware(
 
 app.include_router(web_router)
 app.include_router(api_user, prefix='/api')
-app.include_router(api_gallery, prefix='/api')
-app.include_router(api_grab, prefix='/api')
-app.include_router(api_scrape.router, prefix='/api')
+app.include_router(project_router, prefix='/api')
 
 
 app.mount(STATIC_URL, StaticFiles(directory=STATIC_ROOT), name='static')

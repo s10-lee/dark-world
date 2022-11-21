@@ -46,9 +46,8 @@ def auto_load_models():
 APPS_MODELS = [
     'app.src.auth.models',
     'app.src.user.models',
-    'app.src.gallery.models',
-    'app.src.grab.models',
-    'app.src.scrape.models',
+    'app.src.project.models',
+    'app.src.custom_field.models',
 ]
 
 ORM = {

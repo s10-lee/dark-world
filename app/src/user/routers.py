@@ -15,7 +15,7 @@ from app.src.auth.services import (
 )
 
 
-router = APIRouter()
+router = APIRouter(tags=['User'])
 
 
 @router.post('/sign-up/{uid}/')

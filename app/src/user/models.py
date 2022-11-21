@@ -1,6 +1,14 @@
 from tortoise.models import Model
 from tortoise.fields import (
-    IntField, CharField, ForeignKeyField, BooleanField, DatetimeField, ForeignKeyRelation
+    IntField,
+    CharField,
+    TextField,
+    ForeignKeyField,
+    BooleanField,
+    DatetimeField,
+    ForeignKeyRelation,
+    ManyToManyRelation,
+    ManyToManyField,
 )
 from app.db.fields import UUIDField
 from datetime import datetime
@@ -42,3 +50,30 @@ class User(Model):
 
     class PydanticMeta:
         pass
+
+#
+# class Group(Model):
+#     id = UUIDField(pk=True)
+#     title = CharField(255)
+#     description = TextField()
+#
+#     class Meta:
+#         table = 'group'
+#
+#
+# class Role(Model):
+#     id = IntField(pk=True)
+#     title = CharField(255)
+#     description = TextField()
+#
+#     class Meta:
+#         table = 'role'
+#
+#
+# class Permission(Model):
+#     id = IntField(pk=True)
+#     title = CharField(255)
+#     description = TextField()
+#
+#     class Meta:
+#         table = 'permission'

@@ -3,7 +3,6 @@ from app.library.web import parse_html_response, send_http_request
 from app.src.scrape.models import Request, HttpMethod
 from app.src.scrape import schemas
 from app.src.auth.services import get_current_user_id
-from app.src.grab.services import GRAB_UTILS, filter_json
 from uuid import UUID
 import orjson
 

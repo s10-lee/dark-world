@@ -123,7 +123,7 @@ async def client_token_response(user: User) -> JSONResponse:
     refresh_token = await create_refresh_token(user)
     access_token = await create_access_token(user)
     response = JSONResponse(content={
-        'access_token': access_token.decode('utf-8'),
+        'access_token': access_token,
     })
     response.set_cookie(
         key='refresh_token',
